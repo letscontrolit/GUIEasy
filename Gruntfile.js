@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-
   // Project configuration.
   grunt.initConfig({
 // minify js
@@ -107,6 +106,33 @@ module.exports = function(grunt) {
               }]
           }
       },
+// copyright
+      file_append: {
+          copyright: {
+              files: [
+                  {
+                      prepend: '<-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg -->',
+                      input: 'build/temp/index.min.html'
+                  },
+                  {
+                      prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
+                      input: 'build/temp/gui.min.js'
+                  },
+                  {
+                      prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
+                      input: 'build/temp/gui.min.css'
+                  },
+                  {
+                      prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
+                      input: 'build/temp/forms.min.js'
+                  },
+                  {
+                      prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
+                      input: 'build/temp/dash.min.js'
+                  }
+              ]
+          }
+      },
 // rename the temp folder
       rename: {
           temp: {
@@ -127,6 +153,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-rename');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-processhtml');
+  grunt.loadNpmTasks('grunt-file-append');
 
   // build gui easy task
   grunt.registerTask('buildGuiEasy', 'Will build the project',
@@ -152,6 +179,7 @@ module.exports = function(grunt) {
             'uglify',
             'cssmin',
             'processhtml',
+            'file_append',
             'compress',
             'rename'
         )
@@ -159,7 +187,63 @@ module.exports = function(grunt) {
 
   // the 'default' task can be run just by typing "grunt" on the command line
   grunt.registerTask('default', [
+      'verifyCopyright',
       'buildGuiEasy'
   ]);
 
+    grunt.registerTask('verifyCopyright', function () {
+
+        let fileRead, firstLine, counter = 0, fileExtension, commentWrapper;
+        let copyrightInfo = 'GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg';
+
+        //get file extension regex
+        let re = /(?:\.([^.]+))?$/;
+
+        grunt.log.writeln();
+
+        // read all subdirectories from your modules folder
+        grunt.file.expand(
+            {filter: 'isFile', cwd: 'src/'},
+            ["**/*.js", ['**/*.html', ['**/*.css']]])
+            .forEach(function (dir) {
+                fileRead = grunt.file.read('src/' + dir).split('\n');
+                firstLine = fileRead[0];
+                let startIndex = 0;
+                //Deleting old copyright.
+                if (firstLine.search("Copyright") > -1) {
+                    startIndex = 1;
+                }
+                //Start updating copyright.
+                counter++;
+                if (startIndex > 0) {
+                    grunt.log.ok(dir + " --> updating copyright text");
+                } else {
+                    grunt.log.ok(dir + " --> doesn't have copyright. Writing it.");
+                }
+                fileExtension = re.exec(dir)[1];
+                switch (fileExtension) {
+                    case 'js':
+                        commentWrapper = '/* ' + copyrightInfo + ' */';
+                        break;
+                    case 'html':
+                        commentWrapper = '<!-- ' + copyrightInfo + ' -->';
+                        break;
+                    case 'css':
+                        commentWrapper = '/* ' + copyrightInfo + ' */';
+                        break;
+                    default:
+                        commentWrapper = null;
+                        grunt.log.writeln('file extension not recognized');
+                        break;
+                }
+
+                if (commentWrapper) {
+                    fileRead.unshift(commentWrapper);
+                    fileRead = fileRead.slice(startIndex).join('\n');
+                    grunt.file.write( 'src/' + dir, fileRead);
+                }
+            });
+
+        grunt.log.ok('Searched through', counter, 'files.');
+    });
 };

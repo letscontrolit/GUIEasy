@@ -2,7 +2,7 @@
   "name": "compile-gui-easy",
   "version": "1.0.0",
   "author": "Jimmy 'Grovkillen' Westberg",
-  "license": "LicenseRef-LICENSE.md",
+  "license": "GPL-3.0-or-later",
   "description": "A packager for the GUI Easy application for ESP Easy",
   "bin": {
     "index.html.gz": "build/<version>/"
@@ -19,7 +19,8 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-compress": "^1.6.0",
     "grunt-zopfli-native": "^2.0.0",
-    "grunt-processhtml": "^0.4.2"
+    "grunt-processhtml": "^0.4.2",
+    "grunt-file-append": "^0.0.7"
   },
   "dependencies": {
     "npm": "^6.13.1"
