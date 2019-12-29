@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#000000">
+    <title>I'm Headless</title>
+    <script>
+        start = function () {
+            const t = document.getElementById("t"); //text
+            const b = document.getElementById("b"); //button
+            const a = document.getElementById("a"); //ascii dude
+            const p = document.getElementById("p"); //progress bar
+            if (window.navigator.onLine === true) {
+                //It's ok to download
+                //TODO: have an external js that look if mem will fit the gui etc. etc.
+                t.innerHTML = "Click the button below to upgrade this unit to Queen status.";
+                b.style.display = "block";
+                a.style.display = "none";
+            } else {
+                //Cannot download
+                t.innerHTML = "No Internet connection. Please connect to Internet to download graphical user interface - OR - browse to a Queen.";
+                t.style.color = "red";
+                a.style.color = "red";
+            }
+        };
+        fetchData = function () {
+            const data = "";
+            return data;
+        };
+        download = function () {
+            //start downloading gui
+        }
+    </script>
+</head>
+<body
+    onload="start()"
+    style="
+        background: black;
+        color: green;
+        font-family: monospace;
+        text-align: justify;
+        font-size: 1.1em;
+    "
+>
+<!-- This file is used as a minimum GUI to download the GUI from GitHub -->
+<!-- Since Butler is used, do not rename or move the file /src/gui_easy_butler_gui_update.js !! -->
+<div style="
+    max-width: 250px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+">
+    <div id="a">
+        &nbsp;&nbsp;&nbsp;UR ASCIIN 4 IT!<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;/<br>
+        &nbsp;&nbsp;,﹏<br>
+        (҂॰ᨓ॰)<br>
+        &nbsp;(ϑ͏  ꙻ)ϑ͏<br>
+        &nbsp;√ ㄟ<br><br>
+    </div>
+    <div
+        id="t"
+        style="
+            min-height: 100px;
+        "
+    ></div>
+    <div
+        id="p"
+        style="
+            background-color: green;
+            height: 3px;
+            width: 10%;
+            margin-bottom: 10px;
+        "
+    >
+    </div>
+    <button
+        onclick="download()"
+        id="b"
+        style="
+        display: none;
+        width: 100%;
+        border-color: green;
+        border-style: solid;
+        border-width: 1px;
+        color: green;
+        background: transparent;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline: 0;
+        padding: .65em 2em;
+        font-family: inherit;
+    ">
+        Make This Drone A Queen
+    </button>
+</div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+(c) Copyright 2019 Grovkillen AB, all rights reserved.
