@@ -7,7 +7,6 @@ guiEasy.popper = function (processID, processType) {
     guiEasy.popper.events();
     guiEasy.popper.rules();
     guiEasy.popper.favicon();
-    //Set custom theme... TODO: make a set custom theme function... load from file system
     helpEasy.addToLogDOM("pageSize", 1);
     helpEasy.processDone(processID, processType);
 };

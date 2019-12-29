@@ -90,6 +90,8 @@ guiEasy.pitcher.loadTheme = function () {
                         });
                         helpEasy.processDone("theme", typeOfStartup);
                     })
+            } else {
+                helpEasy.processDone("theme", typeOfStartup);
             }
         }
     }, 25)
