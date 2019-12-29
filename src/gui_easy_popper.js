@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
 //HERE WE ADD THINGS THAT WILL HAPPEN
 guiEasy.popper = function (processID, processType) {
     //to make sure we don't spam the event listener...
@@ -680,10 +680,24 @@ guiEasy.popper.modal.settings = function (type) {
                 "settingsFalse": 1,
                 "falseText": "alt + l/r arrow = jump to tab",
                 "trueText": "alt + l/r arrow = not used",
-                "default":true
+                "default": true
             }
         );
         html += "<hr>";
+        html += helpEasy.addInput(
+            {
+                "type": "toggle",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "wait for theme",
+                "settingsId": "defaultSettings--waitForTheme",
+                "settingsTrue": 1,
+                "settingsFalse": 0,
+                "falseText": "fast boot",
+                "trueText": "wait for theme",
+                "default": false
+            }
+        );
         html += helpEasy.addInput(
             {
                 "type": "toggle",
@@ -1201,7 +1215,7 @@ guiEasy.popper.theme = function (whatToDo) {
             guiEasy.popper.css(blob);
         }
     }
-    if (what === "copy") {
+    if (what === "copy" || what === "save") {
         let input = document.getElementById("custom-theme-settings");
         let themeOutput = JSON.stringify(input.dataset);
         themeOutput = themeOutput.match(/".*?\|.*?"/g);
@@ -1221,14 +1235,43 @@ guiEasy.popper.theme = function (whatToDo) {
                 clipboard += "\n";
             }
         }
-        helpEasy.copyToClipboard(clipboard);
+        if (what === "copy") {
+            helpEasy.copyToClipboard(clipboard);
+        } else {
+            if (document.getElementById("label-temp") !== null) {
+                document.getElementById("label-temp").remove();
+            }
+            let l = document.createElement("label");
+            l.id = "label-temp";
+            l.style.display = "none";
+            document.body.appendChild(l);
+            let file = new File(
+                [clipboard],
+                "theme.txt",
+                {
+                    type: "text/plain"
+                }
+            );
+            helpEasy.uploadBinaryAsFile("generic", file, "temp");
+            let eventDetails = {
+                "type": "wave",
+                "text": "theme saved",
+                "color": "inverted"
+            };
+            guiEasy.popper.tryCallEvent(eventDetails);
+        }
         whatToDo.args[1] = "theme";
-        whatToDo.args[2] = "copy";
+        whatToDo.args[2] = what;
         guiEasy.popper.modal(whatToDo);
     }
     if (what === "import") {
-        let importData = whatToDo.args[2].replace(/_/g,"-");
-        importData = document.getElementById(importData).value;
+        let importData;
+        if (whatToDo.localFile) {
+            importData = whatToDo.args[2];
+        } else {
+            importData = whatToDo.args[2].replace(/_/g,"-");
+            importData = document.getElementById(importData).value;
+        }
         document.getElementById("modal-container").classList.add("is-hidden");
         let themeVariables = importData.split("\n");
         let cssSettings = defaultSettings.css;
@@ -1262,6 +1305,7 @@ guiEasy.popper.theme = function (whatToDo) {
                 guiEasy.popper.tryCallEvent(eventDetails);
             }, (k*10));
         }
+        guiEasy.guiStats.themIsApplied = true;
     }
 };
 

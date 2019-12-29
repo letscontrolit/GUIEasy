@@ -902,6 +902,7 @@ div.area-title > button > svg {
     transform: translateY(3px);
 }
 div.modal {
+    opacity: 1;
     position: fixed;
     z-index: 9999;
     left: 0;
@@ -911,7 +912,18 @@ div.modal {
     overflow: auto;
     background-color: rgba(0,0,0,0.8);
 }
+/* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
+div.modal.is-hiding {
+    display: unset!important;
+    opacity: 1;
+    transition: opacity 0.75s 0.5s ease-out;
+}
+div.modal.is-hiding > div {
+    display: none;
+}
+/* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
 div.modal.is-black {
+    opacity: 1;
     background-color: rgba(0,0,0,1);
     color: rgba(0,0,0,1);
 }
@@ -1984,6 +1996,7 @@ div.silentStartup,
 div.is-hidden,
 .is-hidden {
     display: none!important;
+    opacity: 0;
 }
 .got-margin {
     margin: 20px 0 20px 0;
