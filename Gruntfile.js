@@ -238,9 +238,8 @@ module.exports = function(grunt) {
                 }
 
                 if (commentWrapper) {
-                    fileRead.unshift(commentWrapper);
                     fileRead = fileRead.slice(startIndex).join('\n');
-                    grunt.file.write( 'src/' + dir, fileRead);
+                    grunt.file.write( 'src/' + dir, commentWrapper + '\n' + fileRead);
                 }
             });
 

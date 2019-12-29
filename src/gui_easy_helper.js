@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
 // HERE WE PUT ALL OUR "THIS&THAT" FUNCTIONS
 const helpEasy = {
     'copyToClipboard': function (str) {
@@ -1102,8 +1102,12 @@ const helpEasy = {
                 let modalBackground = document.getElementById("modal-container");
                 let loadingPage = document.getElementById("modal-loading-screen");
                 loadingPage.classList.add("is-hidden");
-                modalBackground.classList.add("is-hidden");
-                modalBackground.classList.remove("is-black");
+                modalBackground.classList.add("is-hiding");
+                setTimeout(function () {
+                    modalBackground.classList.add("is-hidden");
+                    modalBackground.classList.remove("is-hiding");
+                    modalBackground.classList.remove("is-black");
+                }, (500));
                 helpEasy.addToLogDOM("total boot time: " + guiEasy.guiStats.bootTime + "ms", 1);
             }
             progressElement.value++;

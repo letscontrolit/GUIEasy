@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
 //HERE WE ADD THINGS THAT THE CLIENT WANTS TO DO
 guiEasy.pitcher = function (processID, processType) {
     let urlParams = helpEasy.urlParams();
@@ -14,6 +14,7 @@ guiEasy.pitcher = function (processID, processType) {
     let x = setInterval(function () {
         if (guiEasy.current.live !== undefined) {
             clearInterval(x);
+            guiEasy.pitcher.loadTheme();
             helpEasy.setCurrentIndex(0);
             guiEasy.current.live = helpEasy.getCurrentIndex();
             //update graphics
@@ -58,4 +59,38 @@ guiEasy.pitcher = function (processID, processType) {
         }
     },1);
     //and we're live and kicking!
+};
+
+guiEasy.pitcher.loadTheme = function () {
+    let typeOfStartup = "silentStartup";
+    if (defaultSettings.waitForTheme === 1) {
+        typeOfStartup = "startup";
+    }
+    helpEasy.listOfProcesses(
+        "theme",
+        "Waiting for theme to be applied",
+        Date.now(),
+        typeOfStartup
+    );
+    let x = setInterval(function () {
+        let y = guiEasy.nodes[helpEasy.getCurrentIndex()].live;
+        if (y.filelist_json !== undefined) {
+            clearInterval(x);
+            let files = y.filelist_json.map(a => a.fileName);
+            if (files.indexOf("theme.txt") > -1) {
+                helpEasy.addToLogDOM("Applying theme", 1);
+                let timeStart = Date.now();
+                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/theme.txt?callback=" + timeStart;
+                fetch(path)
+                    .then(response => response.text())
+                    .then(text => {
+                        guiEasy.popper.theme({
+                            "localFile": true,
+                            "args":["theme","import",text]
+                        });
+                        helpEasy.processDone("theme", typeOfStartup);
+                    })
+            }
+        }
+    }, 25)
 };

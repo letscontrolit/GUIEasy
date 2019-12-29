@@ -22,7 +22,7 @@ If you want to manually download and install the front end you should head over 
 * src-``<version>``.zip
 * mini/index.htm.gz
 
-Of these five files the actual GUI Easy "engine" is compiled into the **index.htm.gz** file.
+Of these files the actual GUI Easy "engine" is compiled into the **index.htm.gz** file.
 The minified css, js, and html files are the backbone of this gz:ed file. The src-``<version>``.zip
 is the source code of the project as it was at the time of compile. In the directory **mini**
 you will find the minimal interface used as default fallback GUI.
