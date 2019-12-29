@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //HERE WE ADD THINGS THAT THE CLIENT WANTS TO DO
 guiEasy.pitcher = function (processID, processType) {
     let urlParams = helpEasy.urlParams();
