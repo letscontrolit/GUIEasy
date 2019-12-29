@@ -337,6 +337,12 @@ with data or used for human interaction (buttons, sliders etc.). They can use ``
 The ``controllers``, ``plugins``, and ``notification`` setup pages are defined by their
 corresponding page. These can, similar to dash's, use either html or curly syntax.
 
+## CORS error when running as localhost
+
+You need to have CORS allow cross-domain allowed for the GUI to work running from your localhost
+server. We use [this](https://mybrowseraddon.com/access-control-allow-origin.html) add-on which
+lets you turn it on/off by the click of a button.
+
 ## Sponsorship
 
 We are happy for any means of funding you may want to send our way. Please use one of these
