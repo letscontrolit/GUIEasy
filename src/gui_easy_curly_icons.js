@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 // ONLY PATH'S OF SVGs ARE USED
 guiEasy.curly.logo = function(arg) {
     let xml = " xmlns='http://www.w3.org/2000/svg'";

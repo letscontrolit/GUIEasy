@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //https://link.medium.com/c8U3LzyZF2
 //When page has loaded, run "initiate"
 window.addEventListener("load", initiate, false);

@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //HERE WE ADD THINGS THAT WILL HAPPEN
 guiEasy.popper = function (processID, processType) {
     //to make sure we don't spam the event listener...

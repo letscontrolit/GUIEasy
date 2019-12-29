@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //------------------------------- HTML or CURLY -------------------------------//
 guiEasy.forms.controller.C015 = `
 Add html or curly syntax here...

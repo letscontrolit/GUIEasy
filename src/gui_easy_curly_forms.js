@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //THESE CURLY's ARE A BIT DIFFERENT SINCE THEY ARE CONVERTED @ RUN-TIME
 
 guiEasy.curly.forms = function (x) {

@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019  Jimmy "Grovkillen" Westberg */
 //HERE'S THE SETTINGS USED FOR THE SPA ENGINE = TRANSLATIONS ARE PUT IN ANOTHER FILE
 const guiEasy = {
     'logLevel': 0,
