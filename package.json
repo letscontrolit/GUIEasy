@@ -1,0 +1,27 @@
+{
+  "name": "compile-gui-easy",
+  "version": "1.0.0",
+  "author": "Jimmy 'Grovkillen' Westberg",
+  "license": "LicenseRef-LICENSE.md",
+  "description": "A packager for the GUI Easy application for ESP Easy",
+  "bin": {
+    "index.html.gz": "build/<version>/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/letscontrolit/ESPEasy"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "grunt-contrib-uglify-es": "^3.3.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-rename": "^0.2.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-compress": "^1.6.0",
+    "grunt-zopfli-native": "^2.0.0",
+    "grunt-processhtml": "^0.4.2"
+  },
+  "dependencies": {
+    "npm": "^6.13.1"
+  }
+}

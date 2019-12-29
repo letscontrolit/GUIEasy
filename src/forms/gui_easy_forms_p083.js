@@ -1,0 +1,7 @@
+//------------------------------- HTML or CURLY -------------------------------//
+guiEasy.forms.plugin.P083 = `
+Add html or curly syntax here...
+`;  //--------------------------- HTML or CURLY -------------------------------//
+guiEasy.forms.plugin.P083.name = "";
+guiEasy.forms.plugin.P083.category = "";
+guiEasy.forms.plugin.P083.state = "normal"; //normal, testing, development

@@ -1,0 +1,9 @@
+# MacOSX Finder *****
+.DS_Store
+
+# Webstorm **********
+.idea
+
+# Grunt dep *********
+node_modules
+package-lock.json
