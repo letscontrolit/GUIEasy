@@ -13,6 +13,8 @@ If you want to manually download and install the front end you should head over 
 **nightly** and **rcN** are not to be used in production, only as tests. Inside the
 [build](/build)/**version** folder you will find the following files:
 
+* dash.min.js
+* forms.min.js
 * gui.min.css
 * gui.min.js
 * index.htm.gz &larr; **This is what you're looking for**
