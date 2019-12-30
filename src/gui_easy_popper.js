@@ -1421,6 +1421,9 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
 };
 
 guiEasy.popper.settings = function (whatToDo) {
+    if (whatToDo.args[2] === undefined) {
+        whatToDo.args[2] = "inverted";
+    }
     let eventDetails = {
         "type": "wave",
         "text": whatToDo.args[1],
@@ -1522,7 +1525,7 @@ guiEasy.popper.shortcut = function (keyboard) {
     ) {
         if (pd["alt+arrows"]) {
             let tabNumber = guiEasy.current.tabNumber;
-            if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1};
+            if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
             while (guiEasy.tabNumber[tabNumber] === undefined) {
                 if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
                 if (tabNumber < 0) {tabNumber = 9}
@@ -1548,8 +1551,7 @@ guiEasy.popper.favicon = function () {
         for (let i = 0; i < Object.keys(themeSetting).length; i++) {
             let x = Object.keys(themeSetting)[i].toString();
             let color = x.split(/(?=[A-Z])/).map(s => s.toLowerCase());
-            let hexCode = helpEasy.rgb2hex(themeSetting[x].split("|")[1]);
-            colors[color[1]] = hexCode;
+            colors[color[1]] = helpEasy.rgb2hex(themeSetting[x].split("|")[1]);
         }
     }
   helpEasy.favicon(colors);

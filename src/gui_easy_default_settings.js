@@ -14,7 +14,7 @@ const defaultSettings = {
     },
     'areasMinimized': 0,
     'helpLinks': 1,
-    'waitForTheme': 1,
+    'waitForTheme': 0,
     'internetLostShow': 1,
     'clipboardSyntax': {
                     "list": ["Default","GitHub","phpBB"],

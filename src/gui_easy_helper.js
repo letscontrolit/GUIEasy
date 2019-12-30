@@ -76,7 +76,7 @@ const helpEasy = {
             let ip = ipArray[i].ip;
             let startPing = Date.now();
             let ws = await new WebSocket("ws://" + ip);
-            ws.onerror = function(){
+            ws.onerror = function() {
                 ws.close();
                 ws = null;
                 isUpFunction(ipArray, i, (Date.now() - startPing));
@@ -148,7 +148,7 @@ const helpEasy = {
                     if (endpoint === "logjson" && dataFromFile.Log.TTL !== undefined) {
                         array[index]["live"][endpoint].TTL = dataFromFile.Log.TTL;
                     }
-                    //TODO: The if abouve is not needed if we move the TTL for the log to its correct place.
+                    //TODO: The if above is not needed if we move the TTL for the log to its correct place.
                     array[index]["live"][endpoint].TTL_fallback = ttl_fallback;
                     let nextRun = Date.now() + array[index]["live"][endpoint].TTL;
                     array[index]["scheduler"].push([nextRun, endpoint]);
