@@ -171,9 +171,19 @@ module.exports = function(grunt) {
         } else {
           version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
         }
+        let semVer = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+
+        let packageJSON = grunt.file.read('package.json');
+        packageJSON = JSON.parse(packageJSON);
+        packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        packageJSON.bin["index.html.gz"] = "build/" + version + "/";
+        grunt.file.write('package.json',
+            JSON.stringify(packageJSON,null,2)
+        );
         grunt.log.ok(version);
         // add version as a property for the grunt ini loop
         grunt.config("version", version);
+        grunt.config("semVer", semVer);
         grunt.task.run(
             'clean',
             'uglify',
