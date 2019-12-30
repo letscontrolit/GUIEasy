@@ -647,6 +647,7 @@ input[type="range"] {
     display: flex;
 }
 button {
+    height: calc(1.45 * var(--default-height-size, 20) + 3px);
     background: var(--main-bg-color-rgba, blue);
     color: var(--main-font-color-rgba, white);
     font-size: calc(1.1 * var(--default-font-size, 19pt));
@@ -874,11 +875,8 @@ button.pending-save {
     color: red;
     background: rgba(var(--main-success-color), 0.95);
 }
-td > button:last-child {
-    margin: 2px 2px 1px 2px;
-}
-td > button:first-child {
-    margin: 1px 2px 2px 2px;
+td > button {
+    margin: 2px;
 }
 .modal-table button.file-action {
     height: calc(1.45 * var(--default-height-size, 20) + 3px);
