@@ -55,7 +55,7 @@ module.exports = function(grunt) {
 // make one file of them all
       processhtml: {
                 main: {
-                    files: {'build/temp/index.min.html': ['index.html']}
+                    files: {'build/temp/index.min.html': ['src/index.html']}
                 }
             },
 // clean the release folder
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
               files: [
                   {
                       flatten: false,
-                      src: ['src/*','src/forms/*','src/dash/*', 'index.html','Gruntfile.js','package.json'],
+                      src: ['src/*','src/forms/*','src/dash/*','Gruntfile.js','package.json'],
                       dest: '/',
                       filter: 'isFile'
                   }
