@@ -200,8 +200,7 @@ internal statistics. We respect the individuals integrity and only use this to k
 fragmentation of the installations. This way we get a better understanding if we need to have full
 backwards compatibility etc. etc.
 
-Finally we have the _runner_, currently only one main is existing, ``Tender``. ``Weather`` 
-is a Patreon only feature that will fetch your current weather information. The idea behind
+Finally we have the _runner_, currently only one is existing, ``Tender``. The idea behind
 these guys is that they will continuously get data to and from the unit(s).
 
 ###### {{NAVBAR}} [curly]

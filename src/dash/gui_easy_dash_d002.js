@@ -1,13 +1,10 @@
 /* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
-//This one will only run if weather service is activated...
-guiEasy.weather = function (processID, processType) {
-    //TODO: if paid plan httpS is allowed... how to handle that?
-    let url = "http://api.weatherstack.com/";
+//------------------------------- HTML or CURLY -------------------------------//
+guiEasy.dash.D002 = `
+Add HTML or CURLY here...
+`;  //--------------------------- HTML or CURLY -------------------------------//
 
-    helpEasy.processDone(processID, processType);
-};
-
-guiEasy.weather.icon = function (weatherCode) {
+guiEasy.dash.D002.icon = function (weatherCode) {
     if (weatherCode === 113) {
         //Clear sunny
     }
@@ -62,4 +59,5 @@ guiEasy.weather.icon = function (weatherCode) {
     if (weatherCode === 389) {
         //Thunderstorm
     }
+    return "";
 };

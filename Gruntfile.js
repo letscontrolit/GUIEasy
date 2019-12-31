@@ -27,7 +27,6 @@ module.exports = function(grunt) {
                       'src/gui_easy_pitcher.js',
                       'src/gui_easy_butler.js',
                       'src/gui_easy_tender.js',
-                      'src/gui_easy_weather.js',
                       'src/gui_easy_ini.js'
                   ],
                   'build/temp/forms.min.js': [
