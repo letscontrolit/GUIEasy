@@ -692,7 +692,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "settingsId": "defaultSettings--waitForTheme",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
-                "falseText": "fast boot",
+                "falseText": "fast boot (no wait for theme)",
                 "trueText": "wait for theme",
                 "default": false
             }

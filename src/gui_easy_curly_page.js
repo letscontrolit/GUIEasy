@@ -55,7 +55,7 @@ guiEasy.curly.page.tools = function () {
             "icon": "reboot",
             "text": "reboot the esp",
             "color": "bg",
-            "waveText": "unit rebooted"
+            "waveText": "unit rebooting..."
         }
     );
     html += helpEasy.addToolsButton(
@@ -65,7 +65,7 @@ guiEasy.curly.page.tools = function () {
             "icon": "wificonnect",
             "text": "connect to <br> preset wifi",
             "color": "success",
-            "waveText": "wifi connected"
+            "waveText": "wifi connecting..."
         }
     );
     html += helpEasy.addToolsButton(
@@ -75,7 +75,7 @@ guiEasy.curly.page.tools = function () {
             "icon": "wifidisconnect",
             "text": "disconnect from <br> current wifi",
             "color": "warning",
-            "waveText": "wifi disconnected"
+            "waveText": "wifi disconnected..."
         }
     );
     html += helpEasy.dashContainerClose();

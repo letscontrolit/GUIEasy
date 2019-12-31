@@ -66,6 +66,8 @@ const helpEasy = {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
             if (helpEasy.findInArray(words[i], allCaps) === true || (words[i].charAt(0) === "(" && words[i].charAt(words[i].length-1) === ")")) {
                 words[i] = words[i].toUpperCase();
+            } else if (words[i].charAt(0) === "(") {
+                words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
             } else {
                 words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
             }
