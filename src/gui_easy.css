@@ -380,12 +380,10 @@ div.tooltip::after {
     border-style: solid;
     border-color: transparent transparent rgba(var(--main-inverted-color), 0.75) transparent;
 }
-td > div > div.tooltip,
-td > div.tooltip {
+#modal-click-area div.tooltip {
     border: 2px solid rgba(var(--main-bg-color), 0.5);
 }
-td > div > div.tooltip::after,
-td > div.tooltip::after {
+#modal-click-area div.tooltip::after {
     border-color: transparent transparent rgba(var(--main-bg-color), 0.5) transparent;
 }
 .got-tooltip:hover {
