@@ -346,7 +346,7 @@ div.tooltip {
     pointer-events: none;
     font-weight: normal;
     text-indent: 0;
-    border: 2px solid rgba(var(--main-bg-color), 0.5);
+    border: 2px solid rgba(var(--main-inverted-color), 0.5);
     border-radius: calc(0.25 * var(--default-height-size, 20) / var(--button-radius-size, 2));
     padding: 5px 5px 5px 5px;
     z-index: 100;
@@ -378,6 +378,14 @@ div.tooltip::after {
     margin-left: -6px;
     border-width: 6px;
     border-style: solid;
+    border-color: transparent transparent rgba(var(--main-inverted-color), 0.75) transparent;
+}
+td > div > div.tooltip,
+td > div.tooltip {
+    border: 2px solid rgba(var(--main-bg-color), 0.5);
+}
+td > div > div.tooltip::after,
+td > div.tooltip::after {
     border-color: transparent transparent rgba(var(--main-bg-color), 0.5) transparent;
 }
 .got-tooltip:hover {
