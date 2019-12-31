@@ -673,7 +673,7 @@ div.menu {
     height: calc(2 * var(--default-height-size, 20) + 3px);
 }
 button > svg {
-    transform: translateY(4px);
+    transform: translateX(1px) translateY(4px);
 }
 button.menu-action > svg.action > path {
     fill: rgba(var(--main-font-color), 0.5);
