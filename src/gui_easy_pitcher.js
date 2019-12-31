@@ -4,9 +4,11 @@ guiEasy.pitcher = function (processID, processType) {
     let urlParams = helpEasy.urlParams();
     helpEasy.getGuiInFields();
     helpEasy.setCurrentIndex(-1);
-    guiEasy.nodes.push({"ip":"192.168.74.164", "type":"queen"});
-    //guiEasy.nodes.push({"ip":"192.168.73.164", "type":"queen"});
-    //guiEasy.nodes.push({"ip":"192.168.43.197", "type":"queen"});
+    if (window.location.hostname === "localhost") {
+        guiEasy.nodes.push({"ip":"192.168.74.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
+    } else {
+        guiEasy.nodes.push({"ip": window.location.hostname, "type":"queen"});
+    }
     helpEasy.pingIP(guiEasy.nodes, helpEasy.handlePingResults, helpEasy.handlePingResults).then(r => r);
     helpEasy.scheduleFetch(guiEasy.nodes, 0);
     //TODO: set "timeouts" for these and have them displayed in the log...
@@ -90,6 +92,8 @@ guiEasy.pitcher.loadTheme = function () {
                         });
                         helpEasy.processDone("theme", typeOfStartup);
                     })
+            } else {
+                helpEasy.processDone("theme", typeOfStartup);
             }
         }
     }, 25)

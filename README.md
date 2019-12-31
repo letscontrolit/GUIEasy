@@ -13,19 +13,17 @@ If you want to manually download and install the front end you should head over 
 **nightly** and **rcN** are not to be used in production, only as tests. Inside the
 [build](/build)/**version** folder you will find the following files:
 
-* dash.min.js
-* forms.min.js
 * gui.min.css
-* gui.min.js
-* index.htm.gz &larr; **This is what you're looking for**
-* index.min.html
-* src-``<version>``.zip
+* src-``<version>``.
+* main/index.htm.gz &larr; **This is what you're looking for**
 * mini/index.htm.gz
+* noDash/index.htm.gz
 
-Of these files the actual GUI Easy "engine" is compiled into the **index.htm.gz** file.
+Of these files the actual GUI Easy "engine" is compiled into the main/**index.htm.gz** file.
 The minified css, js, and html files are the backbone of this gz:ed file. The src-``<version>``.zip
 is the source code of the project as it was at the time of compile. In the directory **mini**
-you will find the minimal interface used as default fallback GUI.
+you will find the minimal interface used as default fallback GUI. For a slimmer "full" version
+you may use the **noDash** version.
 
 ### Compile Yourself
 
@@ -200,8 +198,8 @@ internal statistics. We respect the individuals integrity and only use this to k
 fragmentation of the installations. This way we get a better understanding if we need to have full
 backwards compatibility etc. etc.
 
-Finally we have the _runner_, currently only one is existing, ``Tender``. The idea is that
-these will continuously get data to and from the unit(s).
+Finally we have the _runner_, currently only one is existing, ``Tender``. The idea behind
+these guys is that they will continuously get data to and from the unit(s).
 
 ###### {{NAVBAR}} [curly]
 
@@ -336,6 +334,12 @@ with data or used for human interaction (buttons, sliders etc.). They can use ``
 
 The ``controllers``, ``plugins``, and ``notification`` setup pages are defined by their
 corresponding page. These can, similar to dash's, use either html or curly syntax.
+
+## CORS error when running as localhost
+
+You need to have CORS allow cross-domain allowed for the GUI to work running from your localhost
+server. We use [this](https://mybrowseraddon.com/access-control-allow-origin.html) add-on which
+lets you turn it on/off by the click of a button.
 
 ## Sponsorship
 

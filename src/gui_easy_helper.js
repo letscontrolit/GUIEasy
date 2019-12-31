@@ -25,14 +25,14 @@ const helpEasy = {
         };
         guiEasy.popper.tryCallEvent(eventDetails);
     },
-    'swapKey2Value': function swap(json){
+    'swapKey2Value': function (json) {
         let ret = {};
         for(let key in json){
             ret[json[key]] = key;
         }
         return ret;
     },
-    'rgb2hex' : function (rgb) {
+    'rgb2hex': function (rgb) {
         rgb = rgb.split(",");
         let hex = "#";
         for (let i=0; i < rgb.length; i++) {
@@ -40,8 +40,17 @@ const helpEasy = {
         }
         return hex;
     },
-    'hex2rgb' : function (hex) {
+    'hex2rgb': function (hex) {
         return hex.match(/[A-Za-z0-9]{2}/g).map(function(v) { return parseInt(v, 16) }).join(",");
+    },
+    'invertHex': function (hex) {
+        const hexCode = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+        let invertedHex = '#';
+        hex.replace('#','').split('').forEach(i => {
+            const index = hexCode.indexOf(i);
+            invertedHex += hexCode.reverse()[index];
+        });
+        return invertedHex;
     },
     'cleanupWord' : function (word, commas = false) {
         word = word.replace(/_/g, " ");
@@ -76,7 +85,7 @@ const helpEasy = {
             let ip = ipArray[i].ip;
             let startPing = Date.now();
             let ws = await new WebSocket("ws://" + ip);
-            ws.onerror = function(){
+            ws.onerror = function() {
                 ws.close();
                 ws = null;
                 isUpFunction(ipArray, i, (Date.now() - startPing));
@@ -148,7 +157,7 @@ const helpEasy = {
                     if (endpoint === "logjson" && dataFromFile.Log.TTL !== undefined) {
                         array[index]["live"][endpoint].TTL = dataFromFile.Log.TTL;
                     }
-                    //TODO: The if abouve is not needed if we move the TTL for the log to its correct place.
+                    //TODO: The if above is not needed if we move the TTL for the log to its correct place.
                     array[index]["live"][endpoint].TTL_fallback = ttl_fallback;
                     let nextRun = Date.now() + array[index]["live"][endpoint].TTL;
                     array[index]["scheduler"].push([nextRun, endpoint]);
@@ -1056,7 +1065,7 @@ const helpEasy = {
     'sortObjectArray': (propName) =>
         (a, b) => a[propName] === b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1
     ,
-    'addToLogDOM': function (str, level) {
+    'addToLogDOM': function (str, level, type = "log") {
         if (str === "pageSize") {
             str = document.documentElement.innerHTML.toString().split("").length;
             let currentSize = guiEasy.guiStats.pageSize;
@@ -1067,7 +1076,7 @@ const helpEasy = {
             str = "total page size: " + Math.round(str/1024) + "kB";
         }
         if (guiEasy.logLevel >= level) {
-            console.log(str);
+            msg[type](str);
         }
     },
     'numberOfFound': function (str, pattern) {

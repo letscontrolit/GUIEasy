@@ -647,6 +647,7 @@ input[type="range"] {
     display: flex;
 }
 button {
+    height: calc(1.45 * var(--default-height-size, 20) + 3px);
     background: var(--main-bg-color-rgba, blue);
     color: var(--main-font-color-rgba, white);
     font-size: calc(1.1 * var(--default-font-size, 19pt));
@@ -874,11 +875,8 @@ button.pending-save {
     color: red;
     background: rgba(var(--main-success-color), 0.95);
 }
-td > button:last-child {
-    margin: 2px 2px 1px 2px;
-}
-td > button:first-child {
-    margin: 1px 2px 2px 2px;
+td > button {
+    margin: 2px;
 }
 .modal-table button.file-action {
     height: calc(1.45 * var(--default-height-size, 20) + 3px);
@@ -1443,42 +1441,34 @@ div.text-main-sunny {
 div.text-main-bg-inverted {
     color: rgba(var(--main-bg-color), 0.25);
 }
-label.main-bg,
 div.main-bg,
 label.main-bg::after {
     background: var(--main-bg-color-rgba, blue);
 }
-label.main-font,
 div.main-font,
 label.main-font::after {
     background: var(--main-font-color-rgba, white);
 }
-label.main-inveted,
 div.main-inverted,
 label.main-inverted::after {
-    background: var(--main-inverted-color-rgba);
+    background: var(--main-inverted-color-rgba, grey);
 }
-label.main-warning,
 div.main-warning,
 label.main-warning::after {
     background: var(--main-warning-color-rgba, red);
 }
-label.main-info,
 div.main-info,
 label.main-info::after {
     background: var(--main-info-color-rgba, orange);
 }
-label.main-success,
 div.main-success,
 label.main-success::after {
     background: var(--main-success-color-rgba, green);
 }
-label.main-sunny,
 div.main-sunny,
 label.main-sunny::after {
     background: var(--main-sunny-color-rgba, yellow);
 }
-label.main-bg-inverted,
 div.main-bg-inverted,
 label.main-bg-inverted::after {
     background: rgba(var(--main-bg-color), 0.25);

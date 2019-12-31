@@ -66,6 +66,10 @@ const guiEasy = {
         {
             'id': 'tender',
             'logText': 'The relay runner is being triggered'
+        },
+        {
+            'id': 'weather',
+            'logText': 'Weather runner initiation in progress'
         }
     ],
     'endpoints':{
@@ -90,7 +94,7 @@ const guiEasy = {
         ]
     },
     'fetchingWait': "Fetching not yet completed, please wait...",
-    'maxTasks': function (board = 'ESP82XX') {
+    'maxTasks': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 12;
         }
@@ -98,7 +102,7 @@ const guiEasy = {
             return 48;
         }
     },
-    'maxValuesPerTask': function (board = 'ESP82XX') {
+    'maxValuesPerTask': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 4;
         }
@@ -106,7 +110,7 @@ const guiEasy = {
             return 8;
         }
     },
-    'maxNotification': function (board = 'ESP82XX') {
+    'maxNotification': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 3;
         }
@@ -114,7 +118,7 @@ const guiEasy = {
             return 3;
         }
     },
-    'maxController': function (board = 'ESP82XX') {
+    'maxController': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 3;
         }
@@ -122,7 +126,7 @@ const guiEasy = {
             return 3;
         }
     },
-    'maxPluginConfigVar': function (board = 'ESP82XX') {
+    'maxPluginConfigVar': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 8;
         }
@@ -130,7 +134,7 @@ const guiEasy = {
             return 8;
         }
     },
-    'maxPluginConfigFloatVar': function (board = 'ESP82XX') {
+    'maxPluginConfigFloatVar': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 4;
         }
@@ -138,7 +142,7 @@ const guiEasy = {
             return 4;
         }
     },
-    'maxPluginConfigLongVar': function (board = 'ESP82XX') {
+    'maxPluginConfigLongVar': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 4;
         }
@@ -146,7 +150,7 @@ const guiEasy = {
             return 4;
         }
     },
-    'maxPluginExtraConfigVar': function (board = 'ESP82XX') {
+    'maxPluginExtraConfigVar': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 16;
         }
@@ -154,7 +158,7 @@ const guiEasy = {
             return 16;
         }
     },
-    'maxFormulaLength': function (board = 'ESP82XX') {
+    'maxFormulaLength': function (board= 'ESP82XX') {
         if (board === 'ESP82XX') {
             return 40;
         }

@@ -55,16 +55,25 @@ module.exports = function(grunt) {
 // make one file of them all
       processhtml: {
                 main: {
-                    files: {'build/temp/index.min.html': ['index.html']}
+                    files: {'build/temp/index.min.html': ['src/index.html']}
+                },
+                nodash: {
+                  files: {'build/temp/no-dash.index.min.html': ['src/no-dash.index.html']}
                 }
             },
-// clean the release folder
+// clean the release folder + nodash
       clean: {
           temp: {
               src: ['build/temp']
           },
           version: {
               src: ['build/<%= version %>']
+          },
+          nodash: {
+              src: ['src/no-dash.index.html']
+          },
+          tempFiles: {
+              src: ['build/temp/*.html', 'build/temp/*.js']
           }
       },
 // zip source to temp folder + gzip the gui html single file
@@ -76,7 +85,7 @@ module.exports = function(grunt) {
               files: [
                   {
                       flatten: false,
-                      src: ['src/*','src/forms/*','src/dash/*', 'index.html','Gruntfile.js','package.json'],
+                      src: ['src/*','src/forms/*','src/dash/*','Gruntfile.js','package.json'],
                       dest: '/',
                       filter: 'isFile'
                   }
@@ -88,10 +97,20 @@ module.exports = function(grunt) {
                   level: 9 //default is 1, max is 9
               },
               files: [{
-                  expand: true,
+                  expand: false,
                   src: ['build/temp/index.min.html'],
-                  dest: '.',
-                  ext: '.htm.gz'
+                  dest: 'build/temp/main/index.htm.gz'
+              }]
+          },
+          nodash: {
+              options: {
+                  mode: 'gzip',
+                  level: 9 //default is 1, max is 9
+              },
+              files: [{
+                  expand: false,
+                  src: ['build/temp/no-dash.index.min.html'],
+                  dest: 'build/temp/noDash/index.htm.gz'
               }]
           },
           mini: {
@@ -171,17 +190,34 @@ module.exports = function(grunt) {
         } else {
           version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
         }
+        let semVer = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        // create a file with no dash (to save space)
+        let noDashDoc = grunt.file.read('src/index.html');
+        noDashDoc = noDashDoc.replace(/<!-- build:js inline ..\/build\/temp\/dash.min.js -->([\s\S]*?)<!-- \/build -->/, "");
+        grunt.file.write('src/no-dash.index.html', noDashDoc);
+        // update the package.json
+        let packageJSON = grunt.file.read('package.json');
+        packageJSON = JSON.parse(packageJSON);
+        packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        packageJSON.bin["index.html.gz"] = "build/main/" + version + "/";
+        grunt.file.write('package.json',
+            JSON.stringify(packageJSON,null,2)
+        );
         grunt.log.ok(version);
         // add version as a property for the grunt ini loop
         grunt.config("version", version);
+        grunt.config("semVer", semVer);
         grunt.task.run(
-            'clean',
+            'clean:temp',
+            'clean:version',
             'uglify',
             'cssmin',
             'processhtml',
             'file_append',
             'compress',
-            'rename'
+            'clean:tempFiles',
+            'rename',
+            'clean:nodash'
         )
     });
 
