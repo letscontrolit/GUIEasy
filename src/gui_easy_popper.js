@@ -1416,7 +1416,18 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
     if (type === "toggle") {
         let toggle = document.getElementById(whatToDo.args.id);
         let label = document.getElementById("label-" + whatToDo.args.id);
-        label.innerHTML = helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]);
+        if (label.children.length > 0) {
+            //we got tooltip
+            let tooltip = label.innerHTML.match(/<div class="tooltip">([\s\S]*?)<\/div>/)[1];
+            label.innerHTML = `
+                    <div class="got-tooltip">
+                ` + helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]) +
+                `   <div class='tooltip'>` + tooltip + `</div>
+                    </div>
+            `;
+        } else {
+            label.innerHTML = helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]);
+        }
     }
 };
 
