@@ -1304,7 +1304,7 @@ guiEasy.popper.theme = function (whatToDo) {
                 guiEasy.popper.tryCallEvent(eventDetails);
             }, (k*10));
         }
-        guiEasy.guiStats.themIsApplied = true;
+        guiEasy.guiStats.themeIsApplied = true;
     }
 };
 

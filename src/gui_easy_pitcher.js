@@ -24,7 +24,6 @@ guiEasy.pitcher = function (processID, processType) {
             helpEasy.addToLogDOM("pageSize", 1);
         }
     },guiEasy.fetchSettings.intervalTimeKeeper);
-    //TODO: make a function that will hide all noob guides if name = "ESP_Easy" and number = 0
     //now make sure that the data is injected into page before continue
     let y = setInterval(function () {
         if (guiEasy.current.gui !== undefined) {
@@ -40,6 +39,10 @@ guiEasy.pitcher = function (processID, processType) {
         if (guiEasy.current.config !== undefined) {
             clearInterval(z);
             helpEasy.guiUpdaterSettings();
+            let x = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.general;
+            if (x.unitnr !== 0 && x.unitname !== "ESP_Easy") {
+                document.getElementById("welcome-text").classList.add("is-hidden");
+            }
             helpEasy.addToLogDOM("pageSize", 1);
         }
     },50);

@@ -66,10 +66,6 @@ const guiEasy = {
         {
             'id': 'tender',
             'logText': 'The relay runner is being triggered'
-        },
-        {
-            'id': 'weather',
-            'logText': 'Weather runner initiation in progress'
         }
     ],
     'endpoints':{
