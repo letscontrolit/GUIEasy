@@ -1,25 +1,24 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //INSPIRATION FOR THE LANDING PAGE: https://codepen.io/diegopardo/pen/dGlfC
 
 //THIS IS THE DEFAULT SETTINGS, THEY WILL BE OVERRIDE BY CUSTOM
 const defaultSettings = {
-    'preventDefaults': {
-        "escape": 1,         //used to close modals etc.
-        "ctrl+space": 1,     //open swarm
-        "ctrl+enter": 1,     //screenshot
-        "ctrl+keys": 1,      //save settings to unit
-        "ctrl+keyz": 1,      //revert changes (which are not yet saved)
-        "alt+digit": 1,     //jump to tab
-        "alt+arrows": 1     //jump to next tab
+    'userSettings': {
+        'preventDefaults': {
+                "escape": 1,         //used to close modals etc.
+                "ctrl+space": 1,     //open swarm
+                "ctrl+enter": 1,     //screenshot
+                "ctrl+keys": 1,      //save settings to unit
+                "ctrl+keyz": 1,      //revert changes (which are not yet saved)
+                "alt+digit": 1,     //jump to tab
+                "alt+arrows": 1     //jump to next tab
+        },
+        'areasMinimized': 0,
+        'helpLinks': 1,
+        'waitForTheme': 0,
+        'internetLostShow': 1,
+        'clipboardSyntax': "Default"
     },
-    'areasMinimized': 0,
-    'helpLinks': 1,
-    'waitForTheme': 0,
-    'internetLostShow': 1,
-    'clipboardSyntax': {
-                    "list": ["Default","GitHub","phpBB"],
-                    "selection": 0
-                },
     'css': {
         'variables': [
             ['main-bg-color',          '52,146,226',                    "Background"],

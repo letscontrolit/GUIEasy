@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 // HERE WE PUT ALL OUR "THIS&THAT" FUNCTIONS
 const helpEasy = {
     'copyToClipboard': function (str) {
@@ -66,6 +66,8 @@ const helpEasy = {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
             if (helpEasy.findInArray(words[i], allCaps) === true || (words[i].charAt(0) === "(" && words[i].charAt(words[i].length-1) === ")")) {
                 words[i] = words[i].toUpperCase();
+            } else if (words[i].charAt(0) === "(") {
+                words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
             } else {
                 words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
             }
@@ -934,7 +936,7 @@ const helpEasy = {
                             for (let i = 0; i < z[k].options.length; i++) {
                                 optionList.push(parseInt(z[k].options[i].value));
                             }
-                            z[k].options.selectedIndex = optionList.indexOf(helpEasy.getjsonPathData(path, m));
+                            z[k].options.selectedIndex = optionList.indexOf(helpEasy.getjsonPathData(path, m)) - parseInt(z[k].dataset.optionListOffset);
                         } else {
                             if (helpEasy.getjsonPathData(path, m) === 255) {
                                 z[k].options.selectedIndex = 0;
@@ -1390,7 +1392,7 @@ const helpEasy = {
     },
     'openArea': function (title) {
         let id = title.replace(" ", "-") + "-area";
-        if (defaultSettings.areasMinimized) {
+        if (defaultSettings.userSettings.areasMinimized) {
             return `
             <div class="area hide-contents" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)

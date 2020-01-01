@@ -1,7 +1,7 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //HERE'S THE SETTINGS USED FOR THE SPA ENGINE = TRANSLATIONS ARE PUT IN ANOTHER FILE
 const guiEasy = {
-    'logLevel': 0,
+    'logLevel': 2,
     'name': 'GUI Easy',
     'version': {
         //--GRUNT-START--
@@ -66,10 +66,6 @@ const guiEasy = {
         {
             'id': 'tender',
             'logText': 'The relay runner is being triggered'
-        },
-        {
-            'id': 'weather',
-            'logText': 'Weather runner initiation in progress'
         }
     ],
     'endpoints':{

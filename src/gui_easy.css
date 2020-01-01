@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 :root {
     /* CSS variables OBSERVE THAT THESE ARE SET AT RUNTIME IN JS [cssVarDefaults] >>>>*/
     --scale-size:               16;
@@ -346,7 +346,7 @@ div.tooltip {
     pointer-events: none;
     font-weight: normal;
     text-indent: 0;
-    border: 2px solid rgba(var(--main-bg-color), 0.5);
+    border: 2px solid rgba(var(--main-inverted-color), 0.5);
     border-radius: calc(0.25 * var(--default-height-size, 20) / var(--button-radius-size, 2));
     padding: 5px 5px 5px 5px;
     z-index: 100;
@@ -378,6 +378,12 @@ div.tooltip::after {
     margin-left: -6px;
     border-width: 6px;
     border-style: solid;
+    border-color: transparent transparent rgba(var(--main-inverted-color), 0.75) transparent;
+}
+#modal-click-area div.tooltip {
+    border: 2px solid rgba(var(--main-bg-color), 0.5);
+}
+#modal-click-area div.tooltip::after {
     border-color: transparent transparent rgba(var(--main-bg-color), 0.5) transparent;
 }
 .got-tooltip:hover {
@@ -673,7 +679,7 @@ div.menu {
     height: calc(2 * var(--default-height-size, 20) + 3px);
 }
 button > svg {
-    transform: translateY(4px);
+    transform: translateX(1px) translateY(4px);
 }
 button.menu-action > svg.action > path {
     fill: rgba(var(--main-font-color), 0.5);
@@ -690,6 +696,7 @@ button.icon-button,
 div.icon-button > button {
     content: '';
     margin-top: 8px;
+    margin-left: -1px;
     position: relative;
     height: calc(2.5 * var(--default-height-size, 20) + 3px);
     width: calc(2.5 * var(--default-height-size, 20) + 3px);
@@ -716,6 +723,10 @@ button.menu-action:not(.is-inactive) {
 }
 div.closed {
     pointer-events: none;
+}
+div.menu-button {
+    display: flex;
+    justify-content: flex-end;
 }
 /* ESP EASY ACTION BUTTON ABOVE */
 /* ACTION MENU SHOW INFO ABOUT BUTTONS BELOW */
@@ -746,6 +757,17 @@ div.closed {
     border-color: transparent transparent transparent var(--main-inverted-color-rgba);
 }
 /* ACTION MENU SHOW INFO ABOUT BUTTONS ABOVE */
+/* ACTION MENU LANDSCAPE IF HEIGHT NOT ENOUGH below */
+#menu-button-list.horizontal {
+    flex-flow: row-reverse;
+}
+#menu-button-list.horizontal > button {
+    margin-left: 8px;
+}
+#menu-button-list.horizontal > button > div.tooltip {
+    transform: rotate(90deg) translateX(calc(-5.5 * var(--default-height-size, 20))) translateY(calc(2.75 * var(--default-height-size, 20)));
+}
+/* ACTION MENU LANDSCAPE IF HEIGHT NOT ENOUGH above */
 /* BADGE STUFF BELOW */
 button.got-badge::after {
     transform: translateX(calc(0.4 * var(--default-height-size, 20))) translateY(calc(-0.7 * var(--default-height-size, 20)));
