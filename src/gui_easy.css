@@ -1464,34 +1464,42 @@ div.text-main-bg-inverted {
     color: rgba(var(--main-bg-color), 0.25);
 }
 div.main-bg,
+label.main-bg,
 label.main-bg::after {
     background: var(--main-bg-color-rgba, blue);
 }
 div.main-font,
+label.main-font,
 label.main-font::after {
     background: var(--main-font-color-rgba, white);
 }
 div.main-inverted,
+label.main-inverted,
 label.main-inverted::after {
     background: var(--main-inverted-color-rgba, grey);
 }
 div.main-warning,
+label.main-warning,
 label.main-warning::after {
     background: var(--main-warning-color-rgba, red);
 }
 div.main-info,
+label.main-info,
 label.main-info::after {
     background: var(--main-info-color-rgba, orange);
 }
 div.main-success,
+label.main-success,
 label.main-success::after {
     background: var(--main-success-color-rgba, green);
 }
 div.main-sunny,
+label.main-sunny,
 label.main-sunny::after {
     background: var(--main-sunny-color-rgba, yellow);
 }
 div.main-bg-inverted,
+label.main-bg-inverted,
 label.main-bg-inverted::after {
     background: rgba(var(--main-bg-color), 0.25);
 }
@@ -1558,6 +1566,7 @@ label.checkbox:active::after {
     color: var(--main-font-color-rgba);
     background-color: rgba(var(--main-success-color), 0.75);
 }
+
 select:hover ~ label.select,
 label:hover.select,
 div.tag.with-close:hover,
@@ -1684,6 +1693,9 @@ label.modal-upload:hover,
 label.modal-upload:focus {
     color: rgba(var(--main-font-color), 0.9);
     border-color: rgba(var(--main-font-color), 0.3);
+}
+label.modal-upload.drag-drop-highlight {
+    background: rgba(var(--main-success-color), 0.3);
 }
 button.file-action {
     float: right;

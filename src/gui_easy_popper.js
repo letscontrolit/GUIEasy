@@ -588,6 +588,44 @@ guiEasy.popper.modal = function (modalToOpen) {
             let id = event.target.id;
             helpEasy.uploadBinaryAsFile(what, file, id)
         }, false);
+        // drag&drop events
+        let labelInputFile = document.getElementById("label-modal-input-upload-file");
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false)
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function () {
+                labelInputFile.innerText = helpEasy.capitalWord("drop file here...");
+                labelInputFile.classList.add('drag-drop-highlight');
+            }, false)
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function (event) {
+                labelInputFile.classList.remove('drag-drop-highlight');
+                labelInputFile.innerText = helpEasy.capitalWord("upload file to unit");
+                if (eventName === "drop") {
+                    let what = inputFile.dataset.typeOfUpload;
+                    let file = event.dataTransfer.files[0];
+                    let id = "modal-input-upload-file";
+                    console.log(what);
+                    if (file.name.slice(-3).toLowerCase() !== "bin" && what === "firmware") {
+                        helpEasy.blinkElement("label-modal-input-upload-file", "warning");
+                        labelInputFile.innerText = helpEasy.capitalWord("not a bin file!");
+                        setTimeout(function () {
+                            helpEasy.blinkElement("label-modal-input-upload-file", "warning");
+                        },750);
+                        setTimeout(function () {
+                            labelInputFile.innerText = helpEasy.capitalWord("upload file to unit");
+                        },1000);
+                    } else {
+                        helpEasy.uploadBinaryAsFile(what, file, id);
+                    }
+                }
+            }, false)
+        });
     }
     if (z.custom !== null) {
         document.getElementById("modal-button-custom").classList[logic[z.button.custom]]("is-hidden");

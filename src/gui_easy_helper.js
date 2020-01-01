@@ -60,7 +60,7 @@ const helpEasy = {
         return word;
     },
     'capitalWord': function (str) {
-        let allCaps = ["ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
+        let allCaps = ["bin","ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
