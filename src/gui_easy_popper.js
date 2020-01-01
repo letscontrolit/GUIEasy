@@ -128,7 +128,39 @@ guiEasy.popper.tryCallEvent.counter = function() {
 //ABOVE IS THE FUNCTION TO TRIGGER ESP EASY EVENT + FIND WHAT WAS FOCUSED//
 //BELOW IS THE "TO EXEC" FUNCTIONS//
 guiEasy.popper.clipboard = function (clipboard) {
-    console.log(clipboard);
+    let id = clipboard.args[1];
+    let element = document.getElementById(id);
+    let syntax = defaultSettings.userSettings.clipboardSyntax;
+    helpEasy.copyToClipboard(guiEasy.popper.clipboard[syntax](element.innerHTML));
+    let eventDetails = {
+        "type": "wave",
+        "text": "info copied",
+        "color": "success"
+    };
+    guiEasy.popper.tryCallEvent(eventDetails);
+};
+
+guiEasy.popper.clipboard.Default = function (rawHTML) {
+    helpEasy.addToLogDOM("Converting (Default): " + rawHTML, 1);
+
+    console.log(rawHTML);
+    return rawHTML;
+};
+
+guiEasy.popper.clipboard.GitHub = function (rawHTML) {
+    helpEasy.addToLogDOM("Converting (GitHub): " + rawHTML, 1);
+
+    console.log(rawHTML);
+    return rawHTML;
+
+};
+
+guiEasy.popper.clipboard.phpBB = function (rawHTML) {
+    helpEasy.addToLogDOM("Converting (phpBB): " + rawHTML, 1);
+
+    console.log(rawHTML);
+    return rawHTML;
+
 };
 
 guiEasy.popper.gui = function (event) {
@@ -342,7 +374,7 @@ guiEasy.popper.modal = function (modalToOpen) {
             "cancel": "modal-close",
             "close": "modal-close",
             "rescan": null,
-            "copy": "modal-copy",
+            "copy": "modal-clipboard",
             "upload": null,
             "location": "update-location",
             "custom": null
@@ -391,7 +423,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.modal = "yep";
         z.button.close = "yep";
         z.button.copy = "yep";
-        z.action.copy = "copy-wifi";                //TODO: make a copy popper
+        z.action.copy = "clipboard-wifi";
         z.title = "found wifi networks";
         z.table = guiEasy.nodes[index].modal.table.wifi;
     }
@@ -512,7 +544,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "system info";
         z.button.copy = "yep";
-        z.action.copy = "copy-system";
+        z.action.copy = "clipboard-sysinfo_json";
         z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
     if (x === "info" && y === "sysvars") {
@@ -520,7 +552,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "system variables";
         z.button.copy = "yep";
-        z.action.copy = "copy-sysvars";
+        z.action.copy = "clipboard-sysvars";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
     if (x === "info" && y === "timing") {
@@ -528,7 +560,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "timing statistics";
         z.button.copy = "yep";
-        z.action.copy = "copy-timing";
+        z.action.copy = "clipboard-timingstats_json";
         z.table = guiEasy.nodes[index].modal.table.timingstats_json;
     }
     if (x === "task" && y === "edit") {

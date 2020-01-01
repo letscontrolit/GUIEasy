@@ -356,7 +356,7 @@ const helpEasy = {
     },
     'wifilist': function (wifiArray, index) {
         let html = `
-                <div data-modal-table="wifi" class="container modal-table vi">
+                <div data-modal-table="wifi" class="container modal-table" id="wifilist">
                 <table>
                 <tr>
                     <th class="header">SSID</th>
@@ -428,7 +428,7 @@ const helpEasy = {
         let deletingFile = guiEasy.nodes[helpEasy.getCurrentIndex()].deleteFile;
         guiEasy.nodes[helpEasy.getCurrentIndex()].deleteFile = null;
         let html = `
-                <div data-modal-table="files" class="container modal-table">
+                <div data-modal-table="files" class="container modal-table" id="filelist">
                 <table>
                 <tr>
                     <th class="header">File Name</th>
@@ -500,7 +500,7 @@ const helpEasy = {
         }
         let sorted = unsorted.sort(helpEasy.sortObjectArray("sortValue"));
         let html = `
-                <div data-modal-table="timingstats_json" class="container modal-table">
+                <div data-modal-table="timingstats_json" class="container modal-table" id="timingstats_json">
                 <table class="is-left">
                 <tr>
                     <th class="header">Type</th>
@@ -544,7 +544,7 @@ const helpEasy = {
     },
     'twoLevelJsonToList': function (endpoint, index) {
         let x = guiEasy.nodes[index].live[endpoint];
-        let html = "<div data-modal-table='" + endpoint + "' class='container modal-table'>";
+        let html = "<div data-modal-table='" + endpoint + "' class='container modal-table' id='" + endpoint + "'>";
         let keysLevel1 = Object.keys(x);
         for (let i = 0; i < keysLevel1.length; i++) {
             let keysLevel2 = Object.keys(x[keysLevel1[i]]);
