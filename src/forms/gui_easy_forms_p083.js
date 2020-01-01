@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //------------------------------- HTML or CURLY -------------------------------//
 guiEasy.forms.plugin.P083 = `
 Add html or curly syntax here...

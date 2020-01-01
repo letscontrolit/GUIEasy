@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //HERE WE ADD THINGS THAT THE CLIENT WANTS TO DO
 guiEasy.pitcher = function (processID, processType) {
     let maxTimeout = 20 * 1000;

@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //HERE'S THE SCRUBBER FUNCTION(S) PUT, SCRUBBER IS ADDING STUFF THAT ARE CALCULATED AFTER THE CULRLY SEQUENCE IS DONE...
 guiEasy.scrubber = function (processID, processType) {
     //make sure the page containers (and top notifier) is hidden at start

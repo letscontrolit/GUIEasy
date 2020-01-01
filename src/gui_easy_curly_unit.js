@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 // HERE WE PUT ALL OUR "UNIT" FUNCTIONS
 guiEasy.curly.unit = function(arg) {
     let x = guiEasy.curly.unit;

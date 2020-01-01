@@ -5,7 +5,7 @@
   "license": "GPL-3.0-or-later",
   "description": "Front End for ESP Easy",
   "bin": {
-    "index.html.gz": "build/0.0.nightly.1/"
+    "index.html.gz": "build/main/0.0.nightly.1/"
   },
   "repository": "github:letscontrolit/GUIEasy",
   "devDependencies": {

@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 guiEasy.configDat = {};
 
 //THIS CONFIG TABLE AND ITS PARSER IS MADE BY https://github.com/ppisljar and NOT Grovkillen, I just formed it to fit my framework.

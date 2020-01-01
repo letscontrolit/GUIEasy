@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 // HERE WE PUT CURLY MAIN FUNCTION, CURLY IS STRICTLY HTML STRUCTURE, SEMI-EVENT-STUFF IS PUT IN SCRUBBER!
 guiEasy.curly = function (processID, processType) {
     //the RegExp will find 64 chars long curlys only!

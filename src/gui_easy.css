@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 :root {
     /* CSS variables OBSERVE THAT THESE ARE SET AT RUNTIME IN JS [cssVarDefaults] >>>>*/
     --scale-size:               16;

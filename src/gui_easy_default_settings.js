@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //INSPIRATION FOR THE LANDING PAGE: https://codepen.io/diegopardo/pen/dGlfC
 
 //THIS IS THE DEFAULT SETTINGS, THEY WILL BE OVERRIDE BY CUSTOM

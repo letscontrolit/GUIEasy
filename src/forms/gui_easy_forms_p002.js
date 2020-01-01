@@ -1,4 +1,4 @@
-/* GUIEasy  Copyright (C) 2019-2019  Jimmy "Grovkillen" Westberg */
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //syntax of curly... if you want to skip a setting set it to "
 //TOGGLE--pathToSettings--uniqueID--label--true(1)Text|false(0)Text
 //NUMBER--pathToSettings--uniqueID--label--defaultValue--minValue--maxValue--stepValue
