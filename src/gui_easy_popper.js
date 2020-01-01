@@ -141,25 +141,36 @@ guiEasy.popper.clipboard = function (clipboard) {
 };
 
 guiEasy.popper.clipboard.Default = function (rawHTML) {
-    helpEasy.addToLogDOM("Converting (Default): " + rawHTML, 1);
+    let text = "";
+    helpEasy.addToLogDOM("Converting (generic): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
 
-    console.log(rawHTML);
-    return rawHTML;
+    helpEasy.addToLogDOM("RESULTS (generic): " + text, 1);
+
+    return text;
 };
 
 guiEasy.popper.clipboard.GitHub = function (rawHTML) {
+    let text = "";
     helpEasy.addToLogDOM("Converting (GitHub): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
 
-    console.log(rawHTML);
-    return rawHTML;
+    helpEasy.addToLogDOM("RESULTS (GitHub): " + text, 1);
 
+    return text;
 };
 
 guiEasy.popper.clipboard.phpBB = function (rawHTML) {
+    let text = "";
     helpEasy.addToLogDOM("Converting (phpBB): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
 
-    console.log(rawHTML);
-    return rawHTML;
+    helpEasy.addToLogDOM("RESULTS (phpBB): " + text, 1);
+
+    return text;
+};
+
+guiEasy.popper.clipboard.regexTable = function (rawHTML) {
 
 };
 
@@ -195,7 +206,7 @@ guiEasy.popper.gui = function (event) {
     document.body.appendChild(l);
     let file = new File(
         [JSON.stringify(currentUserSettings,null,2)],
-        "gui.json",
+        "gui.txt",
         {
             type: "text/plain"
         }
@@ -642,7 +653,6 @@ guiEasy.popper.modal = function (modalToOpen) {
                     let what = inputFile.dataset.typeOfUpload;
                     let file = event.dataTransfer.files[0];
                     let id = "modal-input-upload-file";
-                    console.log(what);
                     if (file.name.slice(-3).toLowerCase() !== "bin" && what === "firmware") {
                         helpEasy.blinkElement("label-modal-input-upload-file", "warning");
                         labelInputFile.innerText = helpEasy.capitalWord("not a bin file!");

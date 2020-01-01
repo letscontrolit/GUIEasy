@@ -119,10 +119,10 @@ guiEasy.pitcher.loadGUIsettings = function () {
         if (y.filelist_json !== undefined) {
             clearInterval(x);
             let files = y.filelist_json.map(a => a.fileName);
-            if (files.indexOf("gui.json") > -1) {
+            if (files.indexOf("gui.txt") > -1) {
                 helpEasy.addToLogDOM("Applying GUI settings", 1);
                 let timeStart = Date.now();
-                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/gui.json?callback=" + timeStart;
+                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/gui.txt?callback=" + timeStart;
                 fetch(path)
                     .then(response => response.json())
                     .then(json => {
