@@ -367,4 +367,6 @@ Please refer to [LICENSE.md](LICENSE.md) file for details.
 
 * All icons are sponsored by [ICONS8](https://icons8.com/)
 * Location lookup using [ipapi.co](https://ipapi.co/)
+* Weather information API using [weatherstack](https://weatherstack.com/)
+* Screenshots using [html2canvas](https://html2canvas.hertzen.com/)
 * Inspiration for the terminal look of the Drones come from ``Terminal.css`` found [here](https://terminalcss.xyz/)
