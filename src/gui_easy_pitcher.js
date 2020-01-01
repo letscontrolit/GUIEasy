@@ -17,6 +17,7 @@ guiEasy.pitcher = function (processID, processType) {
         if (guiEasy.current.live !== undefined) {
             clearInterval(x);
             guiEasy.pitcher.loadTheme();
+            guiEasy.pitcher.loadGUIsettings();
             helpEasy.setCurrentIndex(0);
             guiEasy.current.live = helpEasy.getCurrentIndex();
             //update graphics
@@ -66,9 +67,43 @@ guiEasy.pitcher = function (processID, processType) {
     //and we're live and kicking!
 };
 
+guiEasy.pitcher.loadGUIsettings = function () {
+    let x = setInterval(function () {
+        let typeOfStartup = "silentStartup";
+        if (defaultSettings.userSettings.waitForTheme === 1) {
+            typeOfStartup = "startup";
+        }
+        helpEasy.listOfProcesses(
+            "gui",
+            "Waiting for gui settings to be applied",
+            Date.now(),
+            typeOfStartup
+        );
+        let y = guiEasy.nodes[helpEasy.getCurrentIndex()].live;
+        if (y.filelist_json !== undefined) {
+            clearInterval(x);
+            let files = y.filelist_json.map(a => a.fileName);
+            if (files.indexOf("gui.json") > -1) {
+                helpEasy.addToLogDOM("Applying GUI settings", 1);
+                let timeStart = Date.now();
+                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/gui.json?callback=" + timeStart;
+                fetch(path)
+                    .then(response => response.json())
+                    .then(json => {
+                        defaultSettings.userSettings = json;
+                        helpEasy.processDone("gui", typeOfStartup);
+                    })
+            } else {
+                helpEasy.processDone("gui", typeOfStartup);
+            }
+        }
+    }, 25)
+
+};
+
 guiEasy.pitcher.loadTheme = function () {
     let typeOfStartup = "silentStartup";
-    if (defaultSettings.waitForTheme === 1) {
+    if (defaultSettings.userSettings.waitForTheme === 1) {
         typeOfStartup = "startup";
     }
     helpEasy.listOfProcesses(

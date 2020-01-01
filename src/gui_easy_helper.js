@@ -936,7 +936,7 @@ const helpEasy = {
                             for (let i = 0; i < z[k].options.length; i++) {
                                 optionList.push(parseInt(z[k].options[i].value));
                             }
-                            z[k].options.selectedIndex = optionList.indexOf(helpEasy.getjsonPathData(path, m));
+                            z[k].options.selectedIndex = optionList.indexOf(helpEasy.getjsonPathData(path, m)) - parseInt(z[k].dataset.optionListOffset);
                         } else {
                             if (helpEasy.getjsonPathData(path, m) === 255) {
                                 z[k].options.selectedIndex = 0;
@@ -1392,7 +1392,7 @@ const helpEasy = {
     },
     'openArea': function (title) {
         let id = title.replace(" ", "-") + "-area";
-        if (defaultSettings.areasMinimized) {
+        if (defaultSettings.userSettings.areasMinimized) {
             return `
             <div class="area hide-contents" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)

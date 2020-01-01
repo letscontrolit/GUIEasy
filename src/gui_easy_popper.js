@@ -131,6 +131,57 @@ guiEasy.popper.clipboard = function (clipboard) {
     console.log(clipboard);
 };
 
+guiEasy.popper.gui = function (event) {
+    let currentUserSettings = defaultSettings.userSettings;
+    let browserUserSettings = {
+        "preventDefaults": {}
+    };
+    let inputs = document.querySelectorAll("[data-settings^='defaultSettings--userSettings']");
+    for (let i = 0; i < inputs.length; i++) {
+        let settingsPath = inputs[i].dataset.settings.split("--");
+        let value = "";
+        if (inputs[i].dataset.type === "toggle") {
+            value = JSON.parse(inputs[i].dataset.inputToggle.replace(/'/g, '"'));
+            value = value[inputs[i].checked];
+        }
+        if (inputs[i].dataset.type === "dropdown") {
+            value = inputs[i].selectedOptions[0].text;
+        }
+        if (settingsPath[2] === "preventDefaults") {
+            browserUserSettings.preventDefaults[settingsPath[3]] = value;
+        } else {
+            browserUserSettings[settingsPath[2]] = value;
+        }
+    }
+    currentUserSettings = browserUserSettings;
+    if (document.getElementById("label-temp") !== null) {
+        document.getElementById("label-temp").remove();
+    }
+    let l = document.createElement("label");
+    l.id = "label-temp";
+    l.style.display = "none";
+    document.body.appendChild(l);
+    let file = new File(
+        [JSON.stringify(currentUserSettings,null,2)],
+        "gui.json",
+        {
+            type: "text/plain"
+        }
+    );
+    helpEasy.uploadBinaryAsFile("generic", file, "temp");
+    let eventDetails = {
+        "type": "wave",
+        "text": "gui settings saved",
+        "color": "inverted"
+    };
+    guiEasy.popper.tryCallEvent(eventDetails);
+    eventDetails = {
+        "type": "modal",
+        "args": ["", "close"]
+    };
+    guiEasy.popper.tryCallEvent(eventDetails);
+};
+
 guiEasy.popper.command = function (x) {
     let waveStuff = JSON.parse(x.dataset.args.replace(/'/g, '"'));
     let url = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/?cmd=";
@@ -598,7 +649,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "escape key",
-                "settingsId": "defaultSettings--preventDefaults--escape",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "esc = close modals",
@@ -612,7 +663,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl space key",
-                "settingsId": "defaultSettings--preventDefaults--ctrl+space",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+space",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "ctrl + space = open swarm",
@@ -626,7 +677,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl enter key",
-                "settingsId": "defaultSettings--preventDefaults--ctrl+enter",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+enter",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "ctrl + enter = take screenshot",
@@ -640,7 +691,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keys key",
-                "settingsId": "defaultSettings--preventDefaults--ctrl+keys",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keys",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "ctrl + s = save settings",
@@ -654,7 +705,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keyz key",
-                "settingsId": "defaultSettings--preventDefaults--ctrl+keyz",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keyz",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "ctrl + z = dismiss changes",
@@ -668,7 +719,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "alt digit key",
-                "settingsId": "defaultSettings--preventDefaults--alt+digit",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--alt+digit",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "alt + digit = jump to tab",
@@ -682,7 +733,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "alt arrow key",
-                "settingsId": "defaultSettings--preventDefaults--alt+arrows",
+                "settingsId": "defaultSettings--userSettings--preventDefaults--alt+arrows",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "alt + l/r arrow = jump to tab",
@@ -697,11 +748,11 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "wait for theme",
-                "settingsId": "defaultSettings--waitForTheme",
+                "settingsId": "defaultSettings--userSettings--waitForTheme",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
                 "falseText": "fast boot (no wait for theme)",
-                "trueText": "wait for theme",
+                "trueText": "wait for theme & gui settings",
                 "default": false
             }
         );
@@ -711,7 +762,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "minimize areas",
-                "settingsId": "defaultSettings--areasMinimized",
+                "settingsId": "defaultSettings--userSettings--areasMinimized",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "areas collapsed by default",
@@ -725,7 +776,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "show help links",
-                "settingsId": "defaultSettings--helpLinks",
+                "settingsId": "defaultSettings--userSettings--helpLinks",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "help links = show",
@@ -739,7 +790,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "warn if internet lost",
-                "settingsId": "defaultSettings--internetLostShow",
+                "settingsId": "defaultSettings--userSettings--internetLostShow",
                 "settingsTrue": 0,
                 "settingsFalse": 1,
                 "falseText": "notify on internet lost",
@@ -754,9 +805,11 @@ guiEasy.popper.modal.settings = function (type) {
                 "toGuiSettings": true,
                 "alt": "settings-change",
                 "title": "syntax of copy to clipboard",
-                "settingsId": "defaultSettings--clipboardSyntax",
+                "settingsId": "defaultSettings--userSettings--clipboardSyntax",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": -1,
                 "optionList": [
                     {"text": "Default", "value": 0, "disabled":false, "note":""},
                     {"text": "GitHub", "value": 1, "disabled":false, "note":""},
@@ -805,6 +858,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "title": "serial baud rate",
                 "settingsId": "config--serial--baudrate",
                 "list2value": true,
+                "optionListOffset": 0,
                 "default": 3,
                 "optionList": [
                     {"text": "9600", "value": 9600, "disabled":false, "note":""},
@@ -816,24 +870,6 @@ guiEasy.popper.modal.settings = function (type) {
                 ]
             }
         );
-        html += "<hr>";
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "toGuiSettings": true,
-                "alt": "settings-change",
-                "title": "syntax of copy to clipboard",
-                "settingsId": "defaultSettings--clipboardSyntax",
-                "placeholder": "",
-                "default": 0,
-                "optionList": [
-                    {"text": "Default", "value": 0, "disabled":false, "note":""},
-                    {"text": "GitHub", "value": 1, "disabled":false, "note":""},
-                    {"text": "phpBB", "value": 2, "disabled":false, "note":""}
-                ]
-            }
-        );
-
     }
     if (type === "location") {
         html += helpEasy.addInput(
@@ -1465,7 +1501,7 @@ guiEasy.popper.wave = function (args) {
 
 guiEasy.popper.shortcut = function (keyboard) {
     let keyCombo = "";
-    let pd = defaultSettings.preventDefaults;
+    let pd = defaultSettings.userSettings.preventDefaults;
     if (keyboard.alt === true) {
         keyCombo += "alt "
     }
@@ -1477,7 +1513,7 @@ guiEasy.popper.shortcut = function (keyboard) {
     // "key" and the letter...
     if (keyCombo === "ctrl+keys" && keyboard.state === "keydown") {
         //Save settings...
-        if (pd[keyCombo]) {
+        if (pd[keyCombo] === 1) {
             keyboard.event.preventDefault();
             let details = {};
             details.args = ("settings-save-success").split("-");
@@ -1486,7 +1522,7 @@ guiEasy.popper.shortcut = function (keyboard) {
     }
     if (keyCombo === "ctrl+keyz" && keyboard.state === "keydown") {
         //Cancel settings...
-        if (pd[keyCombo]) {
+        if (pd[keyCombo] === 1) {
             keyboard.event.preventDefault();
             let details = {};
             details.args = ("settings-cancel-sunny").split("-");
@@ -1496,7 +1532,8 @@ guiEasy.popper.shortcut = function (keyboard) {
     }
     if (keyCombo === "alt+altleft" && keyboard.state === "keydown") {
         //Show alt keys
-        if (pd["alt+digit"]) {
+        if (pd["alt+digit"] === 1) {
+            keyboard.event.preventDefault();
             let alts = document.querySelectorAll(".alt-popup");
             for (let i = 0; i < alts.length; i++) {
                 alts[i].classList.remove("is-hidden");
@@ -1505,7 +1542,8 @@ guiEasy.popper.shortcut = function (keyboard) {
     }
     if (keyCombo === "ctrl+enter" && keyboard.state === "keydown") {
         //Screenshot
-        if (pd[keyCombo]) {
+        if (pd[keyCombo] === 1) {
+            keyboard.event.preventDefault();
             helpEasy.screenshot();
         }
     }
@@ -1518,13 +1556,15 @@ guiEasy.popper.shortcut = function (keyboard) {
     }
     if (keyCombo === "escape" && keyboard.state === "keydown") {
         //close open modal
-        if (pd[keyCombo]) {
+        if (pd[keyCombo] === 1) {
+            keyboard.event.preventDefault();
             guiEasy.popper.modal({"args": ["modal", "close"]});
         }
     }
     if (keyCombo === "ctrl+space" && keyboard.state === "keydown") {
         //Show swarm
-        if (pd[keyCombo]) {
+        if (pd[keyCombo] === 1) {
+            keyboard.event.preventDefault();
 
         }
     }
@@ -1532,7 +1572,8 @@ guiEasy.popper.shortcut = function (keyboard) {
     let number = keyCombo.replace( /^\D+/g, "");
     if (keyCombo === ("alt+digit" + number) && keyboard.state === "keydown") {
         //Goto tab..
-        if (pd["alt+digit"]) {
+        if (pd["alt+digit"] === 1) {
+            keyboard.event.preventDefault();
             guiEasy.popper.tab({"args": ["tab", number]});
         }
         //guiEasy.popper.tab({"args":["tab", guiEasy.tabNumber[number]]}); <---- keep as reference now that numerical value is accepted
@@ -1542,7 +1583,8 @@ guiEasy.popper.shortcut = function (keyboard) {
         (keyCombo === "alt+arrowleft"  && keyboard.state === "keydown") ||
         (keyCombo === "alt+arrowright" && keyboard.state === "keydown")
     ) {
-        if (pd["alt+arrows"]) {
+        if (pd["alt+arrows"] === 1) {
+            keyboard.event.preventDefault();
             let tabNumber = guiEasy.current.tabNumber;
             if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
             while (guiEasy.tabNumber[tabNumber] === undefined) {
