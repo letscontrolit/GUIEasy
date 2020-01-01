@@ -240,16 +240,24 @@ guiEasy.popper.tab = function (tabToOpen) {
 guiEasy.popper.menu = function (menuToOpen) {
     let x = menuToOpen.args[1];
     let y = menuToOpen.args[2];
+    let posY = menuToOpen.y;
     if (x === "action") {
         let menu = document.getElementById("menu-button-list");
+        let menuHeight = parseFloat(window.getComputedStyle(menu).height.slice(0, -2));
         let menuButton = document.getElementById("menu-button");
         if (y === "close") {
             menu.classList.add("closed");
             menuButton.classList.add("is-inactive");
+            setTimeout(function () {
+                menu.classList.remove("horizontal");
+            }, 750)
         }
         if (y === "toggle") {
             menu.classList.toggle("closed");
             menuButton.classList.toggle("is-inactive");
+        }
+        if (posY < (menuHeight + 50)) {
+            menu.classList.add("horizontal");
         }
     }
     helpEasy.addToLogDOM("menu: " + x, 1);
