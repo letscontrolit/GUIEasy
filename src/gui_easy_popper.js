@@ -1402,7 +1402,15 @@ guiEasy.popper.update = async function (whatToDo) {
             }
             document.getElementById("settings-input-Longitude-[°]").value = defaultSettings.location.longitude;
             document.getElementById("settings-input-Latitude-[°]").value = defaultSettings.location.latitude;
-        } // TODO: make "else" if no internet to show that it cannot be done
+        } else {
+            //flash the screen, since no internet we cannot use the external data..
+            let eventDetails = {
+                "type": "wave",
+                "text": "No internet!",
+                "color": "warning"
+            };
+            guiEasy.popper.tryCallEvent(eventDetails);
+        }
     }
     //these can be skipped if the alt isn't populate
     if (whatToDo.args.alt === undefined) {
