@@ -78,19 +78,41 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'config.mqtt.useunitname', type: 'byte' },
     { prop: 'config.location.lat', type: 'float' },
     { prop: 'config.location.long', type: 'float' },
-    { prop: 'config._emptyBit', type: 'bit' },
-    { prop: 'config.general.appendunitno', type: 'bit' },
-    { prop: 'config.mqtt.changeclientidrecon', type: 'bit' },
-    { prop: 'config.rules.oldengine', type: 'bit' },
-    { prop: 'config.wifi.forcebgmode', type: 'bit' },
-    { prop: 'config.wifi.restartconnlost', type: 'bit' },
-    { prop: 'config.power.ecomode', type: 'bit' },
-    { prop: 'config.wifi.nosleep', type: 'bit' },
-    { prop: 'config.rules.tolerantargs', type: 'bit' },
-    { prop: 'config.rules.SendToHTTPack', type: 'bit' },
-    { prop: 'config.wifi.gratuitousARP', type: 'bit' },
-    { prop: 'config._bits2', type: 'byte' },
-    { prop: 'config._bits3', type: 'byte' },
+    // Start of various bits int32
+    { prop: 'config.variousBits', type: 'int32' },
+    //bit 0 = empty
+    //bit 1 = general.appendunitno
+    //bit 2 = mqtt.changeclientidrecon
+    //bit 3 = rules.oldengine
+    //bit 4 = wifi.forcebgmode
+    //bit 5 = wifi.restartconnlost
+    //bit 6 = power.ecomode
+    //bit 7 = wifi.gratuitousARP
+    //bit 8 = rules.tolerantArgs
+    //bit 9 = rules.sendToHTTPack
+    //bit 10
+    //bit 11
+    //bit 12
+    //bit 13
+    //bit 14
+    //bit 15
+    //bit 16
+    //bit 17
+    //bit 18
+    //bit 19
+    //bit 20
+    //bit 21
+    //bit 22
+    //bit 23
+    //bit 24
+    //bit 25
+    //bit 26
+    //bit 27
+    //bit 28
+    //bit 29
+    //bit 30
+    //bit 31
+    // end of various bits int32
     { prop: 'ResetFactoryDefaultPreference', type: 'int32' }, // TODO: not ready
 ].flat();
 

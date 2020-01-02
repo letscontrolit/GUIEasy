@@ -95,9 +95,32 @@ guiEasy.pitcher = function (processID, processType) {
             //take care of url parameters...
             guiEasy.popper.tab({"args":["tab",urlParams.tab]});
             console.log(urlParams);
-            console.log(guiEasy);
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit1);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit2);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit3);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit4);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit5);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit6);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit7);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit8);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit9);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit10);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit11);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit12);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit13);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit14);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit15);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit16);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit17);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit18);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit19);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit20);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit21);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit22);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit23);
         }
     }, timeoutU);
     //and we're live and kicking!
