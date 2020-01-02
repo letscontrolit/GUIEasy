@@ -174,13 +174,13 @@ They are initiated in the order above which can be described as this:
                  |                   Curly is converting {{..}} into HTML
               Scrubber               Scrubber is touching up the HTML
                  |                   Popper creates eventhandlers
-               Popper                Pitcher waits for everthing to get read,
+               Popper                Pitcher waits for everthing to get ready,
                  |                   then starts to apply settings/theme
                Pitcher          <--- Boot ended
              /    |    \        <--- GUI is ready
        Tender   Butler  Snitch  <--- First human interaction possible
         LOOP     GET     POST   <--- The type of flow of the function
-                                     Tender updates data and visual stuff
+                                     Tender continuously updates data and visual stuff
                                      Butler gets data from the internet (1 time)
                                      Snitch posts data to our server (1 time)
 
