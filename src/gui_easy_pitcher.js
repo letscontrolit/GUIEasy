@@ -124,17 +124,17 @@ guiEasy.pitcher.variousBits = function() {
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {
+    let typeOfStartup = "silentStartup";
+    if (defaultSettings.userSettings.waitForTheme === 1) {
+        typeOfStartup = "startup";
+    }
+    helpEasy.listOfProcesses(
+        "gui",
+        "Waiting for gui settings to be applied",
+        Date.now(),
+        typeOfStartup
+    );
     let x = setInterval(function () {
-        let typeOfStartup = "silentStartup";
-        if (defaultSettings.userSettings.waitForTheme === 1) {
-            typeOfStartup = "startup";
-        }
-        helpEasy.listOfProcesses(
-            "gui",
-            "Waiting for gui settings to be applied",
-            Date.now(),
-            typeOfStartup
-        );
         let y = guiEasy.nodes[helpEasy.getCurrentIndex()].live;
         if (y.filelist_json !== undefined) {
             clearInterval(x);
