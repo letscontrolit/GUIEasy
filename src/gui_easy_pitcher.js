@@ -66,6 +66,7 @@ guiEasy.pitcher = function (processID, processType) {
         }
         if (guiEasy.current.config !== undefined) {
             clearInterval(z);
+            guiEasy.pitcher.variousBits();
             helpEasy.guiUpdaterSettings();
             let x = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.general;
             if (x.unitnr !== 0 && x.unitname !== "ESP_Easy") {
@@ -98,32 +99,28 @@ guiEasy.pitcher = function (processID, processType) {
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
             console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit1);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit2);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit3);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit4);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit5);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit6);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit7);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit8);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit9);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit10);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit11);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit12);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit13);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit14);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit15);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit16);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit17);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit18);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit19);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit20);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit21);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit22);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config._bit23);
+
         }
     }, timeoutU);
     //and we're live and kicking!
+};
+
+guiEasy.pitcher.variousBits = function() {
+    let list = [
+        "config._emptyBit",
+        "config.general.appendunitno",
+        "config.mqtt.changeclientidrecon",
+        "config.rules.oldengine",
+        "config.wifi.forcebgmode",
+        "config.wifi.restartconnlost",
+        "config.power.ecomode",
+        "config.wifi.gratuitousARP",
+        "config.rules.tolerantArgs",
+        "config.rules.sendToHTTPack"
+    ];
+    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
+    console.log(helpEasy.int32binaryBool(int, list));
+
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {

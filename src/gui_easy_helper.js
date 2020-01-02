@@ -52,6 +52,12 @@ const helpEasy = {
         });
         return invertedHex;
     },
+    'int32binaryBool': function (int, names, length = 32) {
+        //pad with zeros to make sure you got the correct number of 1/0
+        let string = (int >>> 0).toString(2);
+        let array = string.split("");
+        return array;
+    },
     'cleanupWord' : function (word, commas = false) {
         word = word.replace(/_/g, " ");
         if (commas === true) {
