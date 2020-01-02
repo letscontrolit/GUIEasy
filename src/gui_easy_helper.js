@@ -53,9 +53,9 @@ const helpEasy = {
         return invertedHex;
     },
     'int32binaryBool': function (int, names, length = 32) {
-        //pad with zeros to make sure you got the correct number of 1/0
+        //pad with zeros to make sure you got the correct number of 1/0 (MAX 64 int supported by the function
         let string = (int >>> 0).toString(2);
-        string = ("00000000000000000000000000000000" + string).slice(-32);
+        string = ("0000000000000000000000000000000000000000000000000000000000000000" + string).slice(-length);
         console.log(string);
         let array = string.split("");
         return array;
@@ -1120,12 +1120,12 @@ const helpEasy = {
                 //lets close the loading page
                 let modalBackground = document.getElementById("modal-container");
                 let loadingPage = document.getElementById("modal-loading-screen");
-                loadingPage.classList.add("is-hidden");
+                modalBackground.classList.remove("is-black");
                 modalBackground.classList.add("is-hiding");
+                loadingPage.classList.add("is-hidden");
                 setTimeout(function () {
                     modalBackground.classList.add("is-hidden");
                     modalBackground.classList.remove("is-hiding");
-                    modalBackground.classList.remove("is-black");
                 }, (500));
                 helpEasy.addToLogDOM("total boot time: " + guiEasy.guiStats.bootTime + "ms", 1);
             }

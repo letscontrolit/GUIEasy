@@ -934,15 +934,15 @@ div.modal {
 }
 /* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
 div.modal.is-hiding {
-    display: unset!important;
-    opacity: 1;
-    transition: opacity 0.75s 0.5s ease-out;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
 }
-div.modal.is-hiding > div {
+div.modal.is-hiding div {
     display: none;
 }
 /* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
 div.modal.is-black {
+    transition: opacity 0.75s 0.5s ease-out;
     opacity: 1;
     background-color: rgba(0,0,0,1);
     color: rgba(0,0,0,1);
