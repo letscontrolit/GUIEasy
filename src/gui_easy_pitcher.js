@@ -6,7 +6,7 @@ guiEasy.pitcher = function (processID, processType) {
     helpEasy.getGuiInFields();
     helpEasy.setCurrentIndex(-1);
     if (window.location.hostname === "localhost") {
-        guiEasy.nodes.push({"ip":"192.168.74.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
+        guiEasy.nodes.push({"ip":"192.168.43.138", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
     } else {
         guiEasy.nodes.push({"ip": window.location.hostname, "type":"queen"});
     }
