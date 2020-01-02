@@ -55,6 +55,8 @@ const helpEasy = {
     'int32binaryBool': function (int, names, length = 32) {
         //pad with zeros to make sure you got the correct number of 1/0
         let string = (int >>> 0).toString(2);
+        string = ("00000000000000000000000000000000" + string).slice(-32);
+        console.log(string);
         let array = string.split("");
         return array;
     },
