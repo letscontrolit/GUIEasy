@@ -170,12 +170,12 @@ following hocus pocus:
 
 They are initiated in the order above which can be described as this:
 
-               Curly            <--- Boot started (+ Helper initiated)
-                 |                   Curly is converting {{..}} into HTML
-              Scrubber               Scrubber is touching up the HTML
-                 |                   Popper creates eventhandlers
-               Popper                Pitcher waits for everthing to get ready,
-                 |                   then starts to apply settings/theme
+                Curly           <--- Boot started (+ Helper initiated)
+                  |                  Curly is converting {{..}} into HTML
+               Scrubber              Scrubber is touching up the HTML
+                  |                  Popper creates eventhandlers
+                Popper               Pitcher waits for everthing to get ready,
+                  |                  then starts to apply settings/theme
                Pitcher          <--- Boot ended
              /    |    \        <--- GUI is ready
        Tender   Butler  Snitch  <--- First human interaction possible
