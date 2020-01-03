@@ -101,11 +101,11 @@ guiEasy.configDat.configDatParseConfig = [
     //bit 18
     //bit 19
     //bit 20
-    //bit 21 = rules.sendToHTTPack
-    //bit 22
+    //bit 21
+    //bit 22 = rules.sendToHTTPack
     //bit 23
     //bit 24
-    //bit 25
+    //bit 25 = wifi.forceNoSleep
     //bit 26
     //bit 27
     //bit 28
@@ -177,15 +177,15 @@ guiEasy.configDat.securitySettings = [
 
 guiEasy.configDat.variousBits = function() {
     let list = [
-        "config._emptyBit",
-        "config.general.appendunitno",
-        "config.mqtt.changeclientidrecon",
-        "config.rules.oldengine",
-        "config.wifi.forcebgmode",
-        "config.wifi.restartconnlost",
-        "config.power.ecomode",
-        "config.wifi.gratuitousARP",
-        "config.rules.tolerantArgs",
+        "config._variousBit1",
+        "config._variousBit2",
+        "config._variousBit3",
+        "config._variousBit4",
+        "config._variousBit5",
+        "config._variousBit6",
+        "config._variousBit7",
+        "config._variousBit8",
+        "config._variousBit9",
         "config._variousBit10",
         "config._variousBit11",
         "config._variousBit12",
@@ -199,16 +199,16 @@ guiEasy.configDat.variousBits = function() {
         "config._variousBit20",
         "config._variousBit21",
         "config.rules.sendToHTTPack",
-        "config._variousBit23",
+        "config.rules.tolerantArgs",
         "config._variousBit24",
-        "config._variousBit25",
+        "config.wifi.forceNoSleep",
         "config._variousBit26",
-        "config._variousBit27",
-        "config._variousBit28",
-        "config._variousBit29",
-        "config._variousBit30",
-        "config._variousBit31",
-        "config._variousBit32"
+        "config.wifi.restartconnlost",
+        "config.wifi.forcebgmode",
+        "config.rules.useNewEngine",
+        "config.mqtt.changeclientidrecon",
+        "config.general.doNotAppendUnitNumber",
+        "config._variousBit1"
     ];
     let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
     helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.");
