@@ -19,7 +19,7 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'hardware.i2c.sda', type: 'byte' },
     { prop: 'hardware.i2c.scl', type: 'byte' },
     { prop: 'hardware.led.gpio', type: 'byte' },
-    { prop: 'Pin_sd_cs', type: 'byte' }, // TODO: not ready
+    { prop: 'Pin_sd_cs', type: 'byte' },
     { prop: 'hardware.gpio', type: 'bytes', length: 17 },
     { prop: 'config.log.syslog_ip', type: 'bytes', length: 4 },
     { prop: 'config.espnetwork.port', type: 'int32' },
@@ -30,7 +30,7 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'config.serial.baudrate', type: 'int32' },
     { prop: 'config.mqtt.interval', type: 'int32' },
     { prop: 'config.sleep.awaketime', type: 'byte' },
-    { prop: 'CustomCSS', type: 'byte' },  // TODO: not ready
+    { prop: 'CustomCSS', type: 'byte' },
     { prop: 'config.dst.enabled', type: 'byte' },
     { prop: 'config.experimental.WDI2CAddress', type: 'byte' },
     { prop: 'config.rules.enabled', type: 'byte' },
@@ -38,9 +38,9 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'config.ssdp.enabled', type: 'byte' },
     { prop: 'config.ntp.enabled', type: 'byte' },
     { prop: 'config.experimental.WireClockStretchLimit', type: 'int32' },
-    { prop: 'GlobalSync', type: 'byte' },  // TODO: not ready
+    { prop: 'GlobalSync', type: 'byte' },
     { prop: 'config.experimental.ConnectionFailuresThreshold', type: 'int32' },
-    { prop: 'TimeZone', type: 'int16', signed: true}, // TODO: not ready
+    { prop: 'config.dst.TimeZone', type: 'int16'},
     { prop: 'config.mqtt.retain_flag', type: 'byte' },
     { prop: 'hardware.spi.enabled', type: 'byte' },
     [...Array(guiEasy.maxController())].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
@@ -143,25 +143,35 @@ guiEasy.configDat.securitySettings = [
 
 guiEasy.configDat.dst = function(what) {
     let list = [
-        "config._dst" + what + "Bit1",
-        "config._dst" + what + "Bit2",
-        "config._dst" + what + "Bit3",
-        "config._dst" + what + "Bit4",
-        "config._dst" + what + "Bit5",
-        "config._dst" + what + "Bit6",
-        "config._dst" + what + "Bit7",
-        "config._dst" + what + "Bit8",
-        "config._dst" + what + "Bit9",
-        "config._dst" + what + "Bit10",
-        "config._dst" + what + "Bit11",
-        "config._dst" + what + "Bit12",
-        "config._dst" + what + "Bit13",
-        "config._dst" + what + "Bit14",
-        "config._dst" + what + "Bit15",
-        "config._dst" + what + "Bit16"
+        "config.dst.binary." + what + "_emptyBit",
+        "config.dst.binary." + what + ".week.1",
+        "config.dst.binary." + what + ".week.2",
+        "config.dst.binary." + what + ".week.3",
+        "config.dst.binary." + what + ".day.1",
+        "config.dst.binary." + what + ".day.2",
+        "config.dst.binary." + what + ".day.3",
+        "config.dst.binary." + what + ".month.1",
+        "config.dst.binary." + what + ".month.2",
+        "config.dst.binary." + what + ".month.3",
+        "config.dst.binary." + what + ".month.4",
+        "config.dst.binary." + what + ".hour.1",
+        "config.dst.binary." + what + ".hour.2",
+        "config.dst.binary." + what + ".hour.3",
+        "config.dst.binary." + what + ".hour.4",
+        "config.dst.binary." + what + ".hour.5"
     ];
     let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.dst[what];
     helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.", "_emptyBit_dst_" + what, 16);
+    let goThrough = [["week", 3],["day", 3],["month", 4],["hour", 5]];
+    let path = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.dst;
+    for (let i = 0; i < goThrough.length; i++) {
+        let kMax = goThrough[i][1] + 1;
+        let binary = "";
+        for (let k = 1; k < kMax; k++) {
+            binary += path.binary[what][goThrough[i][0]][k];
+        }
+        set(path, "integer." + what + "." + goThrough[i][0], parseInt(binary, 2));
+    }
 };
 
 guiEasy.configDat.variousBits = function() {
