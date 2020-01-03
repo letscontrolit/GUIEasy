@@ -66,7 +66,6 @@ guiEasy.pitcher = function (processID, processType) {
         }
         if (guiEasy.current.config !== undefined) {
             clearInterval(z);
-            guiEasy.pitcher.variousBits();
             helpEasy.guiUpdaterSettings();
             let x = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.general;
             if (x.unitnr !== 0 && x.unitname !== "ESP_Easy") {
@@ -103,24 +102,6 @@ guiEasy.pitcher = function (processID, processType) {
         }
     }, timeoutU);
     //and we're live and kicking!
-};
-
-guiEasy.pitcher.variousBits = function() {
-    let list = [
-        "config._emptyBit",
-        "config.general.appendunitno",
-        "config.mqtt.changeclientidrecon",
-        "config.rules.oldengine",
-        "config.wifi.forcebgmode",
-        "config.wifi.restartconnlost",
-        "config.power.ecomode",
-        "config.wifi.gratuitousARP",
-        "config.rules.tolerantArgs",
-        "config.rules.sendToHTTPack"
-    ];
-    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
-    console.log(helpEasy.int32binaryBool(int, list));
-
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {

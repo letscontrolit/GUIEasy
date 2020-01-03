@@ -52,13 +52,18 @@ const helpEasy = {
         });
         return invertedHex;
     },
-    'int32binaryBool': function (int, names, length = 32) {
+    'int32binaryBool': function (obj, int, names, base, length = 32) {
         //pad with zeros to make sure you got the correct number of 1/0 (MAX 64 int supported by the function
         let string = (int >>> 0).toString(2);
         string = ("0000000000000000000000000000000000000000000000000000000000000000" + string).slice(-length);
-        console.log(string);
         let array = string.split("");
-        return array;
+        for (let i = (array.length - 1); i > -1; i--) {
+            let path = "_emptyBit" + i;
+            if (names[i] !== undefined) {
+                path = names[i];
+            }
+            set(obj, base + path, array[i]);
+        }
     },
     'cleanupWord' : function (word, commas = false) {
         word = word.replace(/_/g, " ");
@@ -233,6 +238,8 @@ const helpEasy = {
                     x = helpEasy.parseConfigDat;
                     return x(securityResponse, z.securitySettings, 1024 * i);
                 });
+
+                guiEasy.configDat.variousBits();
 
                 array[index].settings = Object.assign({},settings);
                 array[index].settings.timestamp = timeStart;

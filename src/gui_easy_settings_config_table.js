@@ -175,6 +175,24 @@ guiEasy.configDat.securitySettings = [
     { prop: 'md5', type:'bytes', length: 16 },
 ].flat();
 
+guiEasy.configDat.variousBits = function() {
+    let list = [
+        "config._emptyBit",
+        "config.general.appendunitno",
+        "config.mqtt.changeclientidrecon",
+        "config.rules.oldengine",
+        "config.wifi.forcebgmode",
+        "config.wifi.restartconnlost",
+        "config.power.ecomode",
+        "config.wifi.gratuitousARP",
+        "config.rules.tolerantArgs",
+        "config.rules.sendToHTTPack"
+    ];
+    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
+    helpEasy.int32binaryBool(guiEasy.current.live, int, list, "settings.config.");
+
+};
+
 const set = (obj, path, value) => {
     let levels = path.replace(/\[/g, '.').replace(/]/g, '').split('.');
     if (levels.length > 1) {
