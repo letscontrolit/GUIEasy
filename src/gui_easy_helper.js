@@ -52,17 +52,17 @@ const helpEasy = {
         });
         return invertedHex;
     },
-    'int32binaryBool': function (obj, int, names, base, length = 32) {
-        //pad with zeros to make sure you got the correct number of 1/0 (MAX 64 int supported by the function
+    'int32binaryBool': function (obj, int, names, base, emptyString = "_emptyBit", length = 32) {
         let string = (int >>> 0).toString(2);
+        //pad with zeros to make sure you got the correct number of 1/0 (MAX 64 int supported by the function
         string = ("0000000000000000000000000000000000000000000000000000000000000000" + string).slice(-length);
         let array = string.split("");
         for (let i = (array.length - 1); i > -1; i--) {
-            let path = "_emptyBit" + i;
+            let path = emptyString + i;
             if (names[i] !== undefined) {
                 path = names[i];
             }
-            set(obj, base + path, array[i]);
+            set(obj, base + path, parseInt(array[i]));
         }
     },
     'cleanupWord' : function (word, commas = false) {
@@ -239,10 +239,10 @@ const helpEasy = {
                     return x(securityResponse, z.securitySettings, 1024 * i);
                 });
 
-                guiEasy.configDat.variousBits();
-
                 array[index].settings = Object.assign({},settings);
                 array[index].settings.timestamp = timeStart;
+
+                guiEasy.configDat.variousBits();
 
                 if (updateBrowserSettings === true) {
                     array[index].settingsBrowser = Object.assign({},settings);

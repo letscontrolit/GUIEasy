@@ -89,7 +89,7 @@ guiEasy.configDat.configDatParseConfig = [
     //bit 6 = power.ecomode
     //bit 7 = wifi.gratuitousARP
     //bit 8 = rules.tolerantArgs
-    //bit 9 = rules.sendToHTTPack
+    //bit 9
     //bit 10
     //bit 11
     //bit 12
@@ -101,7 +101,7 @@ guiEasy.configDat.configDatParseConfig = [
     //bit 18
     //bit 19
     //bit 20
-    //bit 21
+    //bit 21 = rules.sendToHTTPack
     //bit 22
     //bit 23
     //bit 24
@@ -186,10 +186,32 @@ guiEasy.configDat.variousBits = function() {
         "config.power.ecomode",
         "config.wifi.gratuitousARP",
         "config.rules.tolerantArgs",
-        "config.rules.sendToHTTPack"
+        "config._variousBit10",
+        "config._variousBit11",
+        "config._variousBit12",
+        "config._variousBit13",
+        "config._variousBit14",
+        "config._variousBit15",
+        "config._variousBit16",
+        "config._variousBit17",
+        "config._variousBit18",
+        "config._variousBit19",
+        "config._variousBit20",
+        "config._variousBit21",
+        "config.rules.sendToHTTPack",
+        "config._variousBit23",
+        "config._variousBit24",
+        "config._variousBit25",
+        "config._variousBit26",
+        "config._variousBit27",
+        "config._variousBit28",
+        "config._variousBit29",
+        "config._variousBit30",
+        "config._variousBit31",
+        "config._variousBit32"
     ];
     let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
-    helpEasy.int32binaryBool(guiEasy.current.live, int, list, "settings.config.");
+    helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.");
 
 };
 
