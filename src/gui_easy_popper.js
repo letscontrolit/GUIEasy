@@ -128,7 +128,50 @@ guiEasy.popper.tryCallEvent.counter = function() {
 //ABOVE IS THE FUNCTION TO TRIGGER ESP EASY EVENT + FIND WHAT WAS FOCUSED//
 //BELOW IS THE "TO EXEC" FUNCTIONS//
 guiEasy.popper.clipboard = function (clipboard) {
-    console.log(clipboard);
+    let id = clipboard.args[1];
+    let element = document.getElementById(id);
+    let syntax = defaultSettings.userSettings.clipboardSyntax;
+    helpEasy.copyToClipboard(guiEasy.popper.clipboard[syntax](element.innerHTML));
+    let eventDetails = {
+        "type": "wave",
+        "text": "info copied",
+        "color": "success"
+    };
+    guiEasy.popper.tryCallEvent(eventDetails);
+};
+
+guiEasy.popper.clipboard.Default = function (rawHTML) {
+    let text = "";
+    helpEasy.addToLogDOM("Converting (generic): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
+
+    helpEasy.addToLogDOM("RESULTS (generic): " + text, 1);
+
+    return text;
+};
+
+guiEasy.popper.clipboard.GitHub = function (rawHTML) {
+    let text = "";
+    helpEasy.addToLogDOM("Converting (GitHub): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
+
+    helpEasy.addToLogDOM("RESULTS (GitHub): " + text, 1);
+
+    return text;
+};
+
+guiEasy.popper.clipboard.phpBB = function (rawHTML) {
+    let text = "";
+    helpEasy.addToLogDOM("Converting (phpBB): " + rawHTML, 1);
+    let data = guiEasy.popper.clipboard.regexTable(rawHTML);
+
+    helpEasy.addToLogDOM("RESULTS (phpBB): " + text, 1);
+
+    return text;
+};
+
+guiEasy.popper.clipboard.regexTable = function (rawHTML) {
+
 };
 
 guiEasy.popper.gui = function (event) {
@@ -163,7 +206,7 @@ guiEasy.popper.gui = function (event) {
     document.body.appendChild(l);
     let file = new File(
         [JSON.stringify(currentUserSettings,null,2)],
-        "gui.json",
+        "gui.txt",
         {
             type: "text/plain"
         }
@@ -342,7 +385,7 @@ guiEasy.popper.modal = function (modalToOpen) {
             "cancel": "modal-close",
             "close": "modal-close",
             "rescan": null,
-            "copy": "modal-copy",
+            "copy": "modal-clipboard",
             "upload": null,
             "location": "update-location",
             "custom": null
@@ -391,7 +434,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.modal = "yep";
         z.button.close = "yep";
         z.button.copy = "yep";
-        z.action.copy = "copy-wifi";                //TODO: make a copy popper
+        z.action.copy = "clipboard-wifi";
         z.title = "found wifi networks";
         z.table = guiEasy.nodes[index].modal.table.wifi;
     }
@@ -512,7 +555,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "system info";
         z.button.copy = "yep";
-        z.action.copy = "copy-system";
+        z.action.copy = "clipboard-sysinfo_json";
         z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
     if (x === "info" && y === "sysvars") {
@@ -520,7 +563,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "system variables";
         z.button.copy = "yep";
-        z.action.copy = "copy-sysvars";
+        z.action.copy = "clipboard-sysvars";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
     if (x === "info" && y === "timing") {
@@ -528,7 +571,7 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.close = "yep";
         z.title = "timing statistics";
         z.button.copy = "yep";
-        z.action.copy = "copy-timing";
+        z.action.copy = "clipboard-timingstats_json";
         z.table = guiEasy.nodes[index].modal.table.timingstats_json;
     }
     if (x === "task" && y === "edit") {
@@ -588,6 +631,43 @@ guiEasy.popper.modal = function (modalToOpen) {
             let id = event.target.id;
             helpEasy.uploadBinaryAsFile(what, file, id)
         }, false);
+        // drag&drop events
+        let labelInputFile = document.getElementById("label-modal-input-upload-file");
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false)
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function () {
+                labelInputFile.innerText = helpEasy.capitalWord("drop file here...");
+                labelInputFile.classList.add('drag-drop-highlight');
+            }, false)
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            labelInputFile.addEventListener(eventName, function (event) {
+                labelInputFile.classList.remove('drag-drop-highlight');
+                labelInputFile.innerText = helpEasy.capitalWord("upload file to unit");
+                if (eventName === "drop") {
+                    let what = inputFile.dataset.typeOfUpload;
+                    let file = event.dataTransfer.files[0];
+                    let id = "modal-input-upload-file";
+                    if (file.name.slice(-3).toLowerCase() !== "bin" && what === "firmware") {
+                        helpEasy.blinkElement("label-modal-input-upload-file", "warning");
+                        labelInputFile.innerText = helpEasy.capitalWord("not a bin file!");
+                        setTimeout(function () {
+                            helpEasy.blinkElement("label-modal-input-upload-file", "warning");
+                        },750);
+                        setTimeout(function () {
+                            labelInputFile.innerText = helpEasy.capitalWord("upload file to unit");
+                        },1000);
+                    } else {
+                        helpEasy.uploadBinaryAsFile(what, file, id);
+                    }
+                }
+            }, false)
+        });
     }
     if (z.custom !== null) {
         document.getElementById("modal-button-custom").classList[logic[z.button.custom]]("is-hidden");
@@ -1062,7 +1142,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "tolerant last parameter",
-                "settingsId": "config--rules--tolerantargs",
+                "settingsId": "config--rules--tolerantArgs",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
                 "trueText": "last parameter can be left out",
@@ -1076,7 +1156,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "use old rules engine",
-                "settingsId": "config--rules--oldengine",
+                "settingsId": "config--rules--useNewEngine",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
                 "falseText": "old engine",
@@ -1090,7 +1170,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "send to http wait for acknowledge",
-                "settingsId": "config--rules--SendToHTTPack",
+                "settingsId": "config--rules--sendToHTTPack",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
                 "trueText": "send to http = wait for ok",

@@ -19,7 +19,7 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'hardware.i2c.sda', type: 'byte' },
     { prop: 'hardware.i2c.scl', type: 'byte' },
     { prop: 'hardware.led.gpio', type: 'byte' },
-    { prop: 'Pin_sd_cs', type: 'byte' }, // TODO: not ready
+    { prop: 'Pin_sd_cs', type: 'byte' },
     { prop: 'hardware.gpio', type: 'bytes', length: 17 },
     { prop: 'config.log.syslog_ip', type: 'bytes', length: 4 },
     { prop: 'config.espnetwork.port', type: 'int32' },
@@ -30,7 +30,7 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'config.serial.baudrate', type: 'int32' },
     { prop: 'config.mqtt.interval', type: 'int32' },
     { prop: 'config.sleep.awaketime', type: 'byte' },
-    { prop: 'CustomCSS', type: 'byte' },  // TODO: not ready
+    { prop: 'CustomCSS', type: 'byte' },
     { prop: 'config.dst.enabled', type: 'byte' },
     { prop: 'config.experimental.WDI2CAddress', type: 'byte' },
     { prop: 'config.rules.enabled', type: 'byte' },
@@ -38,9 +38,9 @@ guiEasy.configDat.configDatParseConfig = [
     { prop: 'config.ssdp.enabled', type: 'byte' },
     { prop: 'config.ntp.enabled', type: 'byte' },
     { prop: 'config.experimental.WireClockStretchLimit', type: 'int32' },
-    { prop: 'GlobalSync', type: 'byte' },  // TODO: not ready
+    { prop: 'GlobalSync', type: 'byte' },
     { prop: 'config.experimental.ConnectionFailuresThreshold', type: 'int32' },
-    { prop: 'TimeZone', type: 'int16', signed: true}, // TODO: not ready
+    { prop: 'config.dst.TimeZone', type: 'int16'},
     { prop: 'config.mqtt.retain_flag', type: 'byte' },
     { prop: 'hardware.spi.enabled', type: 'byte' },
     [...Array(guiEasy.maxController())].map((x, i) => ({ prop: `controllers[${i}].protocol`, type:'byte' })),
@@ -67,31 +67,19 @@ guiEasy.configDat.configDatParseConfig = [
     [...Array(guiEasy.maxTasks())].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceSendData`, type:'bytes', length: guiEasy.maxController() })),
     { prop: 'hardware.led.inverse', type: 'byte' },
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
-    { prop: 'UseValueLogger', type: 'byte' }, // TODO: not ready
-    { prop: 'ArduinoOTAEnable', type: 'byte' }, // TODO: not ready
+    { prop: 'UseValueLogger', type: 'byte' },
+    { prop: 'ArduinoOTAEnable', type: 'byte' },
     { prop: 'config.dst.start', type: 'int16' },
     { prop: 'config.dst.end', type: 'int16' },
-    { prop: 'UseRTOSMultitasking', type: 'byte' }, // TODO: not ready
+    { prop: 'UseRTOSMultitasking', type: 'byte' },
     { prop: 'hardware.reset.pin', type: 'byte' },
     { prop: 'config.log.syslog_facility', type: 'byte' },
-    { prop: 'StructSize', type: 'int32' }, // TODO: not ready
+    { prop: 'StructSize', type: 'int32' },
     { prop: 'config.mqtt.useunitname', type: 'byte' },
     { prop: 'config.location.lat', type: 'float' },
     { prop: 'config.location.long', type: 'float' },
-    { prop: 'config._emptyBit', type: 'bit' },
-    { prop: 'config.general.appendunitno', type: 'bit' },
-    { prop: 'config.mqtt.changeclientidrecon', type: 'bit' },
-    { prop: 'config.rules.oldengine', type: 'bit' },
-    { prop: 'config.wifi.forcebgmode', type: 'bit' },
-    { prop: 'config.wifi.restartconnlost', type: 'bit' },
-    { prop: 'config.power.ecomode', type: 'bit' },
-    { prop: 'config.wifi.nosleep', type: 'bit' },
-    { prop: 'config.rules.tolerantargs', type: 'bit' },
-    { prop: 'config.rules.SendToHTTPack', type: 'bit' },
-    { prop: 'config.wifi.gratuitousARP', type: 'bit' },
-    { prop: 'config._bits2', type: 'byte' },
-    { prop: 'config._bits3', type: 'byte' },
-    { prop: 'ResetFactoryDefaultPreference', type: 'int32' }, // TODO: not ready
+    { prop: 'config.variousBits', type: 'int32' },
+    { prop: 'ResetFactoryDefaultPreference', type: 'int32' }
 ].flat();
 
 guiEasy.configDat.taskSettings = [
@@ -152,6 +140,79 @@ guiEasy.configDat.securitySettings = [
     { prop: 'ProgmemMd5', type:'bytes', length: 16 },
     { prop: 'md5', type:'bytes', length: 16 },
 ].flat();
+
+guiEasy.configDat.dst = function(what) {
+    let list = [
+        "config.dst.binary." + what + "_emptyBit",
+        "config.dst.binary." + what + ".week.1",
+        "config.dst.binary." + what + ".week.2",
+        "config.dst.binary." + what + ".week.3",
+        "config.dst.binary." + what + ".day.1",
+        "config.dst.binary." + what + ".day.2",
+        "config.dst.binary." + what + ".day.3",
+        "config.dst.binary." + what + ".month.1",
+        "config.dst.binary." + what + ".month.2",
+        "config.dst.binary." + what + ".month.3",
+        "config.dst.binary." + what + ".month.4",
+        "config.dst.binary." + what + ".hour.1",
+        "config.dst.binary." + what + ".hour.2",
+        "config.dst.binary." + what + ".hour.3",
+        "config.dst.binary." + what + ".hour.4",
+        "config.dst.binary." + what + ".hour.5"
+    ];
+    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.dst[what];
+    helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.", "_emptyBit_dst_" + what, 16);
+    let goThrough = [["week", 3],["day", 3],["month", 4],["hour", 5]];
+    let path = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.dst;
+    for (let i = 0; i < goThrough.length; i++) {
+        let kMax = goThrough[i][1] + 1;
+        let binary = "";
+        for (let k = 1; k < kMax; k++) {
+            binary += path.binary[what][goThrough[i][0]][k];
+        }
+        set(path, "integer." + what + "." + goThrough[i][0], parseInt(binary, 2));
+    }
+};
+
+guiEasy.configDat.variousBits = function() {
+    let list = [
+        "config._variousBit1",
+        "config._variousBit2",
+        "config._variousBit3",
+        "config._variousBit4",
+        "config._variousBit5",
+        "config._variousBit6",
+        "config._variousBit7",
+        "config._variousBit8",
+        "config._variousBit9",
+        "config._variousBit10",
+        "config._variousBit11",
+        "config._variousBit12",
+        "config._variousBit13",
+        "config._variousBit14",
+        "config._variousBit15",
+        "config._variousBit16",
+        "config._variousBit17",
+        "config._variousBit18",
+        "config._variousBit19",
+        "config._variousBit20",
+        "config._variousBit21",
+        "config.rules.sendToHTTPack",
+        "config.rules.tolerantArgs",
+        "config.wifi.noGratuitousARP",
+        "config.wifi.forceNoSleep",
+        "config.power.ecomode",
+        "config.wifi.restartconnlost",
+        "config.wifi.forcebgmode",
+        "config.rules.useNewEngine",
+        "config.mqtt.changeclientidrecon",
+        "config.general.doNotAppendUnitNumber",
+        "config._variousBit32"
+    ];
+    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
+    helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.");
+
+};
 
 const set = (obj, path, value) => {
     let levels = path.replace(/\[/g, '.').replace(/]/g, '').split('.');

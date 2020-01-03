@@ -934,15 +934,15 @@ div.modal {
 }
 /* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
 div.modal.is-hiding {
-    display: unset!important;
-    opacity: 1;
-    transition: opacity 0.75s 0.5s ease-out;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
 }
-div.modal.is-hiding > div {
+div.modal.is-hiding div {
     display: none;
 }
 /* THESE ARE SET FOR THE BOOT-2-GUI TRANSITION */
 div.modal.is-black {
+    transition: opacity 0.75s 0.5s ease-out;
     opacity: 1;
     background-color: rgba(0,0,0,1);
     color: rgba(0,0,0,1);
@@ -1558,6 +1558,7 @@ label.checkbox:active::after {
     color: var(--main-font-color-rgba);
     background-color: rgba(var(--main-success-color), 0.75);
 }
+
 select:hover ~ label.select,
 label:hover.select,
 div.tag.with-close:hover,
@@ -1684,6 +1685,9 @@ label.modal-upload:hover,
 label.modal-upload:focus {
     color: rgba(var(--main-font-color), 0.9);
     border-color: rgba(var(--main-font-color), 0.3);
+}
+label.modal-upload.drag-drop-highlight {
+    background: rgba(var(--main-success-color), 0.3);
 }
 button.file-action {
     float: right;

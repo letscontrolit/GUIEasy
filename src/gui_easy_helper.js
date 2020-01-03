@@ -52,6 +52,19 @@ const helpEasy = {
         });
         return invertedHex;
     },
+    'int32binaryBool': function (obj, int, names, base, emptyString = "_emptyBit", length = 32) {
+        let string = (int >>> 0).toString(2);
+        //pad with zeros to make sure you got the correct number of 1/0 (MAX 64 int supported by the function
+        string = ("0000000000000000000000000000000000000000000000000000000000000000" + string).slice(-length);
+        let array = string.split("");
+        for (let i = (array.length - 1); i > -1; i--) {
+            let path = emptyString + i;
+            if (names[i] !== undefined) {
+                path = names[i];
+            }
+            set(obj, base + path, parseInt(array[i]));
+        }
+    },
     'cleanupWord' : function (word, commas = false) {
         word = word.replace(/_/g, " ");
         if (commas === true) {
@@ -60,7 +73,7 @@ const helpEasy = {
         return word;
     },
     'capitalWord': function (str) {
-        let allCaps = ["ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
+        let allCaps = ["bin","ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
@@ -229,6 +242,10 @@ const helpEasy = {
                 array[index].settings = Object.assign({},settings);
                 array[index].settings.timestamp = timeStart;
 
+                guiEasy.configDat.variousBits();
+                guiEasy.configDat.dst("start");
+                guiEasy.configDat.dst("end");
+
                 if (updateBrowserSettings === true) {
                     array[index].settingsBrowser = Object.assign({},settings);
                     array[index].settingsBrowser.timestamp = timeStart;
@@ -356,7 +373,7 @@ const helpEasy = {
     },
     'wifilist': function (wifiArray, index) {
         let html = `
-                <div data-modal-table="wifi" class="container modal-table vi">
+                <div data-modal-table="wifi" class="container modal-table" id="wifilist">
                 <table>
                 <tr>
                     <th class="header">SSID</th>
@@ -428,7 +445,7 @@ const helpEasy = {
         let deletingFile = guiEasy.nodes[helpEasy.getCurrentIndex()].deleteFile;
         guiEasy.nodes[helpEasy.getCurrentIndex()].deleteFile = null;
         let html = `
-                <div data-modal-table="files" class="container modal-table">
+                <div data-modal-table="files" class="container modal-table" id="filelist">
                 <table>
                 <tr>
                     <th class="header">File Name</th>
@@ -445,8 +462,8 @@ const helpEasy = {
                     <tr ` + rowInactive + ` id="` + sorted[i].fileName + `">
                     <td><button
                         class="main-inverted"
-                        onclick="window.location='http://` + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + `/`
-                         + sorted[i].fileName + `';">`
+                        onclick="helpEasy.downloadFile('http://` + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + `/`
+                         + encodeURI(sorted[i].fileName) + `','` + sorted[i].fileName + `');">`
                          + sorted[i].fileName +
                      `</button>`;
             if (noDeleteFile.indexOf(sorted[i].fileName) === -1) {
@@ -500,7 +517,7 @@ const helpEasy = {
         }
         let sorted = unsorted.sort(helpEasy.sortObjectArray("sortValue"));
         let html = `
-                <div data-modal-table="timingstats_json" class="container modal-table">
+                <div data-modal-table="timingstats_json" class="container modal-table" id="timingstats_json">
                 <table class="is-left">
                 <tr>
                     <th class="header">Type</th>
@@ -544,7 +561,7 @@ const helpEasy = {
     },
     'twoLevelJsonToList': function (endpoint, index) {
         let x = guiEasy.nodes[index].live[endpoint];
-        let html = "<div data-modal-table='" + endpoint + "' class='container modal-table'>";
+        let html = "<div data-modal-table='" + endpoint + "' class='container modal-table' id='" + endpoint + "'>";
         let keysLevel1 = Object.keys(x);
         for (let i = 0; i < keysLevel1.length; i++) {
             let keysLevel2 = Object.keys(x[keysLevel1[i]]);
@@ -782,6 +799,17 @@ const helpEasy = {
                 y.map(e => e.classList.add("is-hidden"));
             }
         }
+    },
+    'downloadFile': function (url, fileName) {
+        fetch(url).then(function(t) {
+            return t.blob().then((b)=>{
+                    let a = document.createElement("a");
+                    a.href = URL.createObjectURL(b);
+                    a.download = fileName;
+                    a.click();
+                }
+            );
+        });
     },
     'uploadBinaryAsFile': function (what, file, elementID) {
         let uploadSpeed;  //This is a bogus value just to get the upload percentage until fetch have this natively!
@@ -1112,12 +1140,12 @@ const helpEasy = {
                 //lets close the loading page
                 let modalBackground = document.getElementById("modal-container");
                 let loadingPage = document.getElementById("modal-loading-screen");
-                loadingPage.classList.add("is-hidden");
+                modalBackground.classList.remove("is-black");
                 modalBackground.classList.add("is-hiding");
+                loadingPage.classList.add("is-hidden");
                 setTimeout(function () {
                     modalBackground.classList.add("is-hidden");
                     modalBackground.classList.remove("is-hiding");
-                    modalBackground.classList.remove("is-black");
                 }, (500));
                 helpEasy.addToLogDOM("total boot time: " + guiEasy.guiStats.bootTime + "ms", 1);
             }

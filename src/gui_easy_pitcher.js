@@ -6,7 +6,7 @@ guiEasy.pitcher = function (processID, processType) {
     helpEasy.getGuiInFields();
     helpEasy.setCurrentIndex(-1);
     if (window.location.hostname === "localhost") {
-        guiEasy.nodes.push({"ip":"192.168.74.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
+        guiEasy.nodes.push({"ip":"192.168.73.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
     } else {
         guiEasy.nodes.push({"ip": window.location.hostname, "type":"queen"});
     }
@@ -95,34 +95,35 @@ guiEasy.pitcher = function (processID, processType) {
             //take care of url parameters...
             guiEasy.popper.tab({"args":["tab",urlParams.tab]});
             console.log(urlParams);
-            console.log(guiEasy);
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
+
         }
     }, timeoutU);
     //and we're live and kicking!
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {
+    let typeOfStartup = "silentStartup";
+    if (defaultSettings.userSettings.waitForTheme === 1) {
+        typeOfStartup = "startup";
+    }
+    helpEasy.listOfProcesses(
+        "gui",
+        "Waiting for gui settings to be applied",
+        Date.now(),
+        typeOfStartup
+    );
     let x = setInterval(function () {
-        let typeOfStartup = "silentStartup";
-        if (defaultSettings.userSettings.waitForTheme === 1) {
-            typeOfStartup = "startup";
-        }
-        helpEasy.listOfProcesses(
-            "gui",
-            "Waiting for gui settings to be applied",
-            Date.now(),
-            typeOfStartup
-        );
         let y = guiEasy.nodes[helpEasy.getCurrentIndex()].live;
         if (y.filelist_json !== undefined) {
             clearInterval(x);
             let files = y.filelist_json.map(a => a.fileName);
-            if (files.indexOf("gui.json") > -1) {
+            if (files.indexOf("gui.txt") > -1) {
                 helpEasy.addToLogDOM("Applying GUI settings", 1);
                 let timeStart = Date.now();
-                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/gui.json?callback=" + timeStart;
+                let path = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/gui.txt?callback=" + timeStart;
                 fetch(path)
                     .then(response => response.json())
                     .then(json => {

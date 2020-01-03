@@ -157,7 +157,7 @@ of death`` or Amiga's ``guru meditation``. In other words, not good. But still a
 ###### modal-loading-screen [id] & boot sequence
 
 Here we put the boot sequence information, the boot (and post boot) are made up of the
-following hocus pocus:
+following hocus pocus: 
 
 * Helper
 * Curly
@@ -165,8 +165,24 @@ following hocus pocus:
 * Popper
 * Pitcher
 * Butler
-* Tender
 * Snitch
+* Tender
+
+They are initiated in the order above which can be described as this:
+
+                Curly           <--- Boot started (+ Helper initiated)
+                  |                  Curly is converting {{..}} into HTML
+               Scrubber              Scrubber is touching up the HTML
+                  |                  Popper creates eventhandlers
+                Popper               Pitcher waits for everthing to get ready,
+                  |                  then starts to apply settings/theme
+               Pitcher          <--- Boot ended
+             /    |    \        <--- GUI is ready
+       Tender   Butler  Snitch  <--- First human interaction possible
+        LOOP     GET     POST   <--- The type of flow of the function
+                                     Tender continuously updates data and visual stuff
+                                     Butler gets data from the internet (1 time)
+                                     Snitch posts data to our server (1 time)
 
 These guys are what's making the SPA run smoothly. They can be divided into four groups:
 

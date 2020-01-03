@@ -320,7 +320,7 @@ guiEasy.curly.page.config = function () {
             "toSettings": true,
             "alt": "settings-change",
             "title": "append number",
-            "settingsId": "config--general--appendunitno",
+            "settingsId": "config--general--doNotAppendUnitNumber",
             "settingsTrue": 0,
             "settingsFalse": 1,
             "trueText": "Hostname: name_number",

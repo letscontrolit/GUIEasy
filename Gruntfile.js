@@ -1,3 +1,5 @@
+//TODO: add git commit functionality for auto-release tag (https://github.com/rubenv/grunt-git)
+
 module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
