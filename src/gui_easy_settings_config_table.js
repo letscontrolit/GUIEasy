@@ -67,53 +67,19 @@ guiEasy.configDat.configDatParseConfig = [
     [...Array(guiEasy.maxTasks())].map((x, i) => ({ prop: `tasks[${i}].TaskDeviceSendData`, type:'bytes', length: guiEasy.maxController() })),
     { prop: 'hardware.led.inverse', type: 'byte' },
     { prop: 'config.sleep.sleeponfailiure', type: 'byte' },
-    { prop: 'UseValueLogger', type: 'byte' }, // TODO: not ready
-    { prop: 'ArduinoOTAEnable', type: 'byte' }, // TODO: not ready
+    { prop: 'UseValueLogger', type: 'byte' },
+    { prop: 'ArduinoOTAEnable', type: 'byte' },
     { prop: 'config.dst.start', type: 'int16' },
     { prop: 'config.dst.end', type: 'int16' },
-    { prop: 'UseRTOSMultitasking', type: 'byte' }, // TODO: not ready
+    { prop: 'UseRTOSMultitasking', type: 'byte' },
     { prop: 'hardware.reset.pin', type: 'byte' },
     { prop: 'config.log.syslog_facility', type: 'byte' },
-    { prop: 'StructSize', type: 'int32' }, // TODO: not ready
+    { prop: 'StructSize', type: 'int32' },
     { prop: 'config.mqtt.useunitname', type: 'byte' },
     { prop: 'config.location.lat', type: 'float' },
     { prop: 'config.location.long', type: 'float' },
-    // Start of various bits int32
     { prop: 'config.variousBits', type: 'int32' },
-    //bit 0 = empty
-    //bit 1 = general.appendunitno
-    //bit 2 = mqtt.changeclientidrecon
-    //bit 3 = rules.oldengine
-    //bit 4 = wifi.forcebgmode
-    //bit 5 = wifi.restartconnlost
-    //bit 6 = power.ecomode
-    //bit 7 = wifi.gratuitousARP
-    //bit 8 = rules.tolerantArgs
-    //bit 9
-    //bit 10
-    //bit 11
-    //bit 12
-    //bit 13
-    //bit 14
-    //bit 15
-    //bit 16
-    //bit 17
-    //bit 18
-    //bit 19
-    //bit 20
-    //bit 21
-    //bit 22 = rules.sendToHTTPack
-    //bit 23
-    //bit 24
-    //bit 25 = wifi.forceNoSleep
-    //bit 26
-    //bit 27
-    //bit 28
-    //bit 29
-    //bit 30
-    //bit 31
-    // end of various bits int32
-    { prop: 'ResetFactoryDefaultPreference', type: 'int32' }, // TODO: not ready
+    { prop: 'ResetFactoryDefaultPreference', type: 'int32' }
 ].flat();
 
 guiEasy.configDat.taskSettings = [
@@ -175,6 +141,29 @@ guiEasy.configDat.securitySettings = [
     { prop: 'md5', type:'bytes', length: 16 },
 ].flat();
 
+guiEasy.configDat.dst = function(what) {
+    let list = [
+        "config._dst" + what + "Bit1",
+        "config._dst" + what + "Bit2",
+        "config._dst" + what + "Bit3",
+        "config._dst" + what + "Bit4",
+        "config._dst" + what + "Bit5",
+        "config._dst" + what + "Bit6",
+        "config._dst" + what + "Bit7",
+        "config._dst" + what + "Bit8",
+        "config._dst" + what + "Bit9",
+        "config._dst" + what + "Bit10",
+        "config._dst" + what + "Bit11",
+        "config._dst" + what + "Bit12",
+        "config._dst" + what + "Bit13",
+        "config._dst" + what + "Bit14",
+        "config._dst" + what + "Bit15",
+        "config._dst" + what + "Bit16"
+    ];
+    let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.dst[what];
+    helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.", "_emptyBit_dst_" + what, 16);
+};
+
 guiEasy.configDat.variousBits = function() {
     let list = [
         "config._variousBit1",
@@ -208,7 +197,7 @@ guiEasy.configDat.variousBits = function() {
         "config.rules.useNewEngine",
         "config.mqtt.changeclientidrecon",
         "config.general.doNotAppendUnitNumber",
-        "config._variousBit1"
+        "config._variousBit32"
     ];
     let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
     helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.");

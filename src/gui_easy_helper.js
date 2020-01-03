@@ -243,6 +243,8 @@ const helpEasy = {
                 array[index].settings.timestamp = timeStart;
 
                 guiEasy.configDat.variousBits();
+                guiEasy.configDat.dst("start");
+                guiEasy.configDat.dst("end");
 
                 if (updateBrowserSettings === true) {
                     array[index].settingsBrowser = Object.assign({},settings);
@@ -460,8 +462,8 @@ const helpEasy = {
                     <tr ` + rowInactive + ` id="` + sorted[i].fileName + `">
                     <td><button
                         class="main-inverted"
-                        onclick="window.location='http://` + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + `/`
-                         + sorted[i].fileName + `';">`
+                        onclick="helpEasy.downloadFile('http://` + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + `/`
+                         + encodeURI(sorted[i].fileName) + `','` + sorted[i].fileName + `');">`
                          + sorted[i].fileName +
                      `</button>`;
             if (noDeleteFile.indexOf(sorted[i].fileName) === -1) {
@@ -797,6 +799,17 @@ const helpEasy = {
                 y.map(e => e.classList.add("is-hidden"));
             }
         }
+    },
+    'downloadFile': function (url, fileName) {
+        fetch(url).then(function(t) {
+            return t.blob().then((b)=>{
+                    let a = document.createElement("a");
+                    a.href = URL.createObjectURL(b);
+                    a.download = fileName;
+                    a.click();
+                }
+            );
+        });
     },
     'uploadBinaryAsFile': function (what, file, elementID) {
         let uploadSpeed;  //This is a bogus value just to get the upload percentage until fetch have this natively!
