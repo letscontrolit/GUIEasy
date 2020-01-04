@@ -59,7 +59,7 @@ module.exports = function(grunt) {
                 main: {
                     files: {'build/temp/index.min.html': ['src/index.html']}
                 },
-                nodash: {
+                noDash: {
                   files: {'build/temp/no-dash.index.min.html': ['src/no-dash.index.html']}
                 }
             },
@@ -71,8 +71,11 @@ module.exports = function(grunt) {
           version: {
               src: ['build/<%= version %>']
           },
-          nodash: {
+          noDash: {
               src: ['src/no-dash.index.html']
+          },
+          releaseInfo: {
+              src: ['release.txt']
           },
           tempFiles: {
               src: ['build/temp/*.html', 'build/temp/*.js']
@@ -104,7 +107,7 @@ module.exports = function(grunt) {
                   dest: 'build/temp/main/index.htm.gz'
               }]
           },
-          nodash: {
+          noDash: {
               options: {
                   mode: 'gzip',
                   level: 9 //default is 1, max is 9
@@ -164,20 +167,49 @@ module.exports = function(grunt) {
                   }
               ]
           }
+      },
+// file sizes
+      folder_list : {
+              options: {
+                  files: true,
+                  folders: true
+              },
+              files:
+                  {
+                      src: ['**'],
+                      dest: 'build/temp/source_files.json',
+                      cwd: 'src/'
+                  }
+      },
+// copy release info
+      copy: {
+          releaseInfo : {
+              src: 'release.txt',
+              dest: 'build/temp/',
+              flatten: true,
+              filter: 'isFile',
+          }
       }
-});
+  });
 
-  // Load the plugin(s)
-  grunt.loadNpmTasks('grunt-contrib-uglify-es');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-rename');
-  grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-processhtml');
-  grunt.loadNpmTasks('grunt-file-append');
+    // Load the plugin(s)
+    grunt.loadNpmTasks('grunt-contrib-uglify-es');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-rename');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-file-append');
+    grunt.loadNpmTasks('grunt-folder-list');
 
-  // build gui easy task
-  grunt.registerTask('buildGuiEasy', 'Will build the project',
+    // the 'default' task can be run just by typing "grunt" on the command line
+    grunt.registerTask('default', [
+      'buildGuiEasy'
+    ]);
+
+    // build gui easy task
+    grunt.registerTask('buildGuiEasy', 'Will build the project',
       function () {
         let settings = grunt.file.read('src/gui_easy_settings.js');
         settings = settings.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
@@ -202,14 +234,19 @@ module.exports = function(grunt) {
         packageJSON = JSON.parse(packageJSON);
         packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
         packageJSON.bin["index.html.gz"] = "build/main/" + version + "/";
+        packageJSON.date = Date.now();
         grunt.file.write('package.json',
             JSON.stringify(packageJSON,null,2)
+        );
+        grunt.file.write('release.txt',
+          'major:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate
         );
         grunt.log.ok(version);
         // add version as a property for the grunt ini loop
         grunt.config("version", version);
         grunt.config("semVer", semVer);
         grunt.task.run(
+            'verifyCopyright',
             'clean:temp',
             'clean:version',
             'uglify',
@@ -218,16 +255,14 @@ module.exports = function(grunt) {
             'file_append',
             'compress',
             'clean:tempFiles',
+            'folder_list',
+            'copy:releaseInfo',
             'rename',
-            'clean:nodash'
-        )
+            'clean:noDash',
+            'clean:releaseInfo',
+            'listBuilds'
+        );
     });
-
-  // the 'default' task can be run just by typing "grunt" on the command line
-  grunt.registerTask('default', [
-      'verifyCopyright',
-      'buildGuiEasy'
-  ]);
 
     grunt.registerTask('verifyCopyright', function () {
 
@@ -282,5 +317,16 @@ module.exports = function(grunt) {
             });
 
         grunt.log.ok('Searched through', counter, 'files.');
+    });
+
+    grunt.registerTask('listBuilds', function () {
+        let folders = "";
+        grunt.file.expand(
+            {filter: 'isDirectory', cwd: 'build/'},
+            ['*'])
+            .forEach(function (dir) {
+                folders += dir + "\n";
+        });
+        grunt.file.write( 'build/releases.txt', folders);
     });
 };

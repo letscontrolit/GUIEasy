@@ -9,7 +9,7 @@ main-success-color|0,174,65
 main-sunny-color|255,209,0
 main-warning-color|239,72,61
 max-width-page-size|1400px
-overflow-tab-text-size|30
+overflow-tab-text-size|40
 row-size|16
 scale-size|19
 state-of-navbar-toggle|fixed
