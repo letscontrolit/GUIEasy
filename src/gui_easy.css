@@ -93,11 +93,12 @@ div.area-title {
     height: calc(1.45 * var(--default-height-size, 20));
     background: rgba(var(--main-inverted-color), 0.4);
 }
-
+#modal-setup div.area {
+    background: rgba(var(--main-bg-color), 0.4);
+}
 div.area.hide-contents > div:not(.area-title) {
     display: none;
 }
-
 div.area> div.area-title {
     margin-bottom: 0.2px;
     border-bottom: none;

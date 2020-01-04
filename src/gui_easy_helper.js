@@ -77,7 +77,7 @@ const helpEasy = {
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
-            if (helpEasy.findInArray(words[i], allCaps) === true || (words[i].charAt(0) === "(" && words[i].charAt(words[i].length-1) === ")")) {
+            if (helpEasy.findInArray(words[i], allCaps) === true) {
                 words[i] = words[i].toUpperCase();
             } else if (words[i].charAt(0) === "(") {
                 words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
@@ -1259,6 +1259,8 @@ const helpEasy = {
         let id = args.title.split(" ").join("-");
         let settingsIdPrefix = "generic-input-";
         let datasetBlob = "";
+        let prefixHTML = "";
+        let appendixHTML = "";
         if (args.toSettings === true) {
             settingsIdPrefix = "settings-input-";
             datasetBlob += 'data-settings="' + args.settingsId + '"';
@@ -1281,6 +1283,12 @@ const helpEasy = {
         if (args.list2value !== undefined) {
             datasetBlob += 'data-list2value="' + args.list2value + '"';
         }
+        if (args.prefixHTML !== undefined) {
+            prefixHTML = args.prefixHTML;
+        }
+        if (args.appendixHTML !== undefined) {
+            appendixHTML = args.appendixHTML;
+        }
         id = settingsIdPrefix + id;
         let tooltip = "";
         let gotTooltip = "";
@@ -1288,7 +1296,7 @@ const helpEasy = {
             tooltip = "<div class='tooltip'>" + args.tooltip + "</div>";
             gotTooltip = "got-tooltip";
         }
-        let html = "<div class='row'>";
+        let html = "<div class='row'>" + prefixHTML;
         if (type === "string") {
             html += "<span class='" + gotTooltip + "'>" + helpEasy.capitalWord(args.title) + tooltip + "</span>";
             html += `
@@ -1412,7 +1420,7 @@ const helpEasy = {
                 </label>
             `;
         }
-        html += "</div>";
+        html += appendixHTML + "</div>";
         return html;
     },
     'addLine': function () {
@@ -1424,15 +1432,15 @@ const helpEasy = {
             return `
             <div class="area hide-contents" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)
-                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `"` + ` class="is-hidden">{{ICON-MINIMIZE}}</button>`
-                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `">{{ICON-MAXIMIZE}}</button></div>
+                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `"` + ` class="is-hidden">` + guiEasy.curly.icon(["minimize"]) + `</button>`
+                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `">` + guiEasy.curly.icon(["maximize"]) + `</button></div>
             `;
         } else {
             return `
             <div class="area" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)
-                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `">{{ICON-MINIMIZE}}</button>`
-                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `"` + ` class="is-hidden">{{ICON-MAXIMIZE}}</button></div>
+                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `">` + guiEasy.curly.icon(["minimize"]) + `</button>`
+                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `"` + ` class="is-hidden">` + guiEasy.curly.icon(["maximize"]) + `</button></div>
             `;
         }
     },

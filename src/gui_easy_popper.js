@@ -984,6 +984,21 @@ guiEasy.popper.modal.settings = function (type) {
     if (type === "time") {
         html += helpEasy.addInput(
             {
+                "type": "number",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "time zone (minutes)",
+                "settingsId": "config--dst--TimeZone",
+                "placeholder": "",
+                "default": 0,
+                "max": 720,
+                "min": -720,
+                "step": 1
+            }
+        );
+        html += "<hr>";
+        html += helpEasy.addInput(
+            {
                 "type": "toggle",
                 "toGuiSettings": true,
                 "alt": "settings-change",
@@ -1007,6 +1022,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": ""
             }
         );
+        html += "<hr>";
         html += helpEasy.addInput(
             {
                 "type": "toggle",
@@ -1022,62 +1038,30 @@ guiEasy.popper.modal.settings = function (type) {
             }
         );
         html += "<hr>";
-        html += "<div class='main-bg-inverted'>" + helpEasy.capitalWord("dst starting") + "</div>";
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "week",
-                "alt": "settings-change",
-                "settingsId": "config--1",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.week
-            }
-        );
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "day",
-                "alt": "settings-change",
-                "settingsId": "config--2",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.day
-            }
-        );
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "month",
-                "alt": "settings-change",
-                "settingsId": "config--3",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.month
-            }
-        );
+        html += helpEasy.openArea("dst start");
         html += helpEasy.addInput(
             {
                 "type": "number",
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--4",
+                "settingsId": "config--settings--dst--integer--start--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped ahead.",
                 "default": 2,
                 "max": 23,
                 "min": 0,
-                "step": 1
+                "step": 1,
+                "prefixHTML": "<span style='width: 100%; text-align: left; margin-bottom: 3px;'>When</span>",
+                "appendixHTML": ""
             }
         );
-        html += "<hr><div class='main-bg-inverted'>" + helpEasy.capitalWord("dst ending") + "</div>";
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
                 "title": "week",
                 "alt": "settings-change",
-                "settingsId": "config--5",
+                "settingsId": "config--settings--dst--integer--start--week",
                 "placeholder": "",
                 "default": 0,
                 "optionList": guiEasy.timelist.week
@@ -1088,7 +1072,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "type": "dropdown",
                 "title": "day",
                 "alt": "settings-change",
-                "settingsId": "config--6",
+                "settingsId": "config--settings--dst--integer--start--day",
                 "placeholder": "",
                 "default": 0,
                 "optionList": guiEasy.timelist.day
@@ -1099,27 +1083,65 @@ guiEasy.popper.modal.settings = function (type) {
                 "type": "dropdown",
                 "title": "month",
                 "alt": "settings-change",
-                "settingsId": "config--7",
+                "settingsId": "config--settings--dst--integer--start--month",
                 "placeholder": "",
                 "default": 0,
                 "optionList": guiEasy.timelist.month
             }
         );
+        html += helpEasy.closeArea();
+        html += helpEasy.openArea("dst end");
         html += helpEasy.addInput(
             {
                 "type": "number",
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--8",
+                "settingsId": "config--settings--dst--integer--end--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped behind.",
                 "default": 2,
                 "max": 23,
                 "min": 0,
-                "step": 1
+                "step": 1,
+                "prefixHTML": "<span style='width: 100%; text-align: left; margin-bottom: 3px;'>When</span>",
+                "appendixHTML": ""
             }
         );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "week",
+                "alt": "settings-change",
+                "settingsId": "config--settings--dst--integer--end--week",
+                "placeholder": "",
+                "default": 0,
+                "optionList": guiEasy.timelist.week
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "day",
+                "alt": "settings-change",
+                "settingsId": "config--settings--dst--integer--end--day",
+                "placeholder": "",
+                "default": 0,
+                "optionList": guiEasy.timelist.day
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "month",
+                "alt": "settings-change",
+                "settingsId": "config--settings--dst--integer--end--month",
+                "placeholder": "",
+                "default": 0,
+                "optionList": guiEasy.timelist.month
+            }
+        );
+        html += helpEasy.closeArea();
     }
     if (type === "rules") {
         html += helpEasy.addInput(
