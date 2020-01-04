@@ -148,11 +148,11 @@ guiEasy.curly.input = function (arg) {
     if (type === "upload" || type === "all") {
         html += `
             <div
-                class="text-mini"
+                class="text-tiny"
                 id="modal-input-upload-storage-occupied"
             ></div>
             <div
-                class="text-mini"
+                class="text-tiny"
                 id="modal-input-upload-storage-free"
             ></div>
             <input

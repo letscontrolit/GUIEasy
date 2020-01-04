@@ -1547,19 +1547,20 @@ label.checkbox:active::after {
     width: calc(2 * var(--default-height-size, 20));
 }
 #modal-input-upload-storage-free {
-    margin-bottom: 5px;
     margin-left: auto;
-    height: calc(0.42 * var(--default-height-size, 20));
     color: var(--main-inverted-color-rgba);
     background-color: var(--main-font-color-rgba);
 }
 #modal-input-upload-storage-occupied {
     position: absolute;
-    height: calc(0.42 * var(--default-height-size, 20));
     color: var(--main-font-color-rgba);
     background-color: rgba(var(--main-success-color), 0.75);
 }
-
+#modal-input-upload-storage-free,
+#modal-input-upload-storage-occupied {
+    margin-bottom: 5px;
+    height: calc(0.6 * var(--default-height-size, 20));
+}
 select:hover ~ label.select,
 label:hover.select,
 div.tag.with-close:hover,
