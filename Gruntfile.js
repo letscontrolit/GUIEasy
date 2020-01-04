@@ -177,7 +177,7 @@ module.exports = function(grunt) {
               files:
                   {
                       src: ['**'],
-                      dest: 'build/temp/source_files.json',
+                      dest: 'build/temp/info/source_files.json',
                       cwd: 'src/'
                   }
       },
@@ -185,7 +185,13 @@ module.exports = function(grunt) {
       copy: {
           releaseInfo : {
               src: 'release.txt',
-              dest: 'build/temp/',
+              dest: 'build/temp/info/',
+              flatten: true,
+              filter: 'isFile',
+          },
+          package : {
+              src: 'package.json',
+              dest: 'build/temp/info/',
               flatten: true,
               filter: 'isFile',
           }
@@ -256,7 +262,7 @@ module.exports = function(grunt) {
             'compress',
             'clean:tempFiles',
             'folder_list',
-            'copy:releaseInfo',
+            'copy',
             'rename',
             'clean:noDash',
             'clean:releaseInfo',
