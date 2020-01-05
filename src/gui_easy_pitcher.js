@@ -111,14 +111,27 @@ guiEasy.pitcher.createLists = function () {
     for (let i = 0; i < types.length; i++) {
         let shortName = types[i].split("")[0].toUpperCase();
         guiEasy.list[types[i]] = {};
+        guiEasy.list[types[i]][0] = {
+            "name": "- None -",
+            "category": "",
+            "state": "",
+            "id": ""
+        };
         for (let k = 1; k < 1000; k++) {
             if (guiEasy.forms(types[i], k) === null) {
-                return;
+                //no more
             } else {
+                let endpoint = shortName + ("000" + k).slice(-3);
+                let state = guiEasy.forms[types[i]][endpoint].state;
+                if (state === "normal") {
+                    state = "";
+                }
                 guiEasy.list[types[i]][k] = {
-                    "name": guiEasy.forms[types[i]][shortName + ("000" + k).slice(-3)].name
+                    "name": guiEasy.forms[types[i]][endpoint].name,
+                    "category": guiEasy.forms[types[i]][endpoint].category,
+                    "state": state,
+                    "id": endpoint
                 };
-                console.log(guiEasy.forms.plugin.P002.name);
             }
         }
     }

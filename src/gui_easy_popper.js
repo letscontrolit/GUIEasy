@@ -1563,7 +1563,6 @@ guiEasy.popper.update = async function (whatToDo) {
 
 guiEasy.popper.edit = function (whatToDo) {
         let number = parseInt(whatToDo.args[2]);
-        let dataset = document.getElementById("setup-templates").dataset;
         let presetNumber = 0;
         if (whatToDo.args[1] === "task") {
             presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.tasks[(number-1)].device;
