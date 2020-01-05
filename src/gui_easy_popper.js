@@ -669,6 +669,9 @@ guiEasy.popper.modal = function (modalToOpen) {
             }, false)
         });
     }
+    if (z.input.string !== "nah" || z.input.upload !== "nah" || z.input.textarea !== "nah") {
+        document.getElementById("modal-input").classList.remove("is-hidden");
+    }
     if (z.custom !== null) {
         document.getElementById("modal-button-custom").classList[logic[z.button.custom]]("is-hidden");
         document.getElementById("modal-button-custom").dataset.click = z.action.custom;
@@ -683,6 +686,7 @@ guiEasy.popper.modal = function (modalToOpen) {
     }
     if (z.info !== null) {
         document.getElementById("modal-info").innerHTML = z.info;
+        document.getElementById("modal-info").classList.remove("is-hidden");
     }
     if (z.table !== null) {
         document.getElementById("modal-table").innerHTML = z.table;

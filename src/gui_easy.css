@@ -125,9 +125,6 @@ div.row:not(:empty) {
     margin-bottom: 3px;
     /*overflow: hidden;*/
 }
-div.row:last-child {
-    margin-bottom: 8px;
-}
 div.row > span {
     margin: 4px 3px 5px 4px;
 }
@@ -920,7 +917,7 @@ div.area-title > button.left {
     left: 0;
 }
 div.area-title > button > svg {
-    transform: translateX(1px) translateY(calc(8px - 0.2 * var(--default-height-size, 20)));
+    transform: translateY(calc(8px - 0.2 * var(--default-height-size, 20)));
 }
 div.modal {
     opacity: 1;
@@ -2036,6 +2033,9 @@ div.is-hidden,
     div.area {
         flex-direction: row;
     }
+    div.row:last-child {
+        margin-bottom: 8px;
+    }
 }
 @media (max-width: 999px) {
     #nav-right-small-screen {
@@ -2055,6 +2055,9 @@ div.is-hidden,
     }
     div.area {
         flex-direction: column;
+    }
+    div.row:last-child {
+        margin-bottom: 3px;
     }
 }
 @media (min-width: 550px) {

@@ -100,16 +100,16 @@ guiEasy.curly.modal = function (arg) {
                     >{{ICON-CLOSE}}</button>
                 </div>
                 <div class="column" id="modal-view">
-                    <div class="row" id="modal-info">
+                    <div class="row is-hidden" id="modal-info">
                         ` + info + `
                     </div>
-                    <div class="row" id="modal-table">
+                    <div class="row is-hidden" id="modal-table">
                         ` + tables + `
                     </div>
-                    <div class="row" id="modal-setup">
+                    <div class="row is-hidden" id="modal-setup">
                         ` + setup + `
                     </div>
-                    <div class="row" id="modal-input">
+                    <div class="row is-hidden" id="modal-input">
                         ` + inputs + `
                     </div>
                     <div class="row" id="modal-buttons">
