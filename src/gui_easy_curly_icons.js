@@ -187,7 +187,7 @@ guiEasy.curly.icon = function(arg) {
             </svg>
        `;
     }
-    if (icon === "devices") {
+    if (icon === "tasks") {
         return `
            <svg class="` + icon + `" ` + xml + viewbox + `>
                 <path ` + color + `

@@ -256,7 +256,7 @@ guiEasy.curly.notificationtable = function () {
         table += `
                 <tr>
                     <td class="notification-table controller">
-                        <button class="main-font" data-click="controller-edit-` + (t+1) + `">` + (t+1) + `</button>
+                        <button class="main-font" data-click="edit-notification-` + (t+1) + `">` + (t+1) + `</button>
                     </td>
                     <td class="notification-table service">
                         
@@ -299,7 +299,7 @@ guiEasy.curly.controllertable = function () {
         table += `
                 <tr>
                     <td class="controller-table controller">
-                        <button class="main-font" data-click="controller-edit-` + (t+1) + `">` + (t+1) + `</button>
+                        <button class="main-font" data-click="edit-controller-` + (t+1) + `">` + (t+1) + `</button>
                     </td>
                     <td class="controller-table protocol">
                         
@@ -328,34 +328,34 @@ guiEasy.curly.controllertable.infoCell = function (name, t) {
         `;
 };
 
-guiEasy.curly.devicetable = function () {
+guiEasy.curly.tasktable = function () {
     //TODO: make a choice if ESP82XX or ESP32, blank = ESP82XX
     let x = guiEasy.maxTasks();
     let y = guiEasy.maxValuesPerTask();
     let table = `
-                <table id="device-table">
+                <table id="task-table">
                 <tr>
-                    <th class="device-table header">Task</th>
-                    <th class="device-table header">Device</th>
-                    <th class="device-table header">Value</th>
+                    <th class="task-table header">Task</th>
+                    <th class="task-table header">Device</th>
+                    <th class="task-table header">Value</th>
                 </tr>
          `;
     for (let t=0; t<x; t++) {
         table += `
                 <tr>
-                    <td class="device-table task">
-                        <button class="main-font" data-click="task-edit-` + (t+1) + `">` + (t+1) + `</button>
+                    <td class="task-table task">
+                        <button class="main-font" data-click="edit-task-` + (t+1) + `">` + (t+1) + `</button>
                     </td>
-                    <td class="device-table device">` +
-                        guiEasy.curly.devicetable.deviceCell("plugin", t)
+                    <td class="task-table task">` +
+                        guiEasy.curly.tasktable.taskCell("plugin", t)
                         + `<hr class="is-hidden" id="task-` + (t+1) + `-port-hr">` +
-                        guiEasy.curly.devicetable.deviceCell("port", t)
+                        guiEasy.curly.tasktable.taskCell("port", t)
                         + `<hr class="is-hidden" id="task-` + (t+1) + `-controller-hr">` +
-                        guiEasy.curly.devicetable.deviceCell("controller", t)
+                        guiEasy.curly.tasktable.taskCell("controller", t)
                         + `<hr class="is-hidden" id="task-` + (t+1) + `-gpio-hr">` +
-                        guiEasy.curly.devicetable.deviceCell("gpio", t)
+                        guiEasy.curly.tasktable.taskCell("gpio", t)
                  + `</td>
-                    <td class="device-table value">
+                    <td class="task-table value">
                     <div class="task-name value-row" id="task-` + (t+1) + `-name" data-clear-task="` + (t+1) + `"></div>
                     <hr>
                 `;
@@ -378,11 +378,11 @@ guiEasy.curly.devicetable = function () {
     return table;
 };
 
-guiEasy.curly.devicetable.deviceCell = function (name, t) {
+guiEasy.curly.tasktable.taskCell = function (name, t) {
     return `
-            <div class="device-row flex is-hidden" id="task-` + (t+1) + "-" + name.toLowerCase() + `-row" data-hide-row="` + (t+1) + `">
-                <div class="device-row title">` + helpEasy.capitalWord(name) + `</div>
-                <div class="device-plugin is-right" id="task-` + (t+1) + `-` + name.toLowerCase() + `" data-clear-task="` + (t+1) + `"></div>
+            <div class="task-row flex is-hidden" id="task-` + (t+1) + "-" + name.toLowerCase() + `-row" data-hide-row="` + (t+1) + `">
+                <div class="task-row title">` + helpEasy.capitalWord(name) + `</div>
+                <div class="task-plugin is-right" id="task-` + (t+1) + `-` + name.toLowerCase() + `" data-clear-task="` + (t+1) + `"></div>
             </div>
         `;
 };

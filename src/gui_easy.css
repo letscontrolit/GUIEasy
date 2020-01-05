@@ -442,18 +442,18 @@ th {
 th.header {
     font-size: calc(0.75 * var(--default-font-size, 19pt));
 }
-td.value-row.device {
+td.value-row.task {
     word-wrap: break-word;
 }
 div.notification-row.flex,
 div.controller-row.flex,
-div.device-row.flex,
+div.task-row.flex,
 div.value-row.flex {
     display: flex;
     justify-content: space-between;
 }
 div.controller-row.title,
-div.device-row.title {
+div.task-row.title {
     color: rgba(var(--main-font-color), 0.5);
 }
 div.notification-row.title:empty,
@@ -462,9 +462,9 @@ div.notification-row.is-hidden + hr,
 div.controller-row.title:empty,
 div.controller-row:empty ~ hr,
 div.controller-row.is-hidden + hr,
-div.device-row.title:empty,
-div.device-row:empty ~ hr,
-div.device-row.is-hidden + hr,
+div.task-row.title:empty,
+div.task-row:empty ~ hr,
+div.task-row.is-hidden + hr,
 div.value-name:empty,
 div.value-digits:empty,
 div.value-row:empty ~ hr,
@@ -488,14 +488,14 @@ div.value-row.not-enabled > div.value-digits.classic {
 }
 div.notification-row.title::after,
 div.controller-row.title::after,
-div.device-row.title::after,
+div.task-row.title::after,
 div.value-name::after {
     content: ":";
     color: rgba(var(--main-font-color), 0.5);
 }
 div.notification-row.title:empty::after,
 div.controller-row.title:empty::after,
-div.device-row.title:empty::after,
+div.task-row.title:empty::after,
 div.value-name:empty::after {
     content: "";
 }
@@ -2008,6 +2008,7 @@ div.got-wallpaper::after {
     text-align: right;
     right: 0;
 }
+#setup-templates,
 div.silentStartup,
 div.is-hidden,
 .is-hidden {

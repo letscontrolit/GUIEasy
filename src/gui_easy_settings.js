@@ -219,7 +219,7 @@ const guiEasy = {
 
     },
     'tabs': {
-        'left': ['main', 'config', 'hardware', 'devices'],
+        'left': ['main', 'config', 'hardware', 'tasks'],
         'right': ['controllers', 'notification', 'tools', 'rules']
         },
     'guiStats': {           //Not to be mistaken for the unit's stats, this is the queen bee gui buildup stats
@@ -240,7 +240,7 @@ const guiEasy = {
                     'goto',
                     'button',
                     'version',
-                    'devicetable',
+                    'tasktable',
                     'controllertable',
                     'notificationtable',
                     'setup',

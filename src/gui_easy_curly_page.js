@@ -6,7 +6,7 @@ guiEasy.curly.page = function (arg) {
         type === "main" ||
         type === "config" ||
         type === "hardware" ||
-        type === "devices" ||
+        type === "tasks" ||
         type === "controllers" ||
         type === "notification" ||
         type === "tools" ||
@@ -26,9 +26,9 @@ guiEasy.curly.page.main = function () {
     `;
 };
 
-guiEasy.curly.page.devices = function () {
+guiEasy.curly.page.tasks = function () {
     return `
-            {{DEVICETABLE}}
+            {{TASKTABLE}}
         `;
 };
 
