@@ -586,6 +586,7 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
     }
     if (x === "controller" && y === "edit") {
         z.modal = "yep";
@@ -599,6 +600,7 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
     }
     if (x === "notification" && y === "edit") {
         z.modal = "yep";
@@ -612,6 +614,7 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
     }
     //Below we unhide "yep"s
     document.getElementById("modal-container").classList[logic[z.modal]]("is-hidden");
@@ -909,6 +912,7 @@ guiEasy.popper.modal.settings = function (type) {
             }
         );
         html += "<hr>";
+        //TODO: get the settings file to select these...
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
@@ -924,6 +928,24 @@ guiEasy.popper.modal.settings = function (type) {
                     {"text": "Default", "value": 0, "disabled":false, "note":""},
                     {"text": "GitHub", "value": 1, "disabled":false, "note":""},
                     {"text": "phpBB", "value": 2, "disabled":false, "note":""}
+                ]
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "plugin, controller, and notify dropdown",
+                "settingsId": "defaultSettings--userSettings--dropdownList",
+                "placeholder": "",
+                "default": 0,
+                "list2value": true,
+                "optionListOffset": -1,
+                "optionList": [
+                    {"text": "Default", "value": 0, "disabled":false, "note":""},
+                    {"text": "State", "value": 1, "disabled":false, "note":""},
+                    {"text": "Stripped", "value": 2, "disabled":false, "note":""}
                 ]
             }
         );
@@ -1579,8 +1601,8 @@ guiEasy.popper.edit = function (whatToDo) {
         if (presetNumber) {
             //a plugin is set up but not part of firmware = cannot run
         }
-        guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit"]});
-        console.log(presetNumber);
+        let options = helpEasy.setupDropdownList(whatToDo.args[1], presetNumber);
+        guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit", options]});
 };
 
 guiEasy.popper.settingsDiff = function (whatToDo) {

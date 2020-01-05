@@ -17,7 +17,8 @@ const defaultSettings = {
         'helpLinks': 1,
         'waitForTheme': 0,
         'internetLostShow': 1,
-        'clipboardSyntax': "Default"
+        'clipboardSyntax': "Default",
+        'dropdownList': "Default"
     },
     'css': {
         'variables': [

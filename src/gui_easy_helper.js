@@ -346,17 +346,81 @@ const helpEasy = {
             }
         }
     },
-    'setupDropdownList': function (type) {
-        let dropdownList = "";
+    'setupDropdownList': function (type, selected) {
+        let node = guiEasy.nodes[helpEasy.getCurrentIndex()].live.buildinfo;
+        let all = guiEasy.list;
+        let list = [];
+        let fullList = {};
+        let dropdownList = {};
+        dropdownList.start = "<span>";
+        dropdownList.htmlDefault = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.htmlState = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.htmlStripped = "<select id='" + type + "-dropdown-list'>";
         if (type === "task") {
-
+            list = node.plugins;
+            fullList = all.plugin;
+            dropdownList.start += helpEasy.capitalWord("select plugin");
         }
         if (type === "controller") {
-
+            list = node.controllers;
+            fullList = all.controller;
+            dropdownList.start += helpEasy.capitalWord("select controller");
         }
         if (type === "notification") {
-
+            list = node.notifications;
+            fullList = all.notification;
+            dropdownList.start += helpEasy.capitalWord("select notify");
         }
+        dropdownList.start += "</span>";
+        for (let i = 0; i < list.length; i++) {
+            let number = list[i].id;
+            fullList[number].active = true;
+        }
+        let keys = Object.keys(fullList);
+        for (let k = 0; k < keys.length; k++) {
+            let key = keys[k];
+            if (fullList[key].active !== undefined) {
+                dropdownList.htmlStripped += "<option value='" + key + "'";
+            }
+            dropdownList.htmlDefault += "<option value='" + key + "'";
+            dropdownList.htmlState += "<option value='" + key + "'";
+            if (parseInt(key) === selected) {
+                dropdownList.htmlDefault += " selected";
+                dropdownList.htmlState += " selected";
+                dropdownList.htmlStripped += " selected";
+            }
+            if (fullList[key].active === undefined && key !== "0") {
+                dropdownList.htmlDefault += " disabled";
+                dropdownList.htmlState += " disabled";
+            }
+            if (key === "0") {
+                dropdownList.htmlDefault += ">" + fullList[key].name;
+                dropdownList.htmlState += ">" + fullList[key].name;
+                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + fullList[key].name;
+            } else {
+                dropdownList.htmlDefault += ">" + fullList[key].category + " - " + fullList[key].name;
+            }
+            if (fullList[key].state === "normal") {
+                dropdownList.htmlState += ">" + fullList[key].category + " - " + fullList[key].name;
+            } else {
+                dropdownList.htmlState += ">" + fullList[key].category + " - " + fullList[key].name + " [" + fullList[key].state.toUpperCase() + "]";
+            }
+            if (fullList[key].active !== undefined && key !== "0") {
+                dropdownList.htmlStripped += ">" + fullList[key].category + " - " + fullList[key].name;
+            }
+            if (fullList[key].active === undefined && key !== "0") {
+                dropdownList.htmlDefault += " ⛔";
+                dropdownList.htmlState += " ⛔";
+            }
+            dropdownList.htmlDefault += "</option>";
+            dropdownList.htmlState += "</option>";
+            dropdownList.htmlStripped += "</option>";
+        }
+        dropdownList.htmlDefault += "</select>";
+        dropdownList.htmlState += "</select>";
+        dropdownList.htmlStripped += "</select>";
+        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></llabel>";
+        return dropdownList;
     },
     'getGuiInFields': function () {
         if (guiEasy.jsonPathsIN === undefined) {
