@@ -261,10 +261,10 @@ module.exports = function(grunt) {
             'file_append',
             'compress',
             'clean:tempFiles',
+            'clean:noDash',
             'folder_list',
             'copy',
             'rename',
-            'clean:noDash',
             'clean:releaseInfo',
             'listBuilds'
         );
