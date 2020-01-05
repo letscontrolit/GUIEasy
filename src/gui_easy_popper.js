@@ -581,7 +581,33 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.ok = "yep";
         z.action.ok = "settings-updated";
         z.button.custom = "yep";
-        z.action.custom = "task-delete";
+        z.action.custom = "delete-task";
+        z.custom = {
+            "text":"delete",
+            "color": "warning"
+        };
+    }
+    if (x === "controller" && y === "edit") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "editing controller " + modalToOpen.args[0];
+        z.button.ok = "yep";
+        z.action.ok = "settings-updated";
+        z.button.custom = "yep";
+        z.action.custom = "delete-controller";
+        z.custom = {
+            "text":"delete",
+            "color": "warning"
+        };
+    }
+    if (x === "notification" && y === "edit") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "editing notification " + modalToOpen.args[0];
+        z.button.ok = "yep";
+        z.action.ok = "settings-updated";
+        z.button.custom = "yep";
+        z.action.custom = "delete-notification";
         z.custom = {
             "text":"delete",
             "color": "warning"
@@ -1535,21 +1561,27 @@ guiEasy.popper.update = async function (whatToDo) {
     }
 };
 
-guiEasy.popper.task = function (whatToDo) {
-    if (whatToDo.args[1] === "edit") {
-        let taskNumber = parseInt(whatToDo.args[2]);
+guiEasy.popper.edit = function (whatToDo) {
+        let number = parseInt(whatToDo.args[2]);
         let dataset = document.getElementById("setup-templates").dataset;
-        let presetPluginNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.tasks[(taskNumber-1)].device;
-        if (presetPluginNumber === 0) {
+        let presetNumber = 0;
+        if (whatToDo.args[1] === "task") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.tasks[(number-1)].device;
+        }
+        if (whatToDo.args[1] === "controller") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.controllers[(number-1)].protocol;
+        }
+        if (whatToDo.args[1] === "notification") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.notifications[(number-1)].type;
+        }
+        if (presetNumber === 0) {
             //no plugin is setup
         }
-        if (presetPluginNumber) {
+        if (presetNumber) {
             //a plugin is set up but not part of firmware = cannot run
         }
-        guiEasy.popper.modal({"args":[taskNumber,"task","edit"]});
-        console.log(presetPluginNumber);
-    }
-    console.log(whatToDo);
+        guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit"]});
+        console.log(presetNumber);
 };
 
 guiEasy.popper.settingsDiff = function (whatToDo) {

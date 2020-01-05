@@ -92,16 +92,36 @@ guiEasy.pitcher = function (processID, processType) {
             guiEasy.current.config !== undefined
         ) {
             clearInterval(u);
+            guiEasy.pitcher.createLists();
             //take care of url parameters...
             guiEasy.popper.tab({"args":["tab",urlParams.tab]});
             console.log(urlParams);
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
+            console.log(guiEasy);
 
         }
     }, timeoutU);
     //and we're live and kicking!
+};
+
+guiEasy.pitcher.createLists = function () {
+    let types = ["plugin", "controller", "notification"];
+    guiEasy.list = {};
+    for (let i = 0; i < types.length; i++) {
+        let shortName = types[i].split("")[0].toUpperCase();
+        guiEasy.list[types[i]] = {};
+        for (let k = 1; k < 1000; k++) {
+            if (guiEasy.forms(types[i], k) === null) {
+                return;
+            } else {
+                guiEasy.list[types[i]][k] = {
+                    "name": guiEasy.forms[types[i]][shortName + ("000" + k).slice(-3)].name
+                };
+                console.log(guiEasy.forms.plugin.P002.name);
+            }
+        }
+    }
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {

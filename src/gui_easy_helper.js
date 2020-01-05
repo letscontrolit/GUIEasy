@@ -346,6 +346,18 @@ const helpEasy = {
             }
         }
     },
+    'setupDropdownList': function (type) {
+        let dropdownList = "";
+        if (type === "task") {
+
+        }
+        if (type === "controller") {
+
+        }
+        if (type === "notification") {
+
+        }
+    },
     'getGuiInFields': function () {
         if (guiEasy.jsonPathsIN === undefined) {
             guiEasy.jsonPathsIN = [];

@@ -3,9 +3,12 @@
 //TOGGLE--pathToSettings--uniqueID--label--true(1)Text|false(0)Text
 //NUMBER--pathToSettings--uniqueID--label--defaultValue--minValue--maxValue--stepValue
 
-
+guiEasy.forms.plugin.P002 = {};
+guiEasy.forms.plugin.P002.name = "";
+guiEasy.forms.plugin.P002.category = "";
+guiEasy.forms.plugin.P002.state = "normal"; //normal, testing, development
 //------------------------------- HTML or CURLY -------------------------------//
-guiEasy.forms.plugin.P002 = `
+guiEasy.forms.plugin.P002.html = `
 {{TOGGLE--configs-0--P002-1--oversampling is active|oversampling is disabled}}
 <hr>
 <div hidden id="task-_tasknumber_-y=kx+m">
@@ -83,6 +86,3 @@ function task_tasknumber_updateGraph() {
 {{NUMBER--configs_long-1--P002-5--point 2 (x)--0--0--1023--1}}
 {{NUMBER--configs_float-1--P002-6--point 2 (y)--0}}
 `;  //--------------------------- HTML or CURLY -------------------------------//
-guiEasy.forms.plugin.P002.name = "";
-guiEasy.forms.plugin.P002.category = "";
-guiEasy.forms.plugin.P002.state = "normal"; //normal, testing, development
