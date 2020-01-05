@@ -925,9 +925,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": 0, "disabled":false, "note":""},
-                    {"text": "GitHub", "value": 1, "disabled":false, "note":""},
-                    {"text": "phpBB", "value": 2, "disabled":false, "note":""}
+                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
+                    {"text": "GitHub", "value": "GitHub", "disabled":false, "note":""},
+                    {"text": "phpBB", "value": "phpBB", "disabled":false, "note":""}
                 ]
             }
         );
@@ -943,9 +943,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": 0, "disabled":false, "note":""},
-                    {"text": "State", "value": 1, "disabled":false, "note":""},
-                    {"text": "Stripped", "value": 2, "disabled":false, "note":""}
+                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
+                    {"text": "State", "value": "State", "disabled":false, "note":""},
+                    {"text": "Stripped", "value": "Stripped", "disabled":false, "note":""}
                 ]
             }
         );

@@ -347,6 +347,7 @@ const helpEasy = {
         }
     },
     'setupDropdownList': function (type, selected) {
+        //TODO: sort these lists
         let node = guiEasy.nodes[helpEasy.getCurrentIndex()].live.buildinfo;
         let all = guiEasy.list;
         let list = [];
@@ -379,11 +380,11 @@ const helpEasy = {
         let keys = Object.keys(fullList);
         for (let k = 0; k < keys.length; k++) {
             let key = keys[k];
-            if (fullList[key].active !== undefined) {
-                dropdownList.htmlStripped += "<option value='" + key + "'";
-            }
             dropdownList.htmlDefault += "<option value='" + key + "'";
             dropdownList.htmlState += "<option value='" + key + "'";
+            if (fullList[key].active !== undefined && key !== "0") {
+                dropdownList.htmlStripped += "<option value='" + key + "'";
+            }
             if (parseInt(key) === selected) {
                 dropdownList.htmlDefault += " selected";
                 dropdownList.htmlState += " selected";
@@ -396,25 +397,25 @@ const helpEasy = {
             if (key === "0") {
                 dropdownList.htmlDefault += ">" + fullList[key].name;
                 dropdownList.htmlState += ">" + fullList[key].name;
-                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + fullList[key].name;
-            } else {
-                dropdownList.htmlDefault += ">" + fullList[key].category + " - " + fullList[key].name;
+                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + fullList[key].name + "</option>";
+            }
+            let denied = "";
+            if (fullList[key].active === undefined && key !== "0") {
+                denied = "⛔ ";
+            }
+            if (key !== "0") {
+                dropdownList.htmlDefault += ">" + denied + fullList[key].category + " - " + fullList[key].name;
             }
             if (fullList[key].state === "normal") {
-                dropdownList.htmlState += ">" + fullList[key].category + " - " + fullList[key].name;
-            } else {
-                dropdownList.htmlState += ">" + fullList[key].category + " - " + fullList[key].name + " [" + fullList[key].state.toUpperCase() + "]";
+                dropdownList.htmlState += ">" + denied + fullList[key].category + " - " + fullList[key].name;
+            } else if (key !== "0") {
+                dropdownList.htmlState += ">" + denied + fullList[key].category + " - " + fullList[key].name + " [" + fullList[key].state.toUpperCase() + "]";
             }
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped += ">" + fullList[key].category + " - " + fullList[key].name;
-            }
-            if (fullList[key].active === undefined && key !== "0") {
-                dropdownList.htmlDefault += " ⛔";
-                dropdownList.htmlState += " ⛔";
+                dropdownList.htmlStripped +=  ">" + fullList[key].category + " - " + fullList[key].name + "</option>";
             }
             dropdownList.htmlDefault += "</option>";
             dropdownList.htmlState += "</option>";
-            dropdownList.htmlStripped += "</option>";
         }
         dropdownList.htmlDefault += "</select>";
         dropdownList.htmlState += "</select>";
