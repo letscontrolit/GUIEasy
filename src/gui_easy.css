@@ -680,7 +680,7 @@ div.menu {
     height: calc(2 * var(--default-height-size, 20) + 3px);
 }
 button > svg {
-    transform: translateX(1px) translateY(4px);
+    transform: translateX(1px) translateY(calc(0.1 * var(--default-height-size, 20) + 2px));
 }
 button.menu-action > svg.action > path {
     fill: rgba(var(--main-font-color), 0.5);
@@ -920,7 +920,7 @@ div.area-title > button.left {
     left: 0;
 }
 div.area-title > button > svg {
-    transform: translateY(3px);
+    transform: translateX(1px) translateY(calc(8px - 0.2 * var(--default-height-size, 20)));
 }
 div.modal {
     opacity: 1;
@@ -1525,6 +1525,7 @@ label.checkbox  {
     font-size: calc(1 * var(--default-font-size, 19pt));
     width: calc(3 * var(--default-height-size, 20));
     height: calc(1.2 * var(--default-height-size, 20));
+    margin-bottom: calc(0.12 * var(--default-height-size, 20));
     background: var(--main-font-color-rgba, white);
     border-radius: calc(1 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
