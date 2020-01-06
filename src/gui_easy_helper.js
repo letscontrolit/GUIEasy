@@ -73,7 +73,27 @@ const helpEasy = {
         return word;
     },
     'capitalWord': function (str) {
-        let allCaps = ["bin","ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
+        let allCaps = [
+            "ap",
+            "bin","bssid",
+            "cpu",
+            "dhcp","dns","dst",
+            "esp",
+            "gui","gw","gpio",
+            "http","https",
+            "ip","id","i2c",
+            "json",
+            "led","l/r",
+            "mqtt",
+            "ntp",
+            "ok",
+            "p2p",
+            "rssi","ram",
+            "ssid","spi","sda","scl","sta","ssl",
+            "ttn",
+            "udp",
+            "wpa"
+        ];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
             //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
@@ -395,24 +415,24 @@ const helpEasy = {
                 dropdownList.htmlState += " disabled";
             }
             if (key === "0") {
-                dropdownList.htmlDefault += ">" + fullList[key].name;
-                dropdownList.htmlState += ">" + fullList[key].name;
-                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + fullList[key].name + "</option>";
+                dropdownList.htmlDefault += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.htmlState += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
             let denied = "";
             if (fullList[key].active === undefined && key !== "0") {
                 denied = "⛔ ";
             }
             if (key !== "0") {
-                dropdownList.htmlDefault += ">" + denied + fullList[key].category + " - " + fullList[key].name;
+                dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
             }
             if (fullList[key].state === "normal") {
-                dropdownList.htmlState += ">" + denied + fullList[key].category + " - " + fullList[key].name;
+                dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
             } else if (key !== "0") {
-                dropdownList.htmlState += ">" + denied + fullList[key].category + " - " + fullList[key].name + " [" + fullList[key].state.toUpperCase() + "]";
+                dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "]";
             }
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped +=  ">" + fullList[key].category + " - " + fullList[key].name + "</option>";
+                dropdownList.htmlStripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
             dropdownList.htmlDefault += "</option>";
             dropdownList.htmlState += "</option>";
