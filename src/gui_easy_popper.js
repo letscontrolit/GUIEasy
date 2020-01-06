@@ -187,7 +187,7 @@ guiEasy.popper.gui = function (event) {
             value = value[inputs[i].checked];
         }
         if (inputs[i].dataset.type === "dropdown") {
-            value = inputs[i].selectedOptions[0].text;
+            value = inputs[i].selectedOptions[0].value;
         }
         if (settingsPath[2] === "preventDefaults") {
             browserUserSettings.preventDefaults[settingsPath[3]] = value;
@@ -988,7 +988,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "optionListOffset": -1,
                 "optionList": [
                     {"text": "Default", "value": "Default", "disabled":false, "note":""},
-                    {"text": "State", "value": "State", "disabled":false, "note":""},
+                    {"text": "No State", "value": "NoState", "disabled":false, "note":""},
                     {"text": "Stripped", "value": "Stripped", "disabled":false, "note":""}
                 ]
             }
