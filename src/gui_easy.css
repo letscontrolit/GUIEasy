@@ -961,7 +961,7 @@ div.modal > div.message {
     top: 35%; left: 50%;
     transform: translate(-50%,-35%);
     min-width: 400px;
-    max-width: calc(0.4 * var(--max-width-page-size, 1400px));
+    max-width: calc(0.6 * var(--max-width-page-size, 1400px));
     max-height: 80vh;
     border-radius: calc(0.25 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }

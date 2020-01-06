@@ -1052,7 +1052,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "use ntp server",
                 "settingsId": "config--ntp--enabled",
@@ -1078,7 +1078,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "daylight saving",
                 "settingsId": "config--dst--enabled",
@@ -1097,7 +1097,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--settings--dst--integer--start--hour",
+                "settingsId": "config--dst--integer--start--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped ahead.",
                 "default": 2,
@@ -1112,10 +1112,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "week",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--start--week",
+                "settingsId": "config--dst--integer--start--week",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.week
             }
         );
@@ -1123,10 +1126,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "day",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--start--day",
+                "settingsId": "config--dst--integer--start--day",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.day
             }
         );
@@ -1134,10 +1140,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "month",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--start--month",
+                "settingsId": "config--dst--integer--start--month",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.month
             }
         );
@@ -1149,7 +1158,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--settings--dst--integer--end--hour",
+                "settingsId": "config--dst--integer--end--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped behind.",
                 "default": 2,
@@ -1164,10 +1173,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "week",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--end--week",
+                "settingsId": "config--dst--integer--end--week",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.week
             }
         );
@@ -1175,10 +1187,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "day",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--end--day",
+                "settingsId": "config--dst--integer--end--day",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.day
             }
         );
@@ -1186,10 +1201,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "month",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--settings--dst--integer--end--month",
+                "settingsId": "config--dst--integer--end--month",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.month
             }
         );
