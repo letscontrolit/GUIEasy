@@ -784,12 +784,47 @@ const helpEasy = {
             let taskName = x[i].TaskName;
             let taskEnabled = x[i].TaskEnabled;
             let plugin = x[i].Type;
-            let pluginNumber = "P" + ("000" + x[i].TaskDeviceNumber).slice(-3);
+            let pluginNumber = "P" + ("000" + x[i]["taskNumber"]).slice(-3);
+            let gpio = guiEasy.nodes[helpEasy.getCurrentIndex()].settings;
+            if (gpio === undefined) {
+                gpio = ""
+            } else {
+                gpio = gpio.tasks[(taskNumber-1)];
+            }
+            let gpios = [];
+            for (let k = 1; k < 100; k++) {
+                if (gpio["gpio"+k] === undefined) {
+                    continue;
+                }
+                if (gpio["gpio"+k] !== 0 && gpio["gpio"+k] !== 255) {
+                    gpios.push(gpio["gpio"+k]);
+                }
+            }
+            if (gpios.length > 0) {
+                gpio = gpios.join(", ");
+            } else {
+                gpio = "";
+            }
+            let arrayControllers = [];
+            for (let k = 0; k < controllers.length; k++) {
+                if (controllers[k].Enabled === "true") {
+                    if (controllers[k].IDX > 0) {
+                        arrayControllers.push(controllers[k].Controller + " (" + controllers[k].IDX + ")");
+                    } else {
+                        arrayControllers.push(controllers[k].Controller);
+                    }
+                }
+            }
+            if (arrayControllers.length > 0) {
+                controllers = arrayControllers.join(", ");
+            } else {
+                controllers = "";
+            }
             taskMatrix[(taskNumber - 1)] = {
                 "plugin": plugin,
                 "port": "",
-                "controller": "",
-                "gpio": "",
+                "controller": controllers,
+                "gpio": gpio,
                 "enabled": taskEnabled,
                 "name": taskName
             };

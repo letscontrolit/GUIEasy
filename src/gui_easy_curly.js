@@ -301,7 +301,7 @@ guiEasy.curly.controllertable = function () {
                     <td class="controller-table controller">
                         <button class="main-font" data-click="edit-controller-` + (t+1) + `">` + (t+1) + `</button>
                     </td>
-                    <td class="controller-table protocol">
+                    <td class="controller-table protocol" id="controller-` + (t+1) + `-protocol">
                         
                     </td>
                     <td class="controller-table info">` +

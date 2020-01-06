@@ -51,6 +51,7 @@ guiEasy.tender = function (processID, processType) {
             guiEasy.popper.topNotifier("unitDown","Connection with unit lost.", "warning");
         } else if (guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID === "unitDown") {
             guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastCheck = Date.now();
+            helpEasy.setCurrentOnline("online");
             guiEasy.popper.topNotifier("unitUp","Connection with unit is re-established.", "success", 3);
         }
         //is the settings in gui updated?
