@@ -579,9 +579,10 @@ guiEasy.popper.modal = function (modalToOpen) {
     if (x === "info" && y === "log") {
         z.modal = "yep";
         z.button.close = "yep";
+        z.action.close = "stop-log";
         z.title = "web log";
         z.button.copy = "yep";
-        z.action.copy = "clipboard-pinstate";
+        z.action.copy = "clipboard-log";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
     if (x === "info" && y === "json") {
@@ -754,6 +755,15 @@ guiEasy.popper.modal = function (modalToOpen) {
         guiEasy.current.modal = document.querySelectorAll("[data-modal-settings-table]")[0];
     }
     helpEasy.guiUpdaterSettings("fromBrowser");
+    // since gui uses it's own settings this hackish lookup is done for dropdowns
+    if (x === "settings" && y === "gui") {
+        let dropdowns = document.querySelectorAll("[data-gui-dropdown-value]");
+        for (let k = 0; k < dropdowns.length; k++) {
+            if (dropdowns[k].dataset.guiDropdownValue !== "") {
+                dropdowns[k].value = dropdowns[k].dataset.guiDropdownValue;
+            }
+        }
+    }
     //Countdown...
     if (z.countdown > 0) {
         let countdownElement = document.getElementById("modal-title-button-close");
@@ -777,6 +787,18 @@ guiEasy.popper.modal = function (modalToOpen) {
         }, 1000);
     }
 };
+guiEasy.popper.stop = function (what) {
+    if (what.args[1] === "log") {
+        // close the modal
+        let eventDetails = {
+            "type": "modal",
+            "args": ["modal", "close"]
+        };
+        guiEasy.popper.tryCallEvent(eventDetails);
+        // stop the log list ...
+
+    }
+};
 
 guiEasy.popper.modal.settings = function (type) {
     let html = "";
@@ -785,7 +807,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "escape key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
@@ -799,7 +821,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl space key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+space",
@@ -813,7 +835,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl enter key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+enter",
@@ -827,7 +849,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keys key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keys",
@@ -841,7 +863,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keyz key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keyz",
@@ -855,7 +877,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "alt digit key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--alt+digit",
@@ -869,7 +891,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "alt arrow key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--alt+arrows",
@@ -884,7 +906,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "wait for theme",
                 "settingsId": "defaultSettings--userSettings--waitForTheme",
@@ -898,7 +920,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "minimize areas",
                 "settingsId": "defaultSettings--userSettings--areasMinimized",
@@ -912,7 +934,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "show help links",
                 "settingsId": "defaultSettings--userSettings--helpLinks",
@@ -926,7 +948,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "warn if internet lost",
                 "settingsId": "defaultSettings--userSettings--internetLostShow",
@@ -938,16 +960,14 @@ guiEasy.popper.modal.settings = function (type) {
             }
         );
         html += "<hr>";
-        //TODO: get the settings file to select these...
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "syntax of copy to clipboard",
                 "settingsId": "defaultSettings--userSettings--clipboardSyntax",
                 "placeholder": "",
-                "default": 0,
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
@@ -960,12 +980,11 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "plugin, controller, and notify dropdown",
                 "settingsId": "defaultSettings--userSettings--dropdownList",
                 "placeholder": "",
-                "default": 0,
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [

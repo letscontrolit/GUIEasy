@@ -128,6 +128,7 @@ div.row:not(:empty) {
 }
 div.row > span {
     margin: 4px 3px 5px 4px;
+    text-align: left;
 }
 /*MODAL STUFF BELOW THIS LINE*/
 button#modal-title-button-close::after {

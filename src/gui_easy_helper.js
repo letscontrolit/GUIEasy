@@ -213,7 +213,7 @@ const helpEasy = {
                 }
             )
             .catch(error => {
-                console.error('Error fetching (' + endpoint + '): ', error);
+                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "warn");
                 array[index].stats.error++;
                 let nextRun = Date.now() + array[index].stats[endpoint].TTL_fallback;
                 array[index]["scheduler"].push([nextRun, endpoint]);
@@ -1517,6 +1517,11 @@ const helpEasy = {
                 `;
         }
         if (type === "dropdown") {
+            let split = (args.settingsId).split("--");
+            let guiDropdownValue = null;
+            if (split[0] === "defaultSettings") {
+                guiDropdownValue = defaultSettings[split[1]][split[2]];
+            }
             html += "<span class='" + gotTooltip + "'>" + helpEasy.capitalWord(args.title) + tooltip + "</span>";
             html +=  `    
                     <select
@@ -1526,6 +1531,7 @@ const helpEasy = {
                         data-alt="` + args.alt + `"
                         data-settings="` + args.settingsId + `"
                         data-default-index="` + args.default + `"
+                        data-gui-dropdown-value="` + guiDropdownValue + `"
                         ` + disabled + `
                         ` + datasetBlob + `>
                 `;
