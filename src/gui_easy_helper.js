@@ -446,11 +446,11 @@ const helpEasy = {
             }
             if (key !== "0") {
                 dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
-            }
-            if (fullList[key].state === "normal") {
-                dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
-            } else if (key !== "0") {
-                dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "]";
+                if (fullList[key].state === "") {
+                    dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                } else {
+                    dropdownList.htmlState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
+                }
             }
             if (fullList[key].active !== undefined && key !== "0") {
                 dropdownList.htmlStripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";

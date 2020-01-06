@@ -175,7 +175,6 @@ guiEasy.popper.clipboard.regexTable = function (rawHTML) {
 };
 
 guiEasy.popper.gui = function (event) {
-    let currentUserSettings = defaultSettings.userSettings;
     let browserUserSettings = {
         "preventDefaults": {}
     };
@@ -196,7 +195,7 @@ guiEasy.popper.gui = function (event) {
             browserUserSettings[settingsPath[2]] = value;
         }
     }
-    currentUserSettings = browserUserSettings;
+    defaultSettings.userSettings = browserUserSettings;
     if (document.getElementById("label-temp") !== null) {
         document.getElementById("label-temp").remove();
     }
@@ -205,7 +204,7 @@ guiEasy.popper.gui = function (event) {
     l.style.display = "none";
     document.body.appendChild(l);
     let file = new File(
-        [JSON.stringify(currentUserSettings,null,2)],
+        [JSON.stringify(defaultSettings.userSettings, null, 2)],
         "gui.txt",
         {
             type: "text/plain"
