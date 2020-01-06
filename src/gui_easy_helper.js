@@ -366,8 +366,23 @@ const helpEasy = {
             }
         }
     },
+    'sortOptionsInSelect': function (elementID) {
+            let element = document.getElementById(elementID);
+            let array = [];
+            for (let i = 0; i < element.options.length; i++) {
+                array[i] = [];
+                array[i][0] = element.options[i].text;
+                array[i][1] = element.options[i].value;
+            }
+            array.sort();
+            while (element.options.length > 0) {
+                element.options[0] = null;
+            }
+            for (let i = 0; i < array.length; i++) {
+                element.options[i] = new Option(array[i][0], array[i][1]);
+            }
+    },
     'setupDropdownList': function (type, selected) {
-        //TODO: sort these lists
         let node = guiEasy.nodes[helpEasy.getCurrentIndex()].live.buildinfo;
         let all = guiEasy.list;
         let list = [];

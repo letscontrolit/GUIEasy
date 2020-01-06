@@ -1603,6 +1603,7 @@ guiEasy.popper.edit = function (whatToDo) {
         }
         let options = helpEasy.setupDropdownList(whatToDo.args[1], presetNumber);
         guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit", options]});
+        helpEasy.sortOptionsInSelect(whatToDo.args[1] + "-dropdown-list");
 };
 
 guiEasy.popper.settingsDiff = function (whatToDo) {
