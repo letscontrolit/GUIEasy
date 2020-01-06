@@ -566,6 +566,22 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.action.copy = "clipboard-sysvars";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
+    if (x === "info" && y === "pinstate") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "current pinstate";
+        z.button.copy = "yep";
+        z.action.copy = "clipboard-pinstate";
+        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+    }
+    if (x === "info" && y === "json") {
+        // just open the json endpoint in a new tab... since we're not adding the "a" to DOM it'll be garbage collected
+        let a = document.createElement("a");
+        a.href = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/json";
+        a.target = "_blank";
+        a.click();
+        z.countdown = 1; //since the modal never opens up but it's there = input events aren't triggered we set the countdown to 1 to automatically close it
+    }
     if (x === "info" && y === "timing") {
         z.modal = "yep";
         z.button.close = "yep";
@@ -1619,9 +1635,10 @@ guiEasy.popper.edit = function (whatToDo) {
         if (presetNumber) {
             //a plugin is set up but not part of firmware = cannot run
         }
-        let options = helpEasy.setupDropdownList(whatToDo.args[1], presetNumber);
+        let options = helpEasy.setupDropdownList(whatToDo.args[1]);
         guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit", options]});
         helpEasy.sortOptionsInSelect(whatToDo.args[1] + "-dropdown-list");
+        document.getElementById(whatToDo.args[1] + "-dropdown-list").value = presetNumber;
 };
 
 guiEasy.popper.settingsDiff = function (whatToDo) {

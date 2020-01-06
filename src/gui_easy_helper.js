@@ -373,6 +373,7 @@ const helpEasy = {
                 array[i] = [];
                 array[i][0] = element.options[i].text;
                 array[i][1] = element.options[i].value;
+                array[i][2] = element.options[i].disabled;
             }
             array.sort();
             while (element.options.length > 0) {
@@ -380,9 +381,10 @@ const helpEasy = {
             }
             for (let i = 0; i < array.length; i++) {
                 element.options[i] = new Option(array[i][0], array[i][1]);
+                element.options[i].disabled = array[i][2];
             }
     },
-    'setupDropdownList': function (type, selected) {
+    'setupDropdownList': function (type) {
         let node = guiEasy.nodes[helpEasy.getCurrentIndex()].live.buildinfo;
         let all = guiEasy.list;
         let list = [];
@@ -419,11 +421,6 @@ const helpEasy = {
             dropdownList.htmlState += "<option value='" + key + "'";
             if (fullList[key].active !== undefined && key !== "0") {
                 dropdownList.htmlStripped += "<option value='" + key + "'";
-            }
-            if (parseInt(key) === selected) {
-                dropdownList.htmlDefault += " selected";
-                dropdownList.htmlState += " selected";
-                dropdownList.htmlStripped += " selected";
             }
             if (fullList[key].active === undefined && key !== "0") {
                 dropdownList.htmlDefault += " disabled";
@@ -850,6 +847,8 @@ const helpEasy = {
                 }
             }
         }
+        //controller update
+
         //populate the stats
         guiEasy.current.gui = index;
         if (guiEasy.nodes[index].stats["gui"] === undefined) {
@@ -1202,6 +1201,12 @@ const helpEasy = {
         }
         if (path.length === 8) {
             return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]];
+        }
+        if (path.length === 9) {
+            return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]];
+        }
+        if (path.length === 10) {
+            return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]][path[9]];
         }
     },
     'sortObjectArray': (propName) =>
