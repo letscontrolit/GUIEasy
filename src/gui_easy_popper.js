@@ -251,9 +251,6 @@ guiEasy.popper.command = function (x) {
 
 guiEasy.popper.topNotifier = function (id, string, color, countdown) {
     let x = guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID;
-    if (x === undefined) {
-        guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
-    }
     if (x !== id) {
         guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
         let notifier = document.getElementById("top-notifier");
@@ -263,19 +260,23 @@ guiEasy.popper.topNotifier = function (id, string, color, countdown) {
         }
         notifier.innerHTML = string;
         notifier.classList.add("main-" + color);
-        if (id === "internetDown") {
-            //No click away
-            notifier.classList.add("no-click");
-        }
         notifier.addEventListener("click", function () {
             notifier.classList.add("is-hidden");
             notifier.innerHTML = "";
-            guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
             notifier.classList.remove("no-click");
+            notifier.classList.remove("internet-down");
             notifier.classList.remove("main-" + color);
+            setTimeout(function () {
+                //make the notify not pop up for another 30 seconds
+                guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
+            }, 30 * 1000);
         });
+        if (id === "internetDown") {
+            //No click away
+            notifier.classList.add("no-click");
+            notifier.classList.add("internet-down");
+        }
         if (countdown > 0) {
-            guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
             notifier.innerHTML = "<div id='countdown-bar'></div>" + notifier.innerHTML;
             let bar = document.getElementById("countdown-bar");
             let z = 1;
@@ -288,6 +289,7 @@ guiEasy.popper.topNotifier = function (id, string, color, countdown) {
                 }
             }, 1000);
             setTimeout(function () {
+                guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
                 notifier.click();
             }, countdown * 1001)
         }

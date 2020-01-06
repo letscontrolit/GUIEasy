@@ -15,7 +15,7 @@ guiEasy.tender = function (processID, processType) {
             //If we have more than 1 missed fetch in a row...
             if (x[i].stats.error > maxMissed) {
                 let delay = missedBuffer * guiEasy.fetchSettings.intervalTimeKeeper;
-                console.log("@:" + new Date(timestampNow).toISOString() + ">>> We missed " + (maxMissed + 1) + " fetches in a row... will wait " + delay + " ms before retry.");
+                helpEasy.addToLogDOM("@:" + new Date(timestampNow).toISOString() + ">>> We missed " + (maxMissed + 1) + " fetches in a row... will wait " + delay + " ms before retry.", 0, "warn");
                 helpEasy.schedulerDelay(x, i, delay);
                 continue;
             }
@@ -50,6 +50,7 @@ guiEasy.tender = function (processID, processType) {
         if (helpEasy.getCurrentIndex("online") === false && helpEasy.internet() === true) {
             guiEasy.popper.topNotifier("unitDown","Connection with unit lost.", "warning");
         } else if (guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID === "unitDown") {
+            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastCheck = Date.now();
             guiEasy.popper.topNotifier("unitUp","Connection with unit is re-established.", "success", 3);
         }
         //is the settings in gui updated?
