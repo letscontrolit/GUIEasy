@@ -7,6 +7,7 @@
     --max-width-page-size:		1400px;
     --state-of-navbar-toggle:   fixed;  /* fixed = always show, absolute = scroll away */
     --button-radius-size:		1;
+    --button-icon-size:         0;
     --main-bg-color:			52,146,226;
     --main-inverted-color:		47,66,82;
     --main-sunny-color:         255,209,0;
@@ -122,7 +123,7 @@ div.row:not(:empty) {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
     /*overflow: hidden;*/
 }
 div.row > span {
@@ -678,6 +679,7 @@ div.menu {
 }
 button > svg {
     transform: translateX(1px) translateY(calc(0.1 * var(--default-height-size, 20) + 2px));
+    margin: calc(-1px * var(--button-icon-size, 0));
 }
 button.menu-action > svg.action > path {
     fill: rgba(var(--main-font-color), 0.5);

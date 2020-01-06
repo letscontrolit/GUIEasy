@@ -30,8 +30,9 @@ const defaultSettings = {
             ['main-warning-color',     '239,72,61',                     "Warning"],
             ['main-success-color',     '0,174,65',                      "Success"],
             ['button-radius-size',     1,                               "Button Radius"],  //1...100
+            ['button-icon-size',       0,                               "Button Icon Scale"],  //-20...20
             ['max-width-page-size',    1400,                            "Max Page Width (px)"],  //400...10 000
-            ['scale-size',             16,                              "Scale Value"],  //1...100
+            ['scale-size',             16,                              "Overall Scale Value"],  //1...100
             ['row-size',               20,                              "Row Height"],  //1...100
             ['overflow-tab-text-size', 24,                              "Tab Text Overflow Value"],  //1...100
             ['state-of-navbar-toggle', "fixed",                         "Navbar Always Show|Navbar Scroll Away"],
@@ -40,6 +41,7 @@ const defaultSettings = {
         ],
         'size': {
             "button-radius-size": {"min": 1, "max": 100, "step": 1, "placeholder": ""},
+            "button-icon-size": {"min": -20, "max": 20, "step": 1, "placeholder": ""},
             "max-width-page-size": {"min": 400, "max": 10000, "step": 100, "placeholder": "px"},
             "scale-size": {"min": 1, "max": 100, "step": 1, "placeholder": ""},
             "row-size": {"min": 1, "max": 100, "step": 1, "placeholder": ""},

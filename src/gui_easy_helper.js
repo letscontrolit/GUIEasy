@@ -89,14 +89,14 @@ const helpEasy = {
             "ok",
             "p2p",
             "rssi","ram",
-            "ssid","spi","sda","scl","sta","ssl",
+            "ssid","spi","sda","scl","sta","ssl","smtp",
             "ttn",
             "udp",
             "wpa"
         ];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
-            //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
+            //if the string is found in the allCaps it will be all caps.
             if (helpEasy.findInArray(words[i], allCaps) === true) {
                 words[i] = words[i].toUpperCase();
             } else if (words[i].charAt(0) === "(") {
