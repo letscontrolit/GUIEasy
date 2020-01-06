@@ -576,6 +576,14 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.action.copy = "clipboard-pinstate";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
+    if (x === "info" && y === "log") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "web log";
+        z.button.copy = "yep";
+        z.action.copy = "clipboard-pinstate";
+        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+    }
     if (x === "info" && y === "json") {
         // just open the json endpoint in a new tab... since we're not adding the "a" to DOM it'll be garbage collected
         let a = document.createElement("a");

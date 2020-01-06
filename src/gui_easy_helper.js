@@ -193,6 +193,15 @@ const helpEasy = {
                         array[index]["live"][endpoint].TTL = dataFromFile.Log.TTL;
                     }
                     //TODO: The if above is not needed if we move the TTL for the log to its correct place.
+                    if (endpoint === "logjson") {
+                        if (array[index]["log"] === undefined) {
+                            array[index]["log"] = [];
+                        }
+                        array[index]["log"].push({
+                            "entries": array[index]["live"][endpoint].Log.Entries,
+                            "timestamp": Date.now()
+                        });
+                    }
                     array[index]["live"][endpoint].TTL_fallback = ttl_fallback;
                     let nextRun = Date.now() + array[index]["live"][endpoint].TTL;
                     array[index]["scheduler"].push([nextRun, endpoint]);
@@ -595,6 +604,33 @@ const helpEasy = {
         }
         html += "</table></div>";
         set(guiEasy.nodes[index], "modal.table.files", html);
+    },
+    'logListBacklog': function () {
+        let listHTML = "";
+        let level = {
+            "1":"success",
+            "2":"bg",
+            "3":"sunny",
+            "4":"info",
+            "5":"",      //not used
+            "6":"",      //not used
+            "7":"",      //not used
+            "8":"",      //not used
+            "9":"warning"
+        };
+        let history = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
+        for (let i = 0; i < history.length; i++) {
+            let timestamp = history[i].timestamp;
+            let entries = history[i].Entries;
+            if (entries.length > 0) {
+                //add to list
+                listHTML += "<div class='entry'><div class='timestamp>'" + entries[i].timestamp + "</div><div class='main-" + level[entries[i].level] + "'>" + entries[i].text + "</div></div>";
+            }
+            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
+        }
+    },
+    'logListLive': function (timestampIN) {
+
     },
     'timingstatsList': function (timingArray, index) {
         let unsorted = [];

@@ -57,7 +57,7 @@ guiEasy.tender = function (processID, processType) {
         //is the settings in gui updated?
         //helpEasy.guiUpdaterSettings();
         //console.log(defaultSettings);
-        //console.log(guiEasy.nodes);
+        console.log(guiEasy.nodes);
     }, guiEasy.fetchSettings.intervalGUIupdater);
 
     helpEasy.processDone(processID, processType);
