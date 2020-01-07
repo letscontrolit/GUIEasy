@@ -175,7 +175,6 @@ guiEasy.popper.clipboard.regexTable = function (rawHTML) {
 };
 
 guiEasy.popper.gui = function (event) {
-    let currentUserSettings = defaultSettings.userSettings;
     let browserUserSettings = {
         "preventDefaults": {}
     };
@@ -188,7 +187,7 @@ guiEasy.popper.gui = function (event) {
             value = value[inputs[i].checked];
         }
         if (inputs[i].dataset.type === "dropdown") {
-            value = inputs[i].selectedOptions[0].text;
+            value = inputs[i].selectedOptions[0].value;
         }
         if (settingsPath[2] === "preventDefaults") {
             browserUserSettings.preventDefaults[settingsPath[3]] = value;
@@ -196,7 +195,7 @@ guiEasy.popper.gui = function (event) {
             browserUserSettings[settingsPath[2]] = value;
         }
     }
-    currentUserSettings = browserUserSettings;
+    defaultSettings.userSettings = browserUserSettings;
     if (document.getElementById("label-temp") !== null) {
         document.getElementById("label-temp").remove();
     }
@@ -205,7 +204,7 @@ guiEasy.popper.gui = function (event) {
     l.style.display = "none";
     document.body.appendChild(l);
     let file = new File(
-        [JSON.stringify(currentUserSettings,null,2)],
+        [JSON.stringify(defaultSettings.userSettings, null, 2)],
         "gui.txt",
         {
             type: "text/plain"
@@ -251,9 +250,6 @@ guiEasy.popper.command = function (x) {
 
 guiEasy.popper.topNotifier = function (id, string, color, countdown) {
     let x = guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID;
-    if (x === undefined) {
-        guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
-    }
     if (x !== id) {
         guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
         let notifier = document.getElementById("top-notifier");
@@ -263,19 +259,23 @@ guiEasy.popper.topNotifier = function (id, string, color, countdown) {
         }
         notifier.innerHTML = string;
         notifier.classList.add("main-" + color);
-        if (id === "internetDown") {
-            //No click away
-            notifier.classList.add("no-click");
-        }
         notifier.addEventListener("click", function () {
             notifier.classList.add("is-hidden");
             notifier.innerHTML = "";
-            guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
             notifier.classList.remove("no-click");
+            notifier.classList.remove("internet-down");
             notifier.classList.remove("main-" + color);
+            setTimeout(function () {
+                //make the notify not pop up for another 30 seconds
+                guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
+            }, 30 * 1000);
         });
+        if (id === "internetDown") {
+            //No click away
+            notifier.classList.add("no-click");
+            notifier.classList.add("internet-down");
+        }
         if (countdown > 0) {
-            guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = id;
             notifier.innerHTML = "<div id='countdown-bar'></div>" + notifier.innerHTML;
             let bar = document.getElementById("countdown-bar");
             let z = 1;
@@ -288,6 +288,7 @@ guiEasy.popper.topNotifier = function (id, string, color, countdown) {
                 }
             }, 1000);
             setTimeout(function () {
+                guiEasy.nodes[helpEasy.getCurrentIndex()].notifierID = "";
                 notifier.click();
             }, countdown * 1001)
         }
@@ -566,6 +567,31 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.action.copy = "clipboard-sysvars";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
+    if (x === "info" && y === "pinstate") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "current pinstate";
+        z.button.copy = "yep";
+        z.action.copy = "clipboard-pinstate";
+        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+    }
+    if (x === "info" && y === "log") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.action.close = "stop-log";
+        z.title = "web log";
+        z.button.copy = "yep";
+        z.action.copy = "clipboard-log";
+        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+    }
+    if (x === "info" && y === "json") {
+        // just open the json endpoint in a new tab... since we're not adding the "a" to DOM it'll be garbage collected
+        let a = document.createElement("a");
+        a.href = "http://" + guiEasy.nodes[helpEasy.getCurrentIndex()].ip + "/json";
+        a.target = "_blank";
+        a.click();
+        z.countdown = 1; //since the modal never opens up but it's there = input events aren't triggered we set the countdown to 1 to automatically close it
+    }
     if (x === "info" && y === "timing") {
         z.modal = "yep";
         z.button.close = "yep";
@@ -581,11 +607,40 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.button.ok = "yep";
         z.action.ok = "settings-updated";
         z.button.custom = "yep";
-        z.action.custom = "task-delete";
+        z.action.custom = "delete-task";
         z.custom = {
             "text":"delete",
             "color": "warning"
         };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+    }
+    if (x === "controller" && y === "edit") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "editing controller " + modalToOpen.args[0];
+        z.button.ok = "yep";
+        z.action.ok = "settings-updated";
+        z.button.custom = "yep";
+        z.action.custom = "delete-controller";
+        z.custom = {
+            "text":"delete",
+            "color": "warning"
+        };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+    }
+    if (x === "notification" && y === "edit") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "editing notification " + modalToOpen.args[0];
+        z.button.ok = "yep";
+        z.action.ok = "settings-updated";
+        z.button.custom = "yep";
+        z.action.custom = "delete-notification";
+        z.custom = {
+            "text":"delete",
+            "color": "warning"
+        };
+        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
     }
     //Below we unhide "yep"s
     document.getElementById("modal-container").classList[logic[z.modal]]("is-hidden");
@@ -669,6 +724,9 @@ guiEasy.popper.modal = function (modalToOpen) {
             }, false)
         });
     }
+    if (z.input.string !== "nah" || z.input.upload !== "nah" || z.input.textarea !== "nah") {
+        document.getElementById("modal-input").classList.remove("is-hidden");
+    }
     if (z.custom !== null) {
         document.getElementById("modal-button-custom").classList[logic[z.button.custom]]("is-hidden");
         document.getElementById("modal-button-custom").dataset.click = z.action.custom;
@@ -683,6 +741,7 @@ guiEasy.popper.modal = function (modalToOpen) {
     }
     if (z.info !== null) {
         document.getElementById("modal-info").innerHTML = z.info;
+        document.getElementById("modal-info").classList.remove("is-hidden");
     }
     if (z.table !== null) {
         document.getElementById("modal-table").innerHTML = z.table;
@@ -695,6 +754,15 @@ guiEasy.popper.modal = function (modalToOpen) {
         guiEasy.current.modal = document.querySelectorAll("[data-modal-settings-table]")[0];
     }
     helpEasy.guiUpdaterSettings("fromBrowser");
+    // since gui uses it's own settings this hackish lookup is done for dropdowns
+    if (x === "settings" && y === "gui") {
+        let dropdowns = document.querySelectorAll("[data-gui-dropdown-value]");
+        for (let k = 0; k < dropdowns.length; k++) {
+            if (dropdowns[k].dataset.guiDropdownValue !== "") {
+                dropdowns[k].value = dropdowns[k].dataset.guiDropdownValue;
+            }
+        }
+    }
     //Countdown...
     if (z.countdown > 0) {
         let countdownElement = document.getElementById("modal-title-button-close");
@@ -718,6 +786,18 @@ guiEasy.popper.modal = function (modalToOpen) {
         }, 1000);
     }
 };
+guiEasy.popper.stop = function (what) {
+    if (what.args[1] === "log") {
+        // close the modal
+        let eventDetails = {
+            "type": "modal",
+            "args": ["modal", "close"]
+        };
+        guiEasy.popper.tryCallEvent(eventDetails);
+        // stop the log list ...
+
+    }
+};
 
 guiEasy.popper.modal.settings = function (type) {
     let html = "";
@@ -726,7 +806,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "escape key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
@@ -740,7 +820,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl space key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+space",
@@ -754,7 +834,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl enter key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+enter",
@@ -768,7 +848,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keys key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keys",
@@ -782,7 +862,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "ctrl keyz key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--ctrl+keyz",
@@ -796,7 +876,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "alt digit key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--alt+digit",
@@ -810,7 +890,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "alt arrow key",
                 "settingsId": "defaultSettings--userSettings--preventDefaults--alt+arrows",
@@ -825,7 +905,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "wait for theme",
                 "settingsId": "defaultSettings--userSettings--waitForTheme",
@@ -839,7 +919,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "minimize areas",
                 "settingsId": "defaultSettings--userSettings--areasMinimized",
@@ -853,7 +933,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "show help links",
                 "settingsId": "defaultSettings--userSettings--helpLinks",
@@ -867,7 +947,7 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "warn if internet lost",
                 "settingsId": "defaultSettings--userSettings--internetLostShow",
@@ -882,18 +962,34 @@ guiEasy.popper.modal.settings = function (type) {
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "syntax of copy to clipboard",
                 "settingsId": "defaultSettings--userSettings--clipboardSyntax",
                 "placeholder": "",
-                "default": 0,
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": 0, "disabled":false, "note":""},
-                    {"text": "GitHub", "value": 1, "disabled":false, "note":""},
-                    {"text": "phpBB", "value": 2, "disabled":false, "note":""}
+                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
+                    {"text": "GitHub", "value": "GitHub", "disabled":false, "note":""},
+                    {"text": "phpBB", "value": "phpBB", "disabled":false, "note":""}
+                ]
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "plugin, controller, and notify dropdown",
+                "settingsId": "defaultSettings--userSettings--dropdownList",
+                "placeholder": "",
+                "list2value": true,
+                "optionListOffset": -1,
+                "optionList": [
+                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
+                    {"text": "No State", "value": "NoState", "disabled":false, "note":""},
+                    {"text": "Stripped", "value": "Stripped", "disabled":false, "note":""}
                 ]
             }
         );
@@ -984,8 +1080,23 @@ guiEasy.popper.modal.settings = function (type) {
     if (type === "time") {
         html += helpEasy.addInput(
             {
+                "type": "number",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "time zone (minutes)",
+                "settingsId": "config--dst--TimeZone",
+                "placeholder": "",
+                "default": 0,
+                "max": 720,
+                "min": -720,
+                "step": 1
+            }
+        );
+        html += "<hr>";
+        html += helpEasy.addInput(
+            {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "use ntp server",
                 "settingsId": "config--ntp--enabled",
@@ -1007,10 +1118,11 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": ""
             }
         );
+        html += "<hr>";
         html += helpEasy.addInput(
             {
                 "type": "toggle",
-                "toGuiSettings": true,
+                "toSettings": true,
                 "alt": "settings-change",
                 "title": "daylight saving",
                 "settingsId": "config--dst--enabled",
@@ -1022,64 +1134,35 @@ guiEasy.popper.modal.settings = function (type) {
             }
         );
         html += "<hr>";
-        html += "<div class='main-bg-inverted'>" + helpEasy.capitalWord("dst starting") + "</div>";
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "week",
-                "alt": "settings-change",
-                "settingsId": "config--1",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.week
-            }
-        );
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "day",
-                "alt": "settings-change",
-                "settingsId": "config--2",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.day
-            }
-        );
-        html += helpEasy.addInput(
-            {
-                "type": "dropdown",
-                "title": "month",
-                "alt": "settings-change",
-                "settingsId": "config--3",
-                "placeholder": "",
-                "default": 0,
-                "optionList": guiEasy.timelist.month
-            }
-        );
+        html += helpEasy.openArea("dst start");
         html += helpEasy.addInput(
             {
                 "type": "number",
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--4",
+                "settingsId": "config--dst--integer--start--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped ahead.",
                 "default": 2,
                 "max": 23,
                 "min": 0,
-                "step": 1
+                "step": 1,
+                "prefixHTML": "<span style='width: 100%; text-align: left; margin-bottom: 3px;'>When</span>",
+                "appendixHTML": ""
             }
         );
-        html += "<hr><div class='main-bg-inverted'>" + helpEasy.capitalWord("dst ending") + "</div>";
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
                 "title": "week",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--5",
+                "settingsId": "config--dst--integer--start--week",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.week
             }
         );
@@ -1087,10 +1170,13 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "day",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--6",
+                "settingsId": "config--dst--integer--start--day",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.day
             }
         );
@@ -1098,28 +1184,78 @@ guiEasy.popper.modal.settings = function (type) {
             {
                 "type": "dropdown",
                 "title": "month",
+                "toSettings": true,
                 "alt": "settings-change",
-                "settingsId": "config--7",
+                "settingsId": "config--dst--integer--start--month",
                 "placeholder": "",
                 "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
                 "optionList": guiEasy.timelist.month
             }
         );
+        html += helpEasy.closeArea();
+        html += helpEasy.openArea("dst end");
         html += helpEasy.addInput(
             {
                 "type": "number",
                 "toSettings": true,
                 "alt": "settings-change",
                 "title": "hour",
-                "settingsId": "config--8",
+                "settingsId": "config--dst--integer--end--hour",
                 "placeholder": "",
                 "tooltip": "The hour that <br> will be jumped behind.",
                 "default": 2,
                 "max": 23,
                 "min": 0,
-                "step": 1
+                "step": 1,
+                "prefixHTML": "<span style='width: 100%; text-align: left; margin-bottom: 3px;'>When</span>",
+                "appendixHTML": ""
             }
         );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "week",
+                "toSettings": true,
+                "alt": "settings-change",
+                "settingsId": "config--dst--integer--end--week",
+                "placeholder": "",
+                "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
+                "optionList": guiEasy.timelist.week
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "day",
+                "toSettings": true,
+                "alt": "settings-change",
+                "settingsId": "config--dst--integer--end--day",
+                "placeholder": "",
+                "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
+                "optionList": guiEasy.timelist.day
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "title": "month",
+                "toSettings": true,
+                "alt": "settings-change",
+                "settingsId": "config--dst--integer--end--month",
+                "placeholder": "",
+                "default": 0,
+                "list2value": true,
+                "optionListOffset": 0,
+                "optionList": guiEasy.timelist.month
+            }
+        );
+        html += helpEasy.closeArea();
     }
     if (type === "rules") {
         html += helpEasy.addInput(
@@ -1509,21 +1645,28 @@ guiEasy.popper.update = async function (whatToDo) {
     }
 };
 
-guiEasy.popper.task = function (whatToDo) {
-    if (whatToDo.args[1] === "edit") {
-        let taskNumber = parseInt(whatToDo.args[2]);
-        let dataset = document.getElementById("setup-templates").dataset;
-        let presetPluginNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.tasks[(taskNumber-1)].device;
-        if (presetPluginNumber === 0) {
+guiEasy.popper.edit = function (whatToDo) {
+        let number = parseInt(whatToDo.args[2]);
+        let presetNumber = 0;
+        if (whatToDo.args[1] === "task") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.tasks[(number-1)].device;
+        }
+        if (whatToDo.args[1] === "controller") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.controllers[(number-1)].protocol;
+        }
+        if (whatToDo.args[1] === "notification") {
+            presetNumber = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.notifications[(number-1)].type;
+        }
+        if (presetNumber === 0) {
             //no plugin is setup
         }
-        if (presetPluginNumber) {
+        if (presetNumber) {
             //a plugin is set up but not part of firmware = cannot run
         }
-        guiEasy.popper.modal({"args":[taskNumber,"task","edit"]});
-        console.log(presetPluginNumber);
-    }
-    console.log(whatToDo);
+        let options = helpEasy.setupDropdownList(whatToDo.args[1]);
+        guiEasy.popper.modal({"args":[number,whatToDo.args[1],"edit", options]});
+        helpEasy.sortOptionsInSelect(whatToDo.args[1] + "-dropdown-list");
+        document.getElementById(whatToDo.args[1] + "-dropdown-list").value = presetNumber;
 };
 
 guiEasy.popper.settingsDiff = function (whatToDo) {

@@ -26,6 +26,7 @@ function initiate() {
     }
 }
 
+// In order to distinguish the GUI Easy console messages from the generic messages we have created this :
 guiEasy.newConsole = function () {
     window.msg = (function (defaultConsole) {
         return Object.assign({}, defaultConsole, {

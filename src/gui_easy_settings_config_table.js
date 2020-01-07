@@ -207,7 +207,7 @@ guiEasy.configDat.variousBits = function() {
         "config.rules.useNewEngine",
         "config.mqtt.changeclientidrecon",
         "config.general.doNotAppendUnitNumber",
-        "config._variousBit32"
+        "config._variousBit32"  // empty bit...
     ];
     let int = guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.variousBits;
     helpEasy.int32binaryBool(guiEasy.nodes[helpEasy.getCurrentIndex()], int, list, "settings.");

@@ -171,18 +171,18 @@ const guiEasy = {
                 {"text":"4th","value":4, "disabled":false, "note":""}
                 ],
         'day':  [
-                {"text":"Monday","value":1, "disabled":false, "note":""},
-                {"text":"Tuesday","value":2, "disabled":false, "note":""},
-                {"text":"Wednesday","value":3, "disabled":false, "note":""},
-                {"text":"Thursday","value":4, "disabled":false, "note":""},
-                {"text":"Friday","value":5, "disabled":false, "note":""},
-                {"text":"Saturday","value":6, "disabled":false, "note":""},
-                {"text":"Sunday","value":7, "disabled":false, "note":""}
+                {"text":"Sunday","value":1, "disabled":false, "note":""},
+                {"text":"Monday","value":2, "disabled":false, "note":""},
+                {"text":"Tuesday","value":3, "disabled":false, "note":""},
+                {"text":"Wednesday","value":4, "disabled":false, "note":""},
+                {"text":"Thursday","value":5, "disabled":false, "note":""},
+                {"text":"Friday","value":6, "disabled":false, "note":""},
+                {"text":"Saturday","value":7, "disabled":false, "note":""}
                 ],
         'month':[
                 {"text":"January","value":1, "disabled":false, "note":""},
                 {"text":"February","value":2, "disabled":false, "note":""},
-                {"text":"Mars","value":3, "disabled":false, "note":""},
+                {"text":"March","value":3, "disabled":false, "note":""},
                 {"text":"April","value":4, "disabled":false, "note":""},
                 {"text":"May","value":5, "disabled":false, "note":""},
                 {"text":"June","value":6, "disabled":false, "note":""},
@@ -219,7 +219,7 @@ const guiEasy = {
 
     },
     'tabs': {
-        'left': ['main', 'config', 'hardware', 'devices'],
+        'left': ['main', 'config', 'hardware', 'tasks'],
         'right': ['controllers', 'notification', 'tools', 'rules']
         },
     'guiStats': {           //Not to be mistaken for the unit's stats, this is the queen bee gui buildup stats
@@ -240,7 +240,7 @@ const guiEasy = {
                     'goto',
                     'button',
                     'version',
-                    'devicetable',
+                    'tasktable',
                     'controllertable',
                     'notificationtable',
                     'setup',

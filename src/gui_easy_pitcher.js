@@ -92,16 +92,49 @@ guiEasy.pitcher = function (processID, processType) {
             guiEasy.current.config !== undefined
         ) {
             clearInterval(u);
+            guiEasy.pitcher.createLists();
             //take care of url parameters...
             guiEasy.popper.tab({"args":["tab",urlParams.tab]});
             console.log(urlParams);
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
-            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
+            console.log(guiEasy);
 
         }
     }, timeoutU);
     //and we're live and kicking!
+};
+
+guiEasy.pitcher.createLists = function () {
+    let types = ["plugin", "controller", "notification"];
+    guiEasy.list = {};
+    for (let i = 0; i < types.length; i++) {
+        let shortName = types[i].split("")[0].toUpperCase();
+        guiEasy.list[types[i]] = {};
+        guiEasy.list[types[i]][0] = {
+            "name": "- None -",
+            "category": "",
+            "state": "",
+            "id": ""
+        };
+        for (let k = 1; k < 1000; k++) {
+            if (guiEasy.forms(types[i], k) === null) {
+                //no more
+            } else {
+                let endpoint = shortName + ("000" + k).slice(-3);
+                let state = guiEasy.forms[types[i]][endpoint].state;
+                if (state === "normal") {
+                    state = "";
+                }
+                guiEasy.list[types[i]][k] = {
+                    "name": guiEasy.forms[types[i]][endpoint].name,
+                    "category": guiEasy.forms[types[i]][endpoint].category,
+                    "state": state,
+                    "id": endpoint
+                };
+            }
+        }
+    }
 };
 
 guiEasy.pitcher.loadGUIsettings = function () {

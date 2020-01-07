@@ -48,22 +48,6 @@ guiEasy.scrubber = function (processID, processType) {
             y[k].appendChild(child);
         }
     }
-    let element = document.createElement("div");
-    element.id = "setup-templates";
-    element.style.display = "hidden";
-    document.body.appendChild(element);
-    let typesOfChunks = ["plugin", "controller", "notification"];
-    for (let i = 0; i < typesOfChunks.length; i++) {
-        let element = document.getElementById("setup-templates");
-        for (let k = 1; k < 999; k++) {
-            let html = guiEasy.forms(typesOfChunks[i], k);
-            if (html === null) {
-                k = 999;
-            } else {
-                element.dataset[typesOfChunks[i] + k] = html;
-            }
-        }
-    }
     helpEasy.addToLogDOM("pageSize", 1);
 
     helpEasy.processDone(processID, processType);

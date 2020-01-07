@@ -73,11 +73,46 @@ const helpEasy = {
         return word;
     },
     'capitalWord': function (str) {
-        let allCaps = ["bin","ok","gpio","led","ssid","spi","wpa","ap","ip","esp","dns","id","i2c","sda","scl","ntp","dst","gui","json","mqtt","p2p","rssi","bssid","dhcp","cpu","ram","sta","gw","l/r","http","udp"];
+        let allCaps = [
+            "ap",
+            "bin","bssid",
+            "cpu",
+            "dhcp","dns","dst",
+            "esp",
+            "gui","gw","gpio",
+            "http","https",
+            "ip","id","i2c","io",
+            "json",
+            "led","l/r","lcd",
+            "mqtt",
+            "ntp",
+            "ok",
+            "p2p",
+            "rssi","ram","rfid",
+            "ssid","spi","sda","scl","sta","ssl","smtp",
+            "ttn",
+            "udp",
+            "wpa"
+        ];
+        let leaveAsIs = [
+            "BMP085/180","BH1750",
+            "DS18b20","DHT11/12/22",
+            "HC-SR04",
+            "LCD2004",
+            "MCP23017",
+            "PCF8591",
+            "RCW-0001",
+            "SI7021/HTU21D",
+            "TSL2561"
+        ];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
-            //if the string is found in the allCaps or is starting and ending with parentheses it will be all caps.
-            if (helpEasy.findInArray(words[i], allCaps) === true || (words[i].charAt(0) === "(" && words[i].charAt(words[i].length-1) === ")")) {
+            if (helpEasy.findInArray(words[i], leaveAsIs) === true) { //TODO: make this better and use indexOf instead!
+                words[i] = leaveAsIs[leaveAsIs.indexOf(words[i])];
+                continue;
+            }
+            //if the string is found in the allCaps it will be all caps.
+            if (helpEasy.findInArray(words[i], allCaps) === true) {
                 words[i] = words[i].toUpperCase();
             } else if (words[i].charAt(0) === "(") {
                 words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
@@ -173,6 +208,15 @@ const helpEasy = {
                         array[index]["live"][endpoint].TTL = dataFromFile.Log.TTL;
                     }
                     //TODO: The if above is not needed if we move the TTL for the log to its correct place.
+                    if (endpoint === "logjson") {
+                        if (array[index]["log"] === undefined) {
+                            array[index]["log"] = [];
+                        }
+                        array[index]["log"].push({
+                            "entries": array[index]["live"][endpoint].Log.Entries,
+                            "timestamp": Date.now()
+                        });
+                    }
                     array[index]["live"][endpoint].TTL_fallback = ttl_fallback;
                     let nextRun = Date.now() + array[index]["live"][endpoint].TTL;
                     array[index]["scheduler"].push([nextRun, endpoint]);
@@ -184,7 +228,7 @@ const helpEasy = {
                 }
             )
             .catch(error => {
-                console.error('Error fetching (' + endpoint + '): ', error);
+                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "warn");
                 array[index].stats.error++;
                 let nextRun = Date.now() + array[index].stats[endpoint].TTL_fallback;
                 array[index]["scheduler"].push([nextRun, endpoint]);
@@ -346,6 +390,95 @@ const helpEasy = {
             }
         }
     },
+    'sortOptionsInSelect': function (elementID) {
+            let element = document.getElementById(elementID);
+            let array = [];
+            for (let i = 0; i < element.options.length; i++) {
+                array[i] = [];
+                array[i][0] = element.options[i].text;
+                array[i][1] = element.options[i].value;
+                array[i][2] = element.options[i].disabled;
+            }
+            array.sort();
+            while (element.options.length > 0) {
+                element.options[0] = null;
+            }
+            for (let i = 0; i < array.length; i++) {
+                element.options[i] = new Option(array[i][0], array[i][1]);
+                element.options[i].disabled = array[i][2];
+            }
+    },
+    'setupDropdownList': function (type) {
+        let node = guiEasy.nodes[helpEasy.getCurrentIndex()].live.buildinfo;
+        let all = guiEasy.list;
+        let list = [];
+        let fullList = {};
+        let dropdownList = {};
+        dropdownList.start = "<span>";
+        dropdownList.htmlNoState = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.htmlDefault = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.htmlStripped = "<select id='" + type + "-dropdown-list'>";
+        if (type === "task") {
+            list = node.plugins;
+            fullList = all.plugin;
+            dropdownList.start += helpEasy.capitalWord("select plugin");
+        }
+        if (type === "controller") {
+            list = node.controllers;
+            fullList = all.controller;
+            dropdownList.start += helpEasy.capitalWord("select controller");
+        }
+        if (type === "notification") {
+            list = node.notifications;
+            fullList = all.notification;
+            dropdownList.start += helpEasy.capitalWord("select notify");
+        }
+        dropdownList.start += "</span>";
+        for (let i = 0; i < list.length; i++) {
+            let number = list[i].id;
+            fullList[number].active = true;
+        }
+        let keys = Object.keys(fullList);
+        for (let k = 0; k < keys.length; k++) {
+            let key = keys[k];
+            dropdownList.htmlNoState += "<option value='" + key + "'";
+            dropdownList.htmlDefault += "<option value='" + key + "'";
+            if (fullList[key].active !== undefined && key !== "0") {
+                dropdownList.htmlStripped += "<option value='" + key + "'";
+            }
+            if (fullList[key].active === undefined && key !== "0") {
+                dropdownList.htmlNoState += " disabled";
+                dropdownList.htmlDefault += " disabled";
+            }
+            if (key === "0") {
+                dropdownList.htmlNoState += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.htmlDefault += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
+            }
+            let denied = "";
+            if (fullList[key].active === undefined && key !== "0") {
+                denied = "⛔ ";
+            }
+            if (key !== "0") {
+                dropdownList.htmlNoState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                if (fullList[key].state === "") {
+                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                } else {
+                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
+                }
+            }
+            if (fullList[key].active !== undefined && key !== "0") {
+                dropdownList.htmlStripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
+            }
+            dropdownList.htmlNoState += "</option>";
+            dropdownList.htmlDefault += "</option>";
+        }
+        dropdownList.htmlNoState += "</select>";
+        dropdownList.htmlDefault += "</select>";
+        dropdownList.htmlStripped += "</select>";
+        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></llabel>";
+        return dropdownList;
+    },
     'getGuiInFields': function () {
         if (guiEasy.jsonPathsIN === undefined) {
             guiEasy.jsonPathsIN = [];
@@ -486,6 +619,35 @@ const helpEasy = {
         }
         html += "</table></div>";
         set(guiEasy.nodes[index], "modal.table.files", html);
+    },
+    'logListBacklog': function () {
+        let listHTML = "";
+        let level = {
+            "1":"success",
+            "2":"bg",
+            "3":"sunny",
+            "4":"info",
+            "5":"",      //not used
+            "6":"",      //not used
+            "7":"",      //not used
+            "8":"",      //not used
+            "9":"warning"
+        };
+        let history = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
+        for (let i = 0; i < history.length; i++) {
+            let timestamp = history[i].timestamp;
+            let entries = history[i].Entries;
+            if (entries.length > 0) {
+                //add to list
+                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + Math.random() + `'>`
+                            + `<div class='timestamp>'` + entries[i].timestamp + `</div><div class='main-` + level[entries[i].level] + `'>`
+                            + entries[i].text + `</div></div>`;
+            }
+            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
+        }
+    },
+    'logListLive': function (timestampIN) {
+
     },
     'timingstatsList': function (timingArray, index) {
         let unsorted = [];
@@ -675,12 +837,47 @@ const helpEasy = {
             let taskName = x[i].TaskName;
             let taskEnabled = x[i].TaskEnabled;
             let plugin = x[i].Type;
-            let pluginNumber = "P" + ("000" + x[i].TaskDeviceNumber).slice(-3);
+            let pluginNumber = "P" + ("000" + x[i]["taskNumber"]).slice(-3);
+            let gpio = guiEasy.nodes[helpEasy.getCurrentIndex()].settings;
+            if (gpio === undefined) {
+                gpio = ""
+            } else {
+                gpio = gpio.tasks[(taskNumber-1)];
+            }
+            let gpios = [];
+            for (let k = 1; k < 100; k++) {
+                if (gpio["gpio"+k] === undefined) {
+                    continue;
+                }
+                if (gpio["gpio"+k] !== 0 && gpio["gpio"+k] !== 255) {
+                    gpios.push(gpio["gpio"+k]);
+                }
+            }
+            if (gpios.length > 0) {
+                gpio = gpios.join(", ");
+            } else {
+                gpio = "";
+            }
+            let arrayControllers = [];
+            for (let k = 0; k < controllers.length; k++) {
+                if (controllers[k].Enabled === "true") {
+                    if (controllers[k].IDX > 0) {
+                        arrayControllers.push(controllers[k].Controller + " (" + controllers[k].IDX + ")");
+                    } else {
+                        arrayControllers.push(controllers[k].Controller);
+                    }
+                }
+            }
+            if (arrayControllers.length > 0) {
+                controllers = arrayControllers.join(", ");
+            } else {
+                controllers = "";
+            }
             taskMatrix[(taskNumber - 1)] = {
                 "plugin": plugin,
                 "port": "",
-                "controller": "",
-                "gpio": "",
+                "controller": controllers,
+                "gpio": gpio,
                 "enabled": taskEnabled,
                 "name": taskName
             };
@@ -738,6 +935,8 @@ const helpEasy = {
                 }
             }
         }
+        //controller update
+
         //populate the stats
         guiEasy.current.gui = index;
         if (guiEasy.nodes[index].stats["gui"] === undefined) {
@@ -1091,6 +1290,12 @@ const helpEasy = {
         if (path.length === 8) {
             return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]];
         }
+        if (path.length === 9) {
+            return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]];
+        }
+        if (path.length === 10) {
+            return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]][path[9]];
+        }
     },
     'sortObjectArray': (propName) =>
         (a, b) => a[propName] === b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1
@@ -1259,6 +1464,8 @@ const helpEasy = {
         let id = args.title.split(" ").join("-");
         let settingsIdPrefix = "generic-input-";
         let datasetBlob = "";
+        let prefixHTML = "";
+        let appendixHTML = "";
         if (args.toSettings === true) {
             settingsIdPrefix = "settings-input-";
             datasetBlob += 'data-settings="' + args.settingsId + '"';
@@ -1281,6 +1488,12 @@ const helpEasy = {
         if (args.list2value !== undefined) {
             datasetBlob += 'data-list2value="' + args.list2value + '"';
         }
+        if (args.prefixHTML !== undefined) {
+            prefixHTML = args.prefixHTML;
+        }
+        if (args.appendixHTML !== undefined) {
+            appendixHTML = args.appendixHTML;
+        }
         id = settingsIdPrefix + id;
         let tooltip = "";
         let gotTooltip = "";
@@ -1288,7 +1501,7 @@ const helpEasy = {
             tooltip = "<div class='tooltip'>" + args.tooltip + "</div>";
             gotTooltip = "got-tooltip";
         }
-        let html = "<div class='row'>";
+        let html = "<div class='row'>" + prefixHTML;
         if (type === "string") {
             html += "<span class='" + gotTooltip + "'>" + helpEasy.capitalWord(args.title) + tooltip + "</span>";
             html += `
@@ -1321,6 +1534,11 @@ const helpEasy = {
                 `;
         }
         if (type === "dropdown") {
+            let split = (args.settingsId).split("--");
+            let guiDropdownValue = null;
+            if (split[0] === "defaultSettings") {
+                guiDropdownValue = defaultSettings[split[1]][split[2]];
+            }
             html += "<span class='" + gotTooltip + "'>" + helpEasy.capitalWord(args.title) + tooltip + "</span>";
             html +=  `    
                     <select
@@ -1330,6 +1548,7 @@ const helpEasy = {
                         data-alt="` + args.alt + `"
                         data-settings="` + args.settingsId + `"
                         data-default-index="` + args.default + `"
+                        data-gui-dropdown-value="` + guiDropdownValue + `"
                         ` + disabled + `
                         ` + datasetBlob + `>
                 `;
@@ -1412,7 +1631,7 @@ const helpEasy = {
                 </label>
             `;
         }
-        html += "</div>";
+        html += appendixHTML + "</div>";
         return html;
     },
     'addLine': function () {
@@ -1424,15 +1643,15 @@ const helpEasy = {
             return `
             <div class="area hide-contents" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)
-                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `"` + ` class="is-hidden">{{ICON-MINIMIZE}}</button>`
-                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `">{{ICON-MAXIMIZE}}</button></div>
+                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `"` + ` class="is-hidden">` + guiEasy.curly.icon(["minimize"]) + `</button>`
+                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `">` + guiEasy.curly.icon(["maximize"]) + `</button></div>
             `;
         } else {
             return `
             <div class="area" id="` + id + `">
                 <div class="area-title">` + helpEasy.capitalWord(title)
-                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `">{{ICON-MINIMIZE}}</button>`
-                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `"` + ` class="is-hidden">{{ICON-MAXIMIZE}}</button></div>
+                + `<button id="button-min-` + id + `" data-click="area-min-` + id + `">` + guiEasy.curly.icon(["minimize"]) + `</button>`
+                + `<button id="button-max-` + id + `" data-click="area-max-` + id + `"` + ` class="is-hidden">` + guiEasy.curly.icon(["maximize"]) + `</button></div>
             `;
         }
     },
