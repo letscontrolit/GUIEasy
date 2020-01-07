@@ -639,7 +639,9 @@ const helpEasy = {
             let entries = history[i].Entries;
             if (entries.length > 0) {
                 //add to list
-                listHTML += "<div class='entry'><div class='timestamp>'" + entries[i].timestamp + "</div><div class='main-" + level[entries[i].level] + "'>" + entries[i].text + "</div></div>";
+                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + Math.random() + `'>`
+                            + `<div class='timestamp>'` + entries[i].timestamp + `</div><div class='main-` + level[entries[i].level] + `'>`
+                            + entries[i].text + `</div></div>`;
             }
             guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
         }
