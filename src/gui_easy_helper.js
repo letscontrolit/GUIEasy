@@ -636,15 +636,22 @@ const helpEasy = {
         let history = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
         for (let i = 0; i < history.length; i++) {
             let timestamp = history[i].timestamp;
-            let entries = history[i].Entries;
+            let entries = history[i].entries;
+            let random = Math.random() * (999999 - 100000) + 100000;
             if (entries.length > 0) {
                 //add to list
-                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + Math.random() + `'>`
-                            + `<div class='timestamp>'` + entries[i].timestamp + `</div><div class='main-` + level[entries[i].level] + `'>`
-                            + entries[i].text + `</div></div>`;
+                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + random + `'
+                                 data-web-log-text="` + entries[i].text + `"
+                                 data-web-log-level="` + level[entries[i].level] + `"
+                                 data-web-log-timestamp="` + timestamp + `"
+                              >
+                                 <div class='timestamp>'` + entries[i].timestamp + `</div>
+                                 <div class='main-` + level[entries[i].level] + `'>` + entries[i].text + `</div>
+                             </div>`;
             }
             guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
         }
+        console.log(listHTML);
     },
     'logListLive': function (timestampIN) {
 
