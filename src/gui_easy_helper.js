@@ -81,21 +81,36 @@ const helpEasy = {
             "esp",
             "gui","gw","gpio",
             "http","https",
-            "ip","id","i2c",
+            "ip","id","i2c","io",
             "json",
-            "led","l/r",
+            "led","l/r","lcd",
             "mqtt",
             "ntp",
             "ok",
             "p2p",
-            "rssi","ram",
+            "rssi","ram","rfid",
             "ssid","spi","sda","scl","sta","ssl","smtp",
             "ttn",
             "udp",
             "wpa"
         ];
+        let leaveAsIs = [
+            "BMP085/180","BH1750",
+            "DS18b20","DHT11/12/22",
+            "HC-SR04",
+            "LCD2004",
+            "MCP23017",
+            "PCF8591",
+            "RCW-0001",
+            "SI7021/HTU21D",
+            "TSL2561"
+        ];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
+            if (helpEasy.findInArray(words[i], leaveAsIs) === true) { //TODO: make this better and use indexOf instead!
+                words[i] = leaveAsIs[leaveAsIs.indexOf(words[i])];
+                continue;
+            }
             //if the string is found in the allCaps it will be all caps.
             if (helpEasy.findInArray(words[i], allCaps) === true) {
                 words[i] = words[i].toUpperCase();
