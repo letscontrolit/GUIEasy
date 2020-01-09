@@ -93,11 +93,6 @@ guiEasy.pitcher = function (processID, processType) {
         ) {
             clearInterval(u);
             guiEasy.pitcher.createLists();
-            //TEST ONLY
-            setTimeout(function () {
-                helpEasy.logListBacklog();
-            },10 * 1000);
-            //TEST ONLY
             //take care of url parameters...
             guiEasy.popper.tab({"args":["tab",urlParams.tab]});
             console.log(urlParams);

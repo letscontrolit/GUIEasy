@@ -1394,7 +1394,7 @@ input[type="search"] {
     font-size: calc(0.9 * var(--default-font-size, 19pt));
 }
 input[type="search"]#weblog-filter-input {
-    margin-top: 6px;
+    margin-top: 3px;
 }
 input[type="text"],
 input[type="password"] {

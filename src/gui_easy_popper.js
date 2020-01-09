@@ -824,7 +824,10 @@ guiEasy.popper.modal = function (modalToOpen) {
                 }
                 let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
                 if (element !== undefined) {
-                    document.getElementById(element).scrollIntoView({behavior: "smooth"});
+                    let holdScroll = document.getElementById("generic-input-auto-scroll").checked;
+                    if (holdScroll === false) {
+                        document.getElementById(element).scrollIntoView({behavior: "smooth"});
+                    }
                 }
             }
         }, 500)
