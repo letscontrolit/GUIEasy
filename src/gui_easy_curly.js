@@ -556,3 +556,12 @@ guiEasy.curly.drawer.theme.family = function (variable, defaultValue) {
     startHTML += 'data-default-index="' + v + '" data-default-value="' + defaultValue + '">';
     return startHTML + optionHTML + "</select>";
 };
+
+guiEasy.curly.info = function (what) {
+    if (what[0] === "message") {
+        helpEasy.addToLogDOM("message", 0, "info");
+    }
+    if (what[0] === "footer") {
+        helpEasy.addToLogDOM("footer", 0, "info");
+    }
+};

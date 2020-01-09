@@ -579,10 +579,43 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.modal = "yep";
         z.button.close = "yep";
         z.action.close = "stop-log";
-        z.title = "web log";
+        let level = {};
+        level["0"] = "no web log set";
+        level["1"] = "error";
+        level["2"] = "info";
+        level["3"] = "debug";
+        level["4"] = "debug more";
+        level["5"] = "not used";
+        level["6"] = "not used";
+        level["7"] = "not used";
+        level["8"] = "not used";
+        level["9"] = "debug development";
+        let currentLevel = level[guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.log.web_level];
+        z.title = "web log (" + currentLevel + ")";
         z.button.copy = "yep";
         z.action.copy = "clipboard-log";
-        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+        z.info = `
+            <div class='weblog' id='weblog-container'>Fetching log entries...</div>
+        `;
+        let autoScrollToggle = helpEasy.addInput(
+                    {
+                        "type": "toggle",
+                        "alt": "settings-change",
+                        "title": "auto-scroll",
+                        "settingsTrue": 0,
+                        "settingsFalse": 1,
+                        "falseText": "scrolling on",
+                        "trueText": "scrolling off",
+                        "default":true
+                    }
+                );
+        z.setup = `
+        <div class="column">
+            <div class="row"><div id="weblog-filters" class="is-left"><div class="tag with-close">test</div></div></div>
+            <div class="row"><input id="weblog-filter-input" type="search" placeholder="Filter log..."><label class="search-icon"></label></div>
+            ` + autoScrollToggle + `
+        </div>
+        `;
     }
     if (x === "info" && y === "json") {
         // just open the json endpoint in a new tab... since we're not adding the "a" to DOM it'll be garbage collected
@@ -763,6 +796,39 @@ guiEasy.popper.modal = function (modalToOpen) {
             }
         }
     }
+    if (x === "info" && y === "log") {
+        let backlog = helpEasy.logListBacklog();
+        if (backlog.length > 0) {
+            document.getElementById("weblog-container").innerHTML = backlog;
+            let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
+            if (element !== undefined) {
+                document.getElementById(element).scrollIntoView();
+            }
+        }
+        guiEasy.weblogLoop = setInterval(function () {
+            let timestamp = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast;
+            if (timestamp === undefined) {
+                timestamp = 0;
+            }
+            let timestamp2 = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestamp;
+            if (timestamp === timestamp2) {
+                // no need to do more
+            } else {
+                let weblogContainer = document.getElementById("weblog-container");
+                let newEntries = helpEasy.logListLive(timestamp);
+                let innerText = weblogContainer.innerText;
+                if (innerText === "Fetching log entries..." && newEntries.length !== 0) {
+                    weblogContainer.innerHTML = newEntries;
+                } else if (newEntries.length !== 0) {
+                    weblogContainer.insertAdjacentHTML('beforeend', newEntries);
+                }
+                let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
+                if (element !== undefined) {
+                    document.getElementById(element).scrollIntoView({behavior: "smooth"});
+                }
+            }
+        }, 500)
+    }
     //Countdown...
     if (z.countdown > 0) {
         let countdownElement = document.getElementById("modal-title-button-close");
@@ -795,7 +861,7 @@ guiEasy.popper.stop = function (what) {
         };
         guiEasy.popper.tryCallEvent(eventDetails);
         // stop the log list ...
-
+        clearInterval(guiEasy.weblogLoop);
     }
 };
 

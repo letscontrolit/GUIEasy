@@ -228,7 +228,7 @@ const helpEasy = {
                 }
             )
             .catch(error => {
-                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "warn");
+                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "error");
                 array[index].stats.error++;
                 let nextRun = Date.now() + array[index].stats[endpoint].TTL_fallback;
                 array[index]["scheduler"].push([nextRun, endpoint]);
@@ -620,7 +620,7 @@ const helpEasy = {
         html += "</table></div>";
         set(guiEasy.nodes[index], "modal.table.files", html);
     },
-    'logListBacklog': function () {
+    'logListBacklog': function (iStart) {
         let listHTML = "";
         let level = {
             "1":"success",
@@ -634,27 +634,56 @@ const helpEasy = {
             "9":"warning"
         };
         let history = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
-        for (let i = 0; i < history.length; i++) {
+        if (history === undefined) {
+            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast = 0;
+            return "";
+        }
+        history = history.slice(-3000);             // Slice to only populate the last 3000 chunks of log data
+        if (iStart === undefined) {
+            iStart = 0;
+        }
+        for (let i = iStart; i < history.length; i++) {
             let timestamp = history[i].timestamp;
             let entries = history[i].entries;
             let random = Math.random() * (999999 - 100000) + 100000;
+            let id = "";
             if (entries.length > 0) {
-                //add to list
-                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + random + `'
-                                 data-web-log-text="` + entries[i].text + `"
-                                 data-web-log-level="` + level[entries[i].level] + `"
+                for (let k = 0; k < entries.length; k++) {
+                    //add to list
+                    id = Date.now() + "." + timestamp + "." + random;
+                    listHTML += `<div class='entry' id='` + id + `'
+                                 data-web-log-text="` + entries[k].text + `"
+                                 data-web-log-level="` + entries[k].level + `"
                                  data-web-log-timestamp="` + timestamp + `"
                               >
-                                 <div class='timestamp>'` + entries[i].timestamp + `</div>
-                                 <div class='main-` + level[entries[i].level] + `'>` + entries[i].text + `</div>
+                                 <div class='timestamp'>` + entries[k].timestamp + `</div>
+                                 <div class='main-` + level[entries[k].level] + `'>` + entries[k].text + `</div>
                              </div>`;
+                }
+                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast = timestamp;
+                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID = id;
             }
-            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
         }
-        console.log(listHTML);
+        return listHTML;
     },
     'logListLive': function (timestampIN) {
-
+        let logList = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
+        if (logList === undefined) {
+            return "";
+        }
+        logList = logList.slice(-3000);
+        let fromTimestamp = 0;
+        for (let i = (logList.length - 1); i > -1; i--) {
+            let timestamp = logList[i].timestamp;
+            if (timestamp > timestampIN) {
+                fromTimestamp = i;
+                break;
+            }
+            if (i === 0) {
+                return "";
+            }
+        }
+        return helpEasy.logListBacklog(fromTimestamp);
     },
     'timingstatsList': function (timingArray, index) {
         let unsorted = [];

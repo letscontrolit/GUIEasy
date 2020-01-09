@@ -1,7 +1,7 @@
 /* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //HERE'S THE SETTINGS USED FOR THE SPA ENGINE = TRANSLATIONS ARE PUT IN ANOTHER FILE
 const guiEasy = {
-    'logLevel': 2,
+    'logLevel': 0,
     'name': 'GUI Easy',
     'version': {
         //--GRUNT-START--
@@ -30,13 +30,16 @@ const guiEasy = {
         return guiEasy.geekName() + '-' + guiEasy.version.full()
     },
     'current': {},
-    'fetchSettings':{
-        'maxToKeep': 5,                                         //Mintes...
+    'fetchSettings':{                                           //to store in memory, DOM stuff will grow eternally
+        'maxToKeep': 5,                                         //Minutes...
         'minToKeep': 1,
         'intervalGUIupdater': 1000,                             //ms
         'intervalTimeKeeper': 700,                              //min period in-between fetches
         'maxToKeepMs': function () {
-            return 60 * 1000 / guiEasy.intervalGUIupdater;
+            return guiEasy.maxToKeep * 60 * 1000;
+        },
+        'minToKeepMs': function () {
+            return guiEasy.minToKeep * 60 * 1000;
         },
     },
     'nodes': [],
@@ -236,7 +239,7 @@ const guiEasy = {
                 // We create this array manually for optimization purpose
                     'fetching',
                     'input',
-            'table',
+                    'table',
                     'goto',
                     'button',
                     'version',
@@ -250,6 +253,7 @@ const guiEasy = {
                     'unit',
                     'unitname',
                     'modal',
+                    'info',
                     'menu',
                     'wave',
                     'page',

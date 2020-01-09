@@ -40,10 +40,10 @@
 }
 /* Scrollbar handle */
 ::-webkit-scrollbar-thumb {
-    background: var(--main-inverted-color-rgba);
+    background: rgba(var(--main-inverted-color), 0.75);
 }
 div.modal div.row::-webkit-scrollbar-thumb {
-    background: var(--main-font-color-rgba);
+    background: rgba(var(--main-font-color), 0.5);
 }
 /* the "scrollbar" prop. is the upcoming standard remove webkit above once they have implemented it */
 div.modal div.row,
@@ -973,7 +973,7 @@ div.modal > div.message {
     transform: translate(-50%,-35%);
     min-width: 400px;
     max-width: calc(0.6 * var(--max-width-page-size, 1400px));
-    max-height: 80vh;
+    max-height: 85vh;
     border-radius: calc(0.25 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
 div.modal div.area-title,
@@ -1063,25 +1063,25 @@ div.wave-text > svg {
     height: calc(4 * var(--default-height-size, 20));
 }
 div.weblog {
-    width: calc(100% - 14px);
-    min-height: 70vh;
-    max-height: 70vh;
+    font-family: monospace;
+    width: 100%;
     text-align: left;
     font-size: calc(0.8 * var(--default-font-size, 19pt));
     overflow-y: scroll;
-    display: block;
-    margin: 2px 4px 4px;
     padding: 1px;
-    border-radius: calc(0.2 * var(--default-height-size, 20) / var(--button-radius-size, 2));
     border: 2px solid rgba(var(--main-inverted-color), 0.35);
     background: rgba(0, 0 ,0 , 0.55);
 }
-textarea::-webkit-scrollbar,
-div.weblog::-webkit-scrollbar {
+div.weblog:empty {
+    content: 'Fetching log entries...';
+}
+#weblog-filters {
+    width: 100%;
+}
+textarea::-webkit-scrollbar {
     width: 12px;
 }
-textarea::-webkit-scrollbar-thumb,
-div.weblog::-webkit-scrollbar-thumb {
+textarea::-webkit-scrollbar-thumb {
     max-height: 5%;
     border-radius: calc(0.2 * var(--default-height-size, 20) / var(--button-radius-size, 2));
     background: rgba(var(--main-bg-color), 0.5);
@@ -1393,6 +1393,9 @@ input[type="search"] {
     text-align: left;
     font-size: calc(0.9 * var(--default-font-size, 19pt));
 }
+input[type="search"]#weblog-filter-input {
+    margin-top: 6px;
+}
 input[type="text"],
 input[type="password"] {
     padding-left: 4px;
@@ -1513,6 +1516,10 @@ div.entry > div {
 div.entry > div.timestamp {
     color: rgba(var(--main-font-color), 0.5);
 }
+div.entry > div.timestamp::after {
+    content: ':';
+    color: rgba(var(--main-font-color), 0.25);
+}
 div.entry > div.main-info {
     color: var(--main-info-color-rgba);
     background: transparent;
@@ -1527,6 +1534,10 @@ div.entry > div.main-warning {
 }
 div.entry > div.main-success {
     color: var(--main-success-color-rgba);
+    background: transparent;
+}
+div.entry > div.main-bg {
+    color: var(--main-bg-color-rgba);
     background: transparent;
 }
 label.checkbox  {
@@ -1571,6 +1582,7 @@ label.checkbox:active::after {
 #modal-input-upload-storage-free,
 #modal-input-upload-storage-occupied {
     margin-bottom: 5px;
+    margin-top: 3px;
     height: calc(0.6 * var(--default-height-size, 20));
 }
 select:hover ~ label.select,

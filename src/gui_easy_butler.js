@@ -7,3 +7,8 @@ guiEasy.butler = async function (processID, processType) {
     helpEasy.addToLogDOM("pageSize", 1);
     helpEasy.processDone(processID, processType);
 };
+
+guiEasy.butler.notification = function () {
+    //this one get's info from the server, it is also called "once per hour" from the tender to see if new info is present
+
+};
