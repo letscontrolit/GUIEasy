@@ -19,7 +19,7 @@ guiEasy.pitcher = function (processID, processType) {
     let x = setInterval(function () {
         LCX++;
         if (LCX > maxLoopsX) {
-            helpEasy.addToLogDOM("'live' not working!", 0, "warning");
+            helpEasy.addToLogDOM("'live' not working!", 0, "warn");
             helpEasy.processDone(processID, processType);
             return;
         }
@@ -41,7 +41,7 @@ guiEasy.pitcher = function (processID, processType) {
     let y = setInterval(function () {
         LCY++;
         if (LCY > maxLoopsY) {
-            helpEasy.addToLogDOM("'gui' not working!", 0, "warning");
+            helpEasy.addToLogDOM("'gui' not working!", 0, "warn");
             helpEasy.processDone(processID, processType);
             return;
         }
@@ -60,7 +60,7 @@ guiEasy.pitcher = function (processID, processType) {
     let z = setInterval(function () {
         LCZ++;
         if (LCZ > maxLoopsZ) {
-            helpEasy.addToLogDOM("'config' not working!", 0, "warning");
+            helpEasy.addToLogDOM("'config' not working!", 0, "warn");
             helpEasy.processDone(processID, processType);
             return;
         }
@@ -82,7 +82,7 @@ guiEasy.pitcher = function (processID, processType) {
     let u = setInterval(function () {
         LCU++;
         if (LCU > maxLoopsU) {
-            helpEasy.addToLogDOM("'live'/'gui'/'config' not working!", 0, "warning");
+            helpEasy.addToLogDOM("'live'/'gui'/'config' not working!", 0, "warn");
             helpEasy.processDone(processID, processType);
             return;
         }

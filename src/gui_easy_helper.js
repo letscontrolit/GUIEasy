@@ -228,7 +228,7 @@ const helpEasy = {
                 }
             )
             .catch(error => {
-                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "warn");
+                helpEasy.addToLogDOM('Error fetching (' + endpoint + '): ' + error, 0, "error");
                 array[index].stats.error++;
                 let nextRun = Date.now() + array[index].stats[endpoint].TTL_fallback;
                 array[index]["scheduler"].push([nextRun, endpoint]);
@@ -620,7 +620,7 @@ const helpEasy = {
         html += "</table></div>";
         set(guiEasy.nodes[index], "modal.table.files", html);
     },
-    'logListBacklog': function () {
+    'logListBacklog': function (iStart) {
         let listHTML = "";
         let level = {
             "1":"success",
@@ -634,20 +634,77 @@ const helpEasy = {
             "9":"warning"
         };
         let history = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
-        for (let i = 0; i < history.length; i++) {
-            let timestamp = history[i].timestamp;
-            let entries = history[i].Entries;
-            if (entries.length > 0) {
-                //add to list
-                listHTML += `<div class='entry' id='` + Date.now() + `.` + timestamp + `.` + Math.random() + `'>`
-                            + `<div class='timestamp>'` + entries[i].timestamp + `</div><div class='main-` + level[entries[i].level] + `'>`
-                            + entries[i].text + `</div></div>`;
-            }
-            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.lastLogCheck = timestamp;
+        if (history === undefined) {
+            guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast = 0;
+            return "";
         }
+        history = history.slice(-3000);             // Slice to only populate the last 3000 chunks of log data
+        if (iStart === undefined) {
+            iStart = 0;
+        }
+        for (let i = iStart; i < history.length; i++) {
+            let timestamp = history[i].timestamp;
+            let entries = history[i].entries;
+            let id = "";
+            let idToScroll = "";
+            if (entries.length > 0) {
+                for (let k = 0; k < entries.length; k++) {
+                    //add to list
+                    let random = ("0000" + Math.floor(Math.random() * 1000)).slice(-4);
+                    id = Date.now() + "-" + entries[k].timestamp + "-" + random;
+                    let hidden = "";
+                    if (guiEasy.loops.weblogPattern !== undefined) {
+                        if (guiEasy.loops.weblogPattern.length > 0) {
+                            //must check if the entry should be hidden
+                            let check = helpEasy.ifStringContains(entries[k].text.toLowerCase() + " " + entries[k].timestamp, guiEasy.loops.weblogPattern);
+                            if (check === false) {
+                                hidden = "is-hidden";
+                            }
+                        }
+                    }
+                    if (hidden === "") {
+                        idToScroll = id;
+                    }
+                    listHTML += `<div class='entry ` + hidden + `' id='` + id + `'
+                                 data-web-log-text="` + entries[k].text + `"
+                                 data-web-log-level="` + entries[k].level + `"
+                                 data-web-log-timestamp="` + timestamp + `"
+                              >
+                                 <div class='timestamp'>` + entries[k].timestamp + `</div>
+                                 <div class='main-` + level[entries[k].level] + `'>` + entries[k].text + `</div>
+                             </div>`;
+                }
+                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast = timestamp;
+                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID = idToScroll;
+            }
+        }
+        return listHTML;
     },
     'logListLive': function (timestampIN) {
-
+        let logList = guiEasy.nodes[helpEasy.getCurrentIndex()].log;
+        if (logList === undefined) {
+            return "";
+        }
+        logList = logList.slice(-3000);
+        let fromTimestamp = 0;
+        for (let i = (logList.length - 1); i > -1; i--) {
+            let timestamp = logList[i].timestamp;
+            if (timestamp > timestampIN) {
+                fromTimestamp = i;
+                break;
+            }
+            if (i === 0) {
+                return "";
+            }
+        }
+        return helpEasy.logListBacklog(fromTimestamp);
+    },
+    'ifStringContains': function (string, arrayOfWords) {
+        let value = 0;
+        arrayOfWords.forEach(function(word){
+            value = value + string.includes(word);
+        });
+        return (value === arrayOfWords.length)
     },
     'timingstatsList': function (timingArray, index) {
         let unsorted = [];
