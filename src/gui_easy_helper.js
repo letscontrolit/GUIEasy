@@ -645,13 +645,27 @@ const helpEasy = {
         for (let i = iStart; i < history.length; i++) {
             let timestamp = history[i].timestamp;
             let entries = history[i].entries;
-            let random = Math.random() * (999999 - 100000) + 100000;
             let id = "";
+            let idToScroll = "";
             if (entries.length > 0) {
                 for (let k = 0; k < entries.length; k++) {
                     //add to list
-                    id = Date.now() + "." + timestamp + "." + random;
-                    listHTML += `<div class='entry' id='` + id + `'
+                    let random = ("0000" + Math.floor(Math.random() * 1000)).slice(-4);
+                    id = Date.now() + "-" + entries[k].timestamp + "-" + random;
+                    let hidden = "";
+                    if (guiEasy.loops.weblogPattern !== undefined) {
+                        if (guiEasy.loops.weblogPattern.length > 0) {
+                            //must check if the entry should be hidden
+                            let check = helpEasy.ifStringContains(entries[k].text.toLowerCase() + " " + entries[k].timestamp, guiEasy.loops.weblogPattern);
+                            if (check === false) {
+                                hidden = "is-hidden";
+                            }
+                        }
+                    }
+                    if (hidden === "") {
+                        idToScroll = id;
+                    }
+                    listHTML += `<div class='entry ` + hidden + `' id='` + id + `'
                                  data-web-log-text="` + entries[k].text + `"
                                  data-web-log-level="` + entries[k].level + `"
                                  data-web-log-timestamp="` + timestamp + `"
@@ -661,7 +675,7 @@ const helpEasy = {
                              </div>`;
                 }
                 guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast = timestamp;
-                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID = id;
+                guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID = idToScroll;
             }
         }
         return listHTML;
@@ -684,6 +698,13 @@ const helpEasy = {
             }
         }
         return helpEasy.logListBacklog(fromTimestamp);
+    },
+    'ifStringContains': function (string, arrayOfWords) {
+        let value = 0;
+        arrayOfWords.forEach(function(word){
+            value = value + string.includes(word);
+        });
+        return (value === arrayOfWords.length)
     },
     'timingstatsList': function (timingArray, index) {
         let unsorted = [];

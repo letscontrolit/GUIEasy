@@ -43,6 +43,7 @@ const guiEasy = {
         },
     },
     'nodes': [],
+    'loops': {},
     'startup': [
         {
             'id': 'curly',

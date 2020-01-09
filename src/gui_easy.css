@@ -973,7 +973,7 @@ div.modal > div.message {
     transform: translate(-50%,-35%);
     min-width: 400px;
     max-width: calc(0.6 * var(--max-width-page-size, 1400px));
-    max-height: 85vh;
+    max-height: 95vh;
     border-radius: calc(0.25 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
 div.modal div.area-title,
@@ -1066,6 +1066,9 @@ div.weblog {
     font-family: monospace;
     width: 100%;
     text-align: left;
+    margin-left: 3px;
+    margin-right: 3px;
+    min-height: 30vh;
     font-size: calc(0.8 * var(--default-font-size, 19pt));
     overflow-y: scroll;
     padding: 1px;

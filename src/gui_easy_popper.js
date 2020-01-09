@@ -98,7 +98,8 @@ guiEasy.popper.click = function (event) {
             "args": args,
             "dataset": x,
             "x": event.x,
-            "y": event.y
+            "y": event.y,
+            "element": event.target
         };
         guiEasy.popper.tryCallEvent(eventDetails);
     }
@@ -611,7 +612,7 @@ guiEasy.popper.modal = function (modalToOpen) {
                 );
         z.setup = `
         <div class="column">
-            <div class="row"><div id="weblog-filters" class="is-left"><div class="tag with-close">test</div></div></div>
+            <div class="row"><div id="weblog-filters" class="is-left"></div></div>
             <div class="row"><input id="weblog-filter-input" type="search" placeholder="Filter log..."><label class="search-icon"></label></div>
             ` + autoScrollToggle + `
         </div>
@@ -805,7 +806,7 @@ guiEasy.popper.modal = function (modalToOpen) {
                 document.getElementById(element).scrollIntoView();
             }
         }
-        guiEasy.weblogLoop = setInterval(function () {
+        guiEasy.loops.weblog = setInterval(function () {
             let timestamp = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.timestampLast;
             if (timestamp === undefined) {
                 timestamp = 0;
@@ -823,14 +824,35 @@ guiEasy.popper.modal = function (modalToOpen) {
                     weblogContainer.insertAdjacentHTML('beforeend', newEntries);
                 }
                 let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
-                if (element !== undefined) {
+                if (element !== undefined && element !== "") {
                     let holdScroll = document.getElementById("generic-input-auto-scroll").checked;
                     if (holdScroll === false) {
                         document.getElementById(element).scrollIntoView({behavior: "smooth"});
                     }
                 }
             }
-        }, 500)
+        }, 100);
+        let inputFilter = document.getElementById("weblog-filter-input");
+        inputFilter.onkeyup = function (event) {
+            if (event.key === "Enter") {
+                let filterValue = inputFilter.value;
+                inputFilter.value = "";
+                let subText = filterValue.split(" ");
+                let html = "";
+                for (let i = 0; i < subText.length; i++) {
+                    html += "<div class='tag with-close' data-click='filter-remove'>" + subText[i] + "</div>";
+                }
+                document.getElementById("weblog-filters").insertAdjacentHTML('beforeend', html);
+                let eventDetails = {
+                    "type": "filter",
+                    "args": [
+                        "filter",
+                        "updated"
+                    ]
+                };
+                guiEasy.popper.tryCallEvent(eventDetails);
+            }
+        }
     }
     //Countdown...
     if (z.countdown > 0) {
@@ -855,6 +877,57 @@ guiEasy.popper.modal = function (modalToOpen) {
         }, 1000);
     }
 };
+
+guiEasy.popper.filter = function (what) {
+    if (what.args[1] === "remove") {
+        what.element.remove();
+        let eventDetails = {
+            "type": "filter",
+            "args": [
+                "filter",
+                "updated"
+            ]
+        };
+        guiEasy.popper.tryCallEvent(eventDetails);
+    }
+    if (what.args[1] === "updated") {
+        let filters = document.getElementById("weblog-filters");
+        let c = filters.children;
+        guiEasy.loops.weblogPattern = [];
+        if (c.length > 0) {
+            for (let i = 0; i < c.length; i++) {
+                let p = c[i].innerText.split(" ");
+                for (let k = 0; k < p.length; k++) {
+                    guiEasy.loops.weblogPattern.push(p[k].toLowerCase());
+                }
+            }
+        }
+        let container = document.getElementById("weblog-container");
+        //remove all "is-hidden"
+        let html = container.innerHTML.toString();
+        container.innerHTML = html.replace(/is-hidden/g, "");
+        container.lastChild.scrollIntoView();
+        if (guiEasy.loops.weblogPattern.length > 0) {
+            //start filtering
+            let entries = container.children;
+            for (let k = 0; k < entries.length; k++) {
+                let check = helpEasy.ifStringContains(entries[k].innerText.toLowerCase(), guiEasy.loops.weblogPattern);
+                if (check === false) {
+                    //hide it
+                    entries[k].classList.add("is-hidden");
+                }
+            }
+            if (container.innerText.length === 0) {
+                    let html =  "<div id='nothing-here'>Nothing found...</div>";
+                    container.insertAdjacentHTML("afterbegin", html);
+                    setTimeout(function () {
+                        document.getElementById("nothing-here").remove();
+                    }, 3000)
+            }
+        }
+    }
+};
+
 guiEasy.popper.stop = function (what) {
     if (what.args[1] === "log") {
         // close the modal
@@ -864,7 +937,7 @@ guiEasy.popper.stop = function (what) {
         };
         guiEasy.popper.tryCallEvent(eventDetails);
         // stop the log list ...
-        clearInterval(guiEasy.weblogLoop);
+        clearInterval(guiEasy.loops.weblog);
     }
 };
 
