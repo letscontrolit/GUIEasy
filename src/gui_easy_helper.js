@@ -19,11 +19,6 @@ const helpEasy = {
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(selected);
         }
-        let eventDetails = {
-            "type": "clipboard",
-            "str": str
-        };
-        guiEasy.popper.tryCallEvent(eventDetails);
     },
     'swapKey2Value': function (json) {
         let ret = {};

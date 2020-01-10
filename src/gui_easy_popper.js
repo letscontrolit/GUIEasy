@@ -1666,7 +1666,11 @@ guiEasy.popper.theme = function (whatToDo) {
         let themeVars = [];
         for (let i = 0; i < themeOutput.length; i++) {
             let line = themeOutput[i].split('":"')[1];
-            themeVars[i] = line.slice(0, line.length-1);
+            if (line !== undefined) {
+                themeVars[i] = line.slice(0, line.length-1);
+            } else {
+                themeVars[i] = themeOutput;
+            }
         }
         themeVars.sort();
         let clipboard = "";
@@ -1909,6 +1913,7 @@ guiEasy.popper.wave = function (args) {
     setTimeout( function () {
         waveElement.classList.add("is-inactive");
         waveElement.classList.remove("main-" + args.color);
+        document.body.classList.remove("modal");
     }, 800);
 };
 
