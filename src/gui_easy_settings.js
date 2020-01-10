@@ -261,14 +261,5 @@ const guiEasy = {
                     'logo',
                     'icon'
                 ]
-    },
-    'algorithm': {
-        'name': 'AES-GCM',
-        'iv': window.crypto.getRandomValues(new Uint8Array(12)),
-        'tagLength': 128
-    },
-    'algorithmKeyGen': {
-        'name': 'AES-GCM',
-        'length': 256
     }
 };
