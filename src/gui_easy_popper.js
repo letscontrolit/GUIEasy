@@ -676,6 +676,14 @@ guiEasy.popper.modal = function (modalToOpen) {
         };
         z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
     }
+    if (x === "patreon") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "patreon goodies";
+        z.setup = guiEasy.popper.modal.patreon();
+        z.button.ok = "yep";
+        z.action.ok = "settings-updated";
+    }
     //Below we unhide "yep"s
     document.getElementById("modal-container").classList[logic[z.modal]]("is-hidden");
     if (z.action.ok !== null) {
@@ -941,6 +949,38 @@ guiEasy.popper.stop = function (what) {
     }
 };
 
+guiEasy.popper.modal.patreon = function () {
+    //TODO: remove this test
+    let string = helpEasy.hash.encode("123e4567-e89b-12d3-a456-426655440000", "cgZxarh0l40XV7OO5\n\n\n\n\nJtzyV6dWChocjv9B7DTKndCa3QJC8BUd59hpJtwfkA1xVVOSXEP8qNpxLlsnFgYjpxDg3jIem1rwj8U4tbnzMjrk9REu33XBU5R99qbTtGdm1cP8Y0Roc35f3wKCRVbn63ig870XXCGo8vwUWda57JY3EXX4RyCMqYrjn3hrx4G1UFRwu6qwG9McGCDqAxo3daMSPVSN2OqB9DjQB4ktS8yKj4BWZojH8QQnkL6pzjLKEDpTCwNfCkVhsbehY0URRguc0GsAO95U3OUtcwwlanKHtpmn66zCIGzWJNzqypPPta3Z00wsfnVJk0Hr9b4Nuq1hxBYQ1ZHaGnP6I4dz1fHIhEhWmoZtLMNkYiCCPACtWXgXHQugcbx2w5L4DX5JcsImIg9ZhMp7DxyHf dPuG17qksxTr3r5T1IXkz77rOBHLXvuClAQ4geormatC3AiaaGVxV63ltiK76ou41jaSfAPlJJKK35oITwYiU4BFsTYf0sHi  jLMYGDNeDctF5XLdyDMr0vho eb7uiHmRgR8Ry hbJeBvdoIYJybUWjZHFJHXt7VvAhTTfH1IplnYoSvNpq 1eaF5  qFaxoyeEjKAVNDhyez2t0rznxfr0JPFcqd9lqFuR7unv0ZJdKiE1pex3gGuS01CgRNfdyC9ZL3LBv9dsER2EYrQmy06M39YNVLBXPZHTdfxaISwVmd3pL2aJqQZNXaaepMjZJJyui95gWUnHp3EFj52YwnfLcHMYMQNJnrvPdiJN2AouhvLoB84gw7 REb0vgitqO7J9Vqm25yHih9pYUVzGRUOt5iVR8qIqlnlTpDETfFckBggNcXwK 87 lyY0ryF uJu0ffEVclvWNkRWi OiWgiN2j5dBsNrpw5csy2NN2OOX50ls7y NWxGilkKfofVCV9cOpnBVw5Z8jZxz6sW1I0NS0b4EDSg9HFeif03wLgvGipbDkBJbpFmyRWsMY74ezGCA 3JOaTUdiSNYT4xC791L25M");
+    console.log(string);
+    let newString = helpEasy.hash.decode("123e4567-e89b-12d3-a456-426655440000", string);
+    console.log(newString);
+    helpEasy.copyToClipboard(newString);
+    //TODO: remove this test
+    let html = "<div class='column'>";
+    html += helpEasy.addInput(
+    {
+        "type": "string",
+        "toSettings": true,
+        "alt": "settings-change",
+        "title": "patreon id",
+        "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
+        "placeholder": ""
+        }
+    );
+    html += helpEasy.addInput(
+        {
+            "type": "password",
+            "toSettings": true,
+            "alt": "settings-change",
+            "title": "uuid",
+            "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
+            "placeholder": ""
+        }
+    );
+    return html + "</div>";
+};
+
 guiEasy.popper.modal.settings = function (type) {
     let html = "";
     html += helpEasy.openColumn("data-modal-settings-table");
@@ -1043,7 +1083,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": true
             }
         );
-        html += "<hr>";
+        html += helpEasy.addLine();
         html += helpEasy.addInput(
             {
                 "type": "toggle",
@@ -1100,7 +1140,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "default":true
             }
         );
-        html += "<hr>";
+        html += helpEasy.addLine();
         html += helpEasy.addInput(
             {
                 "type": "dropdown",
@@ -1234,7 +1274,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "step": 1
             }
         );
-        html += "<hr>";
+        html += helpEasy.addLine();
         html += helpEasy.addInput(
             {
                 "type": "toggle",
@@ -1260,7 +1300,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": ""
             }
         );
-        html += "<hr>";
+        html += helpEasy.addLine();
         html += helpEasy.addInput(
             {
                 "type": "toggle",
@@ -1275,7 +1315,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "default":false
             }
         );
-        html += "<hr>";
+        html += helpEasy.addLine();
         html += helpEasy.openArea("dst start");
         html += helpEasy.addInput(
             {
@@ -1577,7 +1617,7 @@ guiEasy.popper.modal.factoryReset = function () {
             "default":false
         }
     );
-    html += "<hr>";
+    html += helpEasy.addLine();
     html += helpEasy.addInput(
         {
             "type": "dropdown",
