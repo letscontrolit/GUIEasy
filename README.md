@@ -431,4 +431,5 @@ The following awesome fans are sponsoring us via Patreon, at gold level or more,
 🥇 Stefan Boschert
 
 ### ❤ Thank you notes ❤
+
 Thank you from the bottom of our hearts, without your support we wouldn't be able to do this.

@@ -16,8 +16,15 @@ guiEasy.popper.rules = function(){
     guiEasy.popper.rules.syntax.selectionElement = selection;
     guiEasy.popper.rules.syntax.backgroundElement = background;
     editor.addEventListener("input", x.input, false);
+    editor.addEventListener("keyup", x.input.tab, false);
     editor.addEventListener("keydown", x.input.tab, false);
+    editor.addEventListener("select", x.selection, false);
+    editor.addEventListener("click", x.selection, false);
+    editor.addEventListener("blur", x.focus, false);
+    editor.addEventListener("focus", x.focus, false);
     x.handleScroll();
+    x.input();
+    selection.classList.add("no-focus");
 };
 
 guiEasy.popper.rules["syntax"] = {
@@ -158,6 +165,7 @@ guiEasy.popper.rules["syntax"] = {
         ['Tone','1','P'],
         ['UDPTest','0','I'],
         ['Unit','0','I'],
+        ['Vol','65','P'],
         ['WDConfig','0','I'],
         ['WDRead','0','I'],
         ['WiFiAPMode','0','I'],
@@ -167,8 +175,7 @@ guiEasy.popper.rules["syntax"] = {
         ['WiFiKey2','0','I'],
         ['WiFiScan','0','I'],
         ['WiFiSSID','0','I'],
-        ['WiFiSSID2','0','I'],
-        ['Vol','65','P']
+        ['WiFiSSID2','0','I']
     ],
         'event': [
         ['Clock#Time=','0','I'],
@@ -324,22 +331,51 @@ guiEasy.popper.rules.splitSyntax = function() {
 };
 
 guiEasy.popper.rules.input = function () {
-    //TODO: add delay for the highlighting and only add "uncolored" character blocks to tht div... wait 1-2 seconds with no new input to start highlighting
     let x = guiEasy.popper.rules.syntax;
     guiEasy.popper.rules.input.highlight(x.editorElement, x.syntaxElement);
 };
 
-guiEasy.popper.rules.input.highlight = function () {
-    let x = guiEasy.popper.rules;
-    x.syntaxHighlight();
+guiEasy.popper.rules.focus = function (event) {
+    let x = guiEasy.popper.rules.syntax.selectionElement;
+    if (event.type === "blur") {
+        x.classList.add("no-focus");
+    } else {
+        x.classList.remove("no-focus");
+    }
+};
+
+guiEasy.popper.rules.selection = function () {
+    //TODO: add delay for the highlighting and only add "uncolored" character blocks to tht div... wait 1-2 seconds with no new input to start highlighting
+    let x = guiEasy.popper.rules.syntax.selectionElement;
+    let y = guiEasy.popper.rules.syntax.editorElement;
+    x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
+    x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
+    if (y.selectionEnd - y.selectionStart === 0) {
+        let caretElement = document.getElementById("select-" + y.selectionStart);
+        if (caretElement !== null) {
+            caretElement.classList.add("editor-caret");
+        }
+        if (caretElement.dataset.endOfLine !== undefined) {
+            caretElement.classList.add("end-of-line-caret");
+        }
+    }
+};
+
+guiEasy.popper.rules.input.highlight = function (editorElement, syntaxElmeent) {
+    guiEasy.popper.rules.syntaxHighlight(editorElement, syntaxElmeent);
 };
 
 guiEasy.popper.rules.input.tab = function (event) {
     let x = guiEasy.popper.rules;
     if (event.type === "keydown") {
         //console.log(event.code);
-        if (event.code === "Tab" ) {
+        if (event.code === "Tab") {
             event.preventDefault();
+        }
+    }
+    if (event.type === "keyup") {
+        //console.log(event.code);
+        if (event.code === "Tab" ) {
             let editor = x.syntax.editorElement;
             let selectionStart = editor.selectionStart;
             //if its a TAB add 3 spaces
@@ -347,8 +383,17 @@ guiEasy.popper.rules.input.tab = function (event) {
             editor.selectionStart = selectionStart + 3;
             editor.selectionEnd = selectionStart + 3;
             x.input();
+        } else {
+            x.input();
+            x.selection();
         }
     }
+};
+
+guiEasy.popper.rules.sizeOfFile = function () {
+    //max size/char's 2048
+    let editor = guiEasy.popper.rules.syntax.editorElement;
+    console.log(editor.value.length);
 };
 
 guiEasy.popper.rules.handleScroll = function () {
@@ -374,34 +419,54 @@ guiEasy.popper.rules.handleScroll = function () {
         };
 };
 
-guiEasy.popper.rules.syntaxHighlight = function() {
+guiEasy.popper.rules.syntaxHighlight = function(editor, syntax) {
     //TODO: make all text = text highlighted "shine"
     let x = guiEasy.popper.rules;
-    let syntaxArray = x.syntax.editorElement.value.split("");
+    let syntaxArray = editor.value.split("");
+    let selectionStart = editor.selectionStart;
+    let selectionEnd = editor.selectionEnd;
+    let selectionLength = selectionEnd - selectionStart;
+    let p = -1;
     let s = -1;
     let currentRow = 0;
-    let syntaxHighlight = "<div class='syntax-row' name='row-" + currentRow + "'>";
-    let syntaxSelection = "<div class='syntax-row' name='row-" + currentRow + "'>";
+    let syntaxHighlight = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
+    let syntaxSelection = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
+    let syntaxInput = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
     for (let i = 0; i < syntaxArray.length; i++) {
+        //p++; //Did not work with minify (grunt)...
+        p = p + 1;
+        let selectionSyntax = "";
+        if (selectionLength === 0 && s === selectionStart) {
+            selectionSyntax += "editor-caret";
+        }
         let char = x.syntaxHighlight.fixSpecialChars(syntaxArray[i]);
         if (char === "NEW_ROW") {
             currentRow++;
-            syntaxHighlight += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "'>";
-            syntaxSelection += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "'>";
+            syntaxHighlight += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
+            syntaxSelection += `<div class='` + selectionSyntax + `' id='select-` + p + `' data-end-of-line></div>
+                                &zwnj;</div>
+                                <div class='syntax-row' name='row-` + currentRow + `' data-row-number='` + (currentRow + 1) + `'>
+                                `;
+            syntaxInput += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
         } else {
-            //s++; //Did not work with minify (grunt)...
             s = s + 1;
-            syntaxHighlight += "<div class='syntax-element {{TYPE_OF_SYNTAX_" + s + "}}' name='hightlight-" + s + "'>" + char + "</div>";
-            syntaxSelection += "<div class='syntax-element' name='hightlight-" + s + "'>" + char + "</div>";
+            syntaxHighlight += "<div class='syntax-element {{TYPE_OF_SYNTAX_" + s + "}}' id='hightlight-" + s + "'>" + char + "</div>";
+            syntaxSelection += "<div class='" + selectionSyntax + "' id='select-" + p + "'>" + char + "</div>";
+            syntaxInput += "<div id='input-" + s + "'>" + char + "</div>";
         }
     }
+    p = p + 1;
+    let selectionSyntax = "";
+    if (selectionLength === 0 && p === selectionStart) {
+        selectionSyntax += "end-of-line-caret editor-caret";
+    }
     syntaxHighlight += "</div>&zwnj;";
-    syntaxSelection += "</div>&zwnj;";
-    //console.log(syntaxHighlight);
+    syntaxSelection += "<div class='" + selectionSyntax + "' id='select-" + p + "' data-end-of-line></div>&zwnj;";
+    syntaxInput += "</div>&zwnj;";
     x.syntax.syntaxElement.innerHTML = x.syntaxHighlight.regEx(syntaxHighlight, syntaxArray);
     x.syntax.selectionElement.innerHTML = syntaxSelection;
-    x.syntax.inputElement.innerHTML = syntaxSelection;
-    //console.log(selectionStart, selectionLength);
+    x.syntax.inputElement.innerHTML = syntaxInput;
+    x.sizeOfFile();
 };
 
 guiEasy.popper.rules.syntaxHighlight.regEx = function(syntaxHighlight, rawTextArray) {
@@ -423,13 +488,13 @@ guiEasy.popper.rules.syntaxHighlight.regEx = function(syntaxHighlight, rawTextAr
     return x.fixSyntaxMatrix(matrixFull, syntaxHighlight);
 };
 
-guiEasy.popper.rules.syntaxHighlight.fixSyntaxMatrix = function(x, syntaxHighlight) {
+guiEasy.popper.rules.syntaxHighlight.fixSyntaxMatrix = function(matrixFull, syntaxHighlight) {
     let z = guiEasy.popper.rules.syntaxHighlight;
     let checkSyntax = guiEasy.popper.rules.syntax.hightlight;
     let s = -1;
     let syntaxTemp = [];
-    for (let i = 0; i < x.length; i++) {
-        let tempI = x[i];
+    for (let i = 0; i < matrixFull.length; i++) {
+        let tempI = matrixFull[i];
         for (let k = 0; k < tempI.length; k++) {
             s++;
             syntaxTemp.push();

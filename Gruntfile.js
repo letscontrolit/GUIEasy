@@ -40,6 +40,9 @@ module.exports = function(grunt) {
                   'build/temp/dash.min.js': [
                       'src/dash/gui_easy_dash.js',
                       'src/dash/gui_easy_dash_d*.js'
+                  ],
+                  'build/temp/patreon.min.js': [
+                      'src/dash/gui_easy_popper_extra.js'
                   ]
               }
           }

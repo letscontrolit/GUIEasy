@@ -1868,7 +1868,6 @@ const helpEasy = {
         favicon.href = canvas.toDataURL("image/x-icon");
         document.head.appendChild(favicon);
     },
-
     'hash': {
         encode: function (key, data) {
             data = this.xor_encrypt(key, data);

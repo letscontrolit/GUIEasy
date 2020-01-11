@@ -87,6 +87,7 @@ div.area {
     justify-content: flex-start;
     border: 2px solid rgba(var(--main-inverted-color), 0.5);
     margin-bottom: 3px;
+    transition: 0.4s;
 }
 div.area-title {
     width: 100%;
@@ -1236,16 +1237,28 @@ div.editor-container > div {
 }
 div.editor-input {
     z-index: 2;
+    color: transparent;
 }
 div.editor-syntax {
     z-index: 6;
 }
 div.editor-selection {
     z-index: 8;
+    color: transparent;
 }
-div.editor-caret::after {
-    content: "|";
-    color: red;
+div.editor-caret::before {
+    content: "│";
+    color: rgba(var(--main-font-color, white), 0.75);
+    animation: blinking .5s step-end infinite alternate;
+    position: relative;
+    left: calc(-5px * 0.0625 * var(--scale-size, 16));
+}
+div.end-of-line-caret.editor-caret::before {
+    content: "█";
+    left: unset;
+}
+div.editor-selection.no-focus {
+    opacity: 0;
 }
 div.syntax-element {
     color: var(--main-font-color-rgba, white);
@@ -2154,6 +2167,12 @@ div.is-hidden,
         opacity: 1
     }
     100% {
+        opacity: 0;
+    }
+}
+
+@keyframes blinking {
+    50% {
         opacity: 0;
     }
 }
