@@ -397,38 +397,38 @@ The following awesome fans is sponsoring us via Patreon, at gold level or more, 
 
 ### 2x Platinum
 
-CARL E FORSTER
+CARL E FORSTER,
 Friedrich Bader
 
 ### Platinum
 
-Bert van den Bergh
-Dennis van der Weck
-Droscovi
-Harald Fauland
+Bert van den Bergh,
+Dennis van der Weck,
+Droscovi,
+Harald Fauland,
 Mikael Brusman
 
 ### Gold
 
-Alain
-Alex Bik
-Andrew Piechocki
-Anupam Singh
-Armin Krämer
-Clinton Lee Taylor
-Etienne Bottke
-Hightower
-IoTPlay
-Jan Kazimour
-KJ Dijkema
-Marcus Lindberg
-Markus Kuntz
-marzog
-Michael Buchholz
-Olaf
-Reinhold Kainhofer
-Rich Schiffli
+Alain,
+Alex Bik,
+Andrew Piechocki,
+Anupam Singh,
+Armin Krämer,
+Clinton Lee Taylor,
+Etienne Bottke,
+Hightower,
+IoTPlay,
+Jan Kazimour,
+KJ Dijkema,
+Marcus Lindberg,
+Markus Kuntz,
+marzog,
+Michael Buchholz,
+Olaf,
+Reinhold Kainhofer,
+Rich Schiffli,
 Stefan Boschert
 
-
+### Thank you notes
 Thank you from the bottom of our hearts, without your support we wouldn't be able to do this.
