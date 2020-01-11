@@ -564,4 +564,7 @@ guiEasy.curly.info = function (what) {
     if (what[0] === "footer") {
         helpEasy.addToLogDOM("footer", 0, "info");
     }
+    if (what[0] === "patreon") {
+        helpEasy.addToLogDOM("patreon", 0, "info");
+    }
 };

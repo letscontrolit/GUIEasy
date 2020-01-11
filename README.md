@@ -386,3 +386,49 @@ Please refer to [LICENSE.md](LICENSE.md) file for details.
 * Weather information API using [weatherstack](https://weatherstack.com/)
 * Screenshots using [html2canvas](https://html2canvas.hertzen.com/)
 * Inspiration for the terminal look of the Drones come from ``Terminal.css`` found [here](https://terminalcss.xyz/)
+
+## Sponsors
+
+The following awesome fans is sponsoring us via Patreon, at gold level or more, each month.
+
+### Company Level
+
+### BOM Level
+
+### 2x Platinum
+
+CARL E FORSTER
+Friedrich Bader
+
+### Platinum
+
+Bert van den Bergh
+Dennis van der Weck
+Droscovi
+Harald Fauland
+Mikael Brusman
+
+### Gold
+
+Alain
+Alex Bik
+Andrew Piechocki
+Anupam Singh
+Armin Krämer
+Clinton Lee Taylor
+Etienne Bottke
+Hightower
+IoTPlay
+Jan Kazimour
+KJ Dijkema
+Marcus Lindberg
+Markus Kuntz
+marzog
+Michael Buchholz
+Olaf
+Reinhold Kainhofer
+Rich Schiffli
+Stefan Boschert
+
+
+Thank you from the bottom of our hearts, without your support we wouldn't be able to do this.
