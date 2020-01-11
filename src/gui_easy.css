@@ -1248,7 +1248,7 @@ div.editor-selection {
 }
 div.editor-caret::before {
     content: "│";
-    color: rgba(var(--main-font-color, white), 0.75);
+    color: rgba(var(--main-font-color), 0.75);
     animation: blinking .5s step-end infinite alternate;
     position: relative;
     left: calc(-5px * 0.0625 * var(--scale-size, 16));

@@ -267,6 +267,7 @@ are placed here.
 --max-width-page-size:	    1400px;
 --state-of-navbar-toggle:   fixed;
 --button-radius-size:	    1;
+--button-icon-size:         0;
 --main-bg-color:	    52,146,226;
 --main-inverted-color:	    47,66,82;
 --main-sunny-color:         255,209,0;

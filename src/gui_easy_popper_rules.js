@@ -397,7 +397,6 @@ guiEasy.popper.rules.sizeOfFile = function () {
 };
 
 guiEasy.popper.rules.handleScroll = function () {
-    //TODO: continue here with the scroll...
     let isSyncingEditorScroll = false;
     let isSyncingSyntaxScroll = false;
     let x = guiEasy.popper.rules.syntax;
@@ -420,7 +419,6 @@ guiEasy.popper.rules.handleScroll = function () {
 };
 
 guiEasy.popper.rules.syntaxHighlight = function(editor, syntax) {
-    //TODO: make all text = text highlighted "shine"
     let x = guiEasy.popper.rules;
     let syntaxArray = editor.value.split("");
     let selectionStart = editor.selectionStart;
