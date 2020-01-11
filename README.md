@@ -389,7 +389,7 @@ Please refer to [LICENSE.md](LICENSE.md) file for details.
 
 ## Sponsors
 
-The following awesome fans is sponsoring us via Patreon, at gold level or more, each month.
+The following awesome fans are sponsoring us via Patreon, at gold level or more, each month.
 
 ### Company Level
 
