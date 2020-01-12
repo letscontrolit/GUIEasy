@@ -1238,6 +1238,12 @@ div.editor-container > div {
 div.editor.is-inactive {
     pointer-events: none;
 }
+div.editor.too-big {
+    border: 5px solid var(--main-warning-color-rgba, red);
+}
+div#rules-editor-file-size.too-big::after {
+    content: "🔺";
+}
 div#rules-editor-inactive {
     opacity: 0;
 }

@@ -18,10 +18,9 @@ guiEasy.popper.rules = function(){
     guiEasy.popper.rules.syntax.backgroundElement = background;
     guiEasy.popper.rules.syntax.filesizeElement = fileSize;
     editor.addEventListener("input", x.input, false);
-    editor.addEventListener("keyup", x.input.tab, false);
-    editor.addEventListener("keydown", x.input.tab, false);
-    editor.addEventListener("select", x.selection, false);
-    editor.addEventListener("click", x.selection, false);
+    editor.addEventListener("keyup", x.input.specialKeys, false);
+    editor.addEventListener("keydown", x.input.specialKeys, false);
+    editor.addEventListener("mouseup", x.selection, false);
     editor.addEventListener("blur", x.focus, false);
     editor.addEventListener("focus", x.focus, false);
     x.handleScroll();
@@ -306,13 +305,15 @@ guiEasy.popper.rules.splitSyntax = function() {
         'parentheses',
         'variable'
     ];
-    for (let i = 0; i < listOfTypes.length; i++) {
+    let l = listOfTypes.length;
+    for (let i = 0; i < l; i++) {
         let tempI = x[listOfTypes[i]];
         for (let k = 0; k < tempI.length; k++) {
             let tempK = tempI[k];
             let tempSplit = tempK[0].split("");
             let y = syntaxArray;
-            for (let s = 0; s < tempSplit.length; s++) {
+            let l = tempSplit.length;
+            for (let s = 0; s < l; s++) {
                 let z = tempSplit[s].toLowerCase();
                 if (y[z] === undefined) {
                     y[z] = {};
@@ -332,9 +333,125 @@ guiEasy.popper.rules.splitSyntax = function() {
     //console.log(guiEasy.syntax);
 };
 
-guiEasy.popper.rules.input = function () {
+guiEasy.popper.rules.input = function (event) {
     let x = guiEasy.popper.rules.syntax;
-    guiEasy.popper.rules.input.highlight(x.editorElement, x.syntaxElement);
+    let y = guiEasy.popper.rules;
+    let start = x.editorElement.selectionStart;
+    let end = x.editorElement.selectionEnd;
+    if (x.lastRun === undefined) {
+        y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
+        x.lastRun = Date.now();
+        x.selectionElement.position = {
+            "col": 0,
+            "colStamp": Date.now(),
+            "row": 0,
+            "rowStamp": Date.now()
+        };
+        y.selection();
+        return;
+    }
+    let whatToDo;
+    if (event.inputType === "deleteContentForward") {
+        whatToDo = "delete>";
+    }
+    if (event.inputType === "deleteContentBackward") {
+        whatToDo = "<delete";
+    }
+    if (event.inputType === "insertLineBreak") {
+        whatToDo = "linefeed";
+    }
+    if (event.inputType === "insertText") {
+        whatToDo = event.data;
+    }
+    let test = Date.now() - x.lastRun;
+    if (test < 300 && test > 5 || test > 1000) {
+        y.syntaxHighlightTemporary(whatToDo, start, end);
+        x.lastRun = Date.now();
+    }
+    // as long as the user is entering new data this will not be executed. Once the user stops for X ms the parser will kick in
+    setTimeout(function () {
+        if ((Date.now() - x.lastRun) >= 750) {
+            y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
+            x.lastRun = Date.now();
+            y.selection();
+        }
+    }, 1000)
+};
+
+guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
+    let x = guiEasy.popper.rules.syntax.selectionElement;
+    let y = guiEasy.popper.rules.syntax.editorElement;
+    let rows = document.getElementById("rules-editor-selection").childElementCount - 1;
+    let colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+    let colsInRowAbove = document.getElementById("row-" + (x.position.row - 1));
+    if (colsInRowAbove !== null) {
+        colsInRowAbove = colsInRowAbove.childElementCount - 1;
+    } else {
+        colsInRowAbove = -1;
+    }
+    let colsInRowBelow = document.getElementById("row-" + (x.position.row + 1));
+    if (colsInRowBelow !== null) {
+        colsInRowBelow = colsInRowBelow.childElementCount - 1;
+    } else {
+        colsInRowBelow = -1;
+    }
+    let innerText = what;
+    if (what === "linefeed") {
+        innerText = "";
+        x.position.row++;
+        x.position.col = 0;
+    }
+    if (what === "down") {
+        innerText = "";
+        if (rows > x.position.row) {
+            x.position.row++;
+            if (colsInRowBelow < x.position.col) {
+                x.position.col = colsInRowBelow;
+            }
+        }
+    }
+    if (what === "up") {
+        innerText = "";
+        if (x.position.row > 0) {
+            x.position.row--;
+            if (colsInRowAbove < x.position.col) {
+                x.position.col = colsInRowAbove;
+            }
+        }
+    }
+    if (what === "tab") {
+        //if its a TAB add 3 spaces
+        innerText = ["&nbsp;", "&nbsp;", "&nbsp;"];
+        y.value = y.value.substring(0, start) + "\x20\x20\x20" + y.value.substring(end);
+        y.selectionStart = start + 3;
+        y.selectionEnd = start + 3;
+        x.position.col += 3;
+    }
+    if (what === "left") {
+        innerText = "";
+        if (x.position.col > 0) {
+            x.position.col--;
+        } else {
+            if (x.position.row > 0) {
+                x.position.row--;
+                x.position.col = colsInRowAbove;
+            }
+        }
+    }
+    if (what === "right") {
+        innerText = "";
+        if (x.position.col < colsInRow) {
+            x.position.col++;
+        } else {
+            if (rows > x.position.row) {
+                x.position.row++;
+                x.position.col = 0;
+            }
+        }
+    }
+    x.position.rowStamp = Date.now();
+    x.position.colStamp = Date.now();
+    console.log(x.position);
 };
 
 guiEasy.popper.rules.focus = function (event) {
@@ -346,48 +463,54 @@ guiEasy.popper.rules.focus = function (event) {
     }
 };
 
-guiEasy.popper.rules.selection = function () {
-    //TODO: add delay for the highlighting and only add "uncolored" character blocks to tht div... wait 1-2 seconds with no new input to start highlighting
+guiEasy.popper.rules.selection = function (state = "up") {
+    if (state.type === "mouseup") {
+        state = "up";
+    }
     let x = guiEasy.popper.rules.syntax.selectionElement;
     let y = guiEasy.popper.rules.syntax.editorElement;
     x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
     x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
-    if (y.selectionEnd - y.selectionStart === 0) {
-        let caretElement = document.getElementById("select-" + y.selectionStart);
+    let caretElement = document.getElementById("select-" + y.selectionStart);
+    if (state === "up" && y.selectionEnd - y.selectionStart === 0) {
         if (caretElement !== null) {
             caretElement.classList.add("editor-caret");
+            x.position.col = -1;
+            x.position.col = Array.from(caretElement.parentNode.children).indexOf(caretElement);
+            x.position.colStamp = Date.now();
         }
-        if (caretElement.dataset.endOfLine !== undefined) {
+        if (caretElement !== null && caretElement.dataset.endOfLine !== undefined) {
             caretElement.classList.add("end-of-line-caret");
+            x.position.col = caretElement.parentElement.childElementCount - 1;
+            x.position.colStamp = Date.now();
         }
     }
+    let test = Date.now() - x.position.rowStamp;
+    if (state === "up" && test > 100 && caretElement !== null) {
+        x.position.row = parseInt((caretElement.parentElement.id).replace("row-", ""));
+        x.position.rowStamp = Date.now();
+    }
+    console.log(x.position);
 };
 
-guiEasy.popper.rules.input.highlight = function (editorElement, syntaxElmeent) {
-    guiEasy.popper.rules.syntaxHighlight(editorElement, syntaxElmeent);
-};
-
-guiEasy.popper.rules.input.tab = function (event) {
+guiEasy.popper.rules.input.specialKeys = function (event) {
     let x = guiEasy.popper.rules;
+    let start = x.syntax.editorElement.selectionStart;
+    let end = x.syntax.editorElement.selectionEnd;
     if (event.type === "keydown") {
-        //console.log(event.code);
         if (event.code === "Tab") {
             event.preventDefault();
+        }
+        let test = (event.code).toLowerCase().indexOf("arrow");
+        if (test === 0) {
+            let what = (event.code).toLowerCase().replace("arrow", "");
+            guiEasy.popper.rules.syntaxHighlightTemporary(what, start, end);
         }
     }
     if (event.type === "keyup") {
         //console.log(event.code);
         if (event.code === "Tab" ) {
-            let editor = x.syntax.editorElement;
-            let selectionStart = editor.selectionStart;
-            //if its a TAB add 3 spaces
-            editor.value = editor.value.substring(0, editor.selectionStart) + "\x20\x20\x20" + editor.value.substring(editor.selectionEnd);
-            editor.selectionStart = selectionStart + 3;
-            editor.selectionEnd = selectionStart + 3;
-            x.input();
-        } else {
-            x.input();
-            x.selection();
+            guiEasy.popper.rules.syntaxHighlightTemporary("tab", start, end);
         }
     }
 };
@@ -398,13 +521,17 @@ guiEasy.popper.rules.sizeOfFile = function () {
     let currentSizeOfFile = x.editorElement.value.length;
     x.filesizeElement.innerHTML = currentSizeOfFile + "/" + maxSizeOfFile;
     if (currentSizeOfFile > maxSizeOfFile) {
-        x.backgroundElement.classList.add("main-warning");
         x.filesizeElement.classList.remove("text-tiny");
         x.filesizeElement.classList.add("text-huge");
+        x.filesizeElement.classList.add("text-main-warning");
+        x.filesizeElement.classList.add("too-big");
+        x.backgroundElement.classList.add("too-big");
     } else {
-        x.backgroundElement.classList.remove("main-warning");
-        x.filesizeElement.classList.remove("text-huge");
         x.filesizeElement.classList.add("text-tiny");
+        x.filesizeElement.classList.remove("text-huge");
+        x.filesizeElement.classList.remove("text-main-warning");
+        x.filesizeElement.classList.remove("too-big");
+        x.backgroundElement.classList.remove("too-big");
     }
 };
 
@@ -420,7 +547,8 @@ guiEasy.popper.rules.handleScroll = function () {
     x.editorElement.onscroll = function() {
             if (!isSyncingEditorScroll) {
                 isSyncingSyntaxScroll = true;
-                for (let i = 0; i < elements.length; i++) {
+                let l = elements.length;
+                for (let i = 0; i < l; i++) {
                     let element = x[elements[i] + "Element"];
                     element.scrollTop = this.scrollTop;
                     element.scrollLeft = this.scrollLeft;
@@ -430,8 +558,9 @@ guiEasy.popper.rules.handleScroll = function () {
         };
 };
 
-guiEasy.popper.rules.syntaxHighlight = function(editor, syntax) {
+guiEasy.popper.rules.syntaxHighlightAll = function(editor, syntax) {
     let x = guiEasy.popper.rules;
+    editor.value = editor.value.replace(/\t/g, '   ');  //replace all tabs with 3 spaces...
     let syntaxArray = editor.value.split("");
     let selectionStart = editor.selectionStart;
     let selectionEnd = editor.selectionEnd;
@@ -440,22 +569,23 @@ guiEasy.popper.rules.syntaxHighlight = function(editor, syntax) {
     let s = -1;
     let currentRow = 0;
     let syntaxHighlight = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
-    let syntaxSelection = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
+    let syntaxSelection = "<div class='syntax-row' id='row-" + currentRow + "' data-row-number='1'>";
     let syntaxInput = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
-    for (let i = 0; i < syntaxArray.length; i++) {
+    let l = syntaxArray.length;
+    for (let i = 0; i < l; i++) {
         //p++; //Did not work with minify (grunt)...
         p = p + 1;
         let selectionSyntax = "";
         if (selectionLength === 0 && s === selectionStart) {
             selectionSyntax += "editor-caret";
         }
-        let char = x.syntaxHighlight.fixSpecialChars(syntaxArray[i]);
+        let char = x.syntaxHighlightAll.fixSpecialChars(syntaxArray[i]);
         if (char === "NEW_ROW") {
             currentRow++;
             syntaxHighlight += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
             syntaxSelection += `<div class='` + selectionSyntax + `' id='select-` + p + `' data-end-of-line></div>
                                 &zwnj;</div>
-                                <div class='syntax-row' name='row-` + currentRow + `' data-row-number='` + (currentRow + 1) + `'>
+                                <div class='syntax-row' id='row-` + currentRow + `' data-row-number='` + (currentRow + 1) + `'>
                                 `;
             syntaxInput += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
         } else {
@@ -473,17 +603,18 @@ guiEasy.popper.rules.syntaxHighlight = function(editor, syntax) {
     syntaxHighlight += "</div>&zwnj;";
     syntaxSelection += "<div class='" + selectionSyntax + "' id='select-" + p + "' data-end-of-line></div>&zwnj;";
     syntaxInput += "</div>&zwnj;";
-    x.syntax.syntaxElement.innerHTML = x.syntaxHighlight.regEx(syntaxHighlight, syntaxArray);
+    x.syntax.syntaxElement.innerHTML = x.syntaxHighlightAll.regEx(syntaxHighlight, syntaxArray);
     x.syntax.selectionElement.innerHTML = syntaxSelection;
-    x.syntax.inputElement.innerHTML = syntaxInput;
+    x.syntax.inputElement.innerHTML =  syntaxInput;
     x.sizeOfFile();
 };
 
-guiEasy.popper.rules.syntaxHighlight.regEx = function(syntaxHighlight, rawTextArray) {
+guiEasy.popper.rules.syntaxHighlightAll.regEx = function(syntaxHighlight, rawTextArray) {
     let matrixRow = [];
     let matrixFull = [];
-    let x = guiEasy.popper.rules.syntaxHighlight;
-    for (let i = 0; i < rawTextArray.length; i++) {
+    let x = guiEasy.popper.rules.syntaxHighlightAll;
+    let l = rawTextArray.length;
+    for (let i = 0; i < l; i++) {
         if (rawTextArray[i] === "\n") {
             matrixFull.push(matrixRow);
             matrixRow = [];
@@ -498,12 +629,13 @@ guiEasy.popper.rules.syntaxHighlight.regEx = function(syntaxHighlight, rawTextAr
     return x.fixSyntaxMatrix(matrixFull, syntaxHighlight);
 };
 
-guiEasy.popper.rules.syntaxHighlight.fixSyntaxMatrix = function(matrixFull, syntaxHighlight) {
-    let z = guiEasy.popper.rules.syntaxHighlight;
+guiEasy.popper.rules.syntaxHighlightAll.fixSyntaxMatrix = function(matrixFull, syntaxHighlight) {
+    let z = guiEasy.popper.rules.syntaxHighlightAll;
     let checkSyntax = guiEasy.popper.rules.syntax.hightlight;
     let s = -1;
     let syntaxTemp = [];
-    for (let i = 0; i < matrixFull.length; i++) {
+    let l = matrixFull.length;
+    for (let i = 0; i < l; i++) {
         let tempI = matrixFull[i];
         for (let k = 0; k < tempI.length; k++) {
             s++;
@@ -536,19 +668,21 @@ guiEasy.popper.rules.syntaxHighlight.fixSyntaxMatrix = function(matrixFull, synt
             }
         }
     }
-    for (let i = 0; i < syntaxTemp.length; i++) {
+    l = syntaxTemp.length;
+    for (let i = 0; i < l; i++) {
         syntaxHighlight = syntaxHighlight.replace("{{TYPE_OF_SYNTAX_" + i + "}}", syntaxTemp[i]);
     }
     return syntaxHighlight;
 };
 
-guiEasy.popper.rules.syntaxHighlight.parseRow = function(rowChar, k, checkSyntax) {
+guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyntax) {
     let foundSyntax = null;
     let type = null;
     let s = 0;
     let nextK = k;
     let testString = checkSyntax;
-    for (let i = k; i < rowChar.length; i++) {
+    let l = rowChar.length;
+    for (let i = k; i < l; i++) {
         if (foundSyntax !== null) {
             continue;  //THIS MEANS WE GOT A MATCH AND WILL LOOK BEHIND + BEFORE THIS ONE
         }
@@ -700,7 +834,7 @@ guiEasy.popper.rules.syntaxHighlight.parseRow = function(rowChar, k, checkSyntax
     }
 };
 
-guiEasy.popper.rules.syntaxHighlight.fixSpecialChars = function(char) {
+guiEasy.popper.rules.syntaxHighlightAll.fixSpecialChars = function(char) {
     //console.log(char.charCodeAt(0));
     if (char.charCodeAt(0) === 10) {
         char = "NEW_ROW";
