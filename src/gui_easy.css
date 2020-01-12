@@ -1235,6 +1235,21 @@ div.editor-container > div {
     flex-direction: column;
     border-radius: calc(0.2 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
+div.editor.is-inactive {
+    pointer-events: none;
+}
+div#rules-editor-inactive {
+    opacity: 0;
+}
+div.is-inactive div#rules-editor-inactive {
+    opacity: 0.5;
+    top: 50%;
+    height: 20%;
+    transform: translateY(-50%);
+}
+div.is-inactive div#rules-editor-inactive::after {
+    content: "rules are not enabled"
+}
 div.editor-input {
     z-index: 2;
     color: transparent;
