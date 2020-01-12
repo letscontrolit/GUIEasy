@@ -1,3 +1,4 @@
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 
 guiEasy.popper.extra = "";
 

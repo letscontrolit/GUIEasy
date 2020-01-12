@@ -42,7 +42,7 @@ module.exports = function(grunt) {
                       'src/dash/gui_easy_dash_d*.js'
                   ],
                   'build/temp/patreon.min.js': [
-                      'src/dash/gui_easy_popper_extra.js'
+                      'src/gui_easy_popper_extra.js'
                   ]
               }
           }

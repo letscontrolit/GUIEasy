@@ -10,11 +10,13 @@ guiEasy.popper.rules = function(){
     let input = document.getElementById("rules-editor-input");
     let selection = document.getElementById("rules-editor-selection");
     let background = document.getElementById("rules-editor-background");
+    let fileSize = document.getElementById("rules-editor-file-size");
     guiEasy.popper.rules.syntax.editorElement = editor;
     guiEasy.popper.rules.syntax.syntaxElement = syntax;
     guiEasy.popper.rules.syntax.inputElement = input;
     guiEasy.popper.rules.syntax.selectionElement = selection;
     guiEasy.popper.rules.syntax.backgroundElement = background;
+    guiEasy.popper.rules.syntax.filesizeElement = fileSize;
     editor.addEventListener("input", x.input, false);
     editor.addEventListener("keyup", x.input.tab, false);
     editor.addEventListener("keydown", x.input.tab, false);
@@ -391,9 +393,19 @@ guiEasy.popper.rules.input.tab = function (event) {
 };
 
 guiEasy.popper.rules.sizeOfFile = function () {
-    //max size/char's 2048
-    let editor = guiEasy.popper.rules.syntax.editorElement;
-    console.log(editor.value.length);
+    let x = guiEasy.popper.rules.syntax;
+    let maxSizeOfFile = 2048;
+    let currentSizeOfFile = x.editorElement.value.length;
+    x.filesizeElement.innerHTML = currentSizeOfFile + "/" + maxSizeOfFile;
+    if (currentSizeOfFile > maxSizeOfFile) {
+        x.backgroundElement.classList.add("main-warning");
+        x.filesizeElement.classList.remove("text-tiny");
+        x.filesizeElement.classList.add("text-huge");
+    } else {
+        x.backgroundElement.classList.remove("main-warning");
+        x.filesizeElement.classList.remove("text-huge");
+        x.filesizeElement.classList.add("text-tiny");
+    }
 };
 
 guiEasy.popper.rules.handleScroll = function () {
