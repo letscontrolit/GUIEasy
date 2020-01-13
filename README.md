@@ -396,10 +396,11 @@ The following awesome fans are sponsoring us via Patreon, at gold level or more,
 
 ### BOM Level
 
+💎 Friedrich Bader
+
 ### 2x Platinum
 
-👑 CARL E FORSTER,
-👑 Friedrich Bader
+👑 CARL E FORSTER
 
 ### Platinum
 
