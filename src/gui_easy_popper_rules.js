@@ -2,6 +2,7 @@
 
 guiEasy.popper.rules = function(){
     let x = guiEasy.popper.rules;
+    x.timeoutStarted = false;
     x.splitSyntax();
     let editor = document.getElementById("rules-editor");
     if (editor === null) {
@@ -364,26 +365,48 @@ guiEasy.popper.rules.input = function (event) {
     if (event.inputType === "insertText") {
         whatToDo = event.data;
     }
-    let test = Date.now() - x.lastRun;
-    if (test < 300 && test > 5 || test > 1000) {
-        y.syntaxHighlightTemporary(whatToDo, start, end);
-        x.lastRun = Date.now();
-    }
+    x.selectionElement.classList.add("no-focus");
+    y.syntaxHighlightTemporary(whatToDo, start, end);
     // as long as the user is entering new data this will not be executed. Once the user stops for X ms the parser will kick in
-    setTimeout(function () {
-        if ((Date.now() - x.lastRun) >= 750) {
-            y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
-            x.lastRun = Date.now();
-            y.selection();
-        }
-    }, 1000)
+    x.timePunch = false;
+    if (!y.timeoutStarted) {
+        y.timeoutStarted = true;
+        let p = setInterval(function () {
+            x.timePunch = true;
+            if (x.timePunch) {
+                clearInterval(p);
+                y.timeoutStarted = false;
+                x.selectionElement.classList.remove("no-focus");
+                y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
+                y.selection();
+            }
+        }, 25)
+    }
 };
 
 guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
     let x = guiEasy.popper.rules.syntax.selectionElement;
     let y = guiEasy.popper.rules.syntax.editorElement;
-    let rows = document.getElementById("rules-editor-selection").childElementCount - 1;
-    let colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+    let rows;
+    let colsInRow;
+    if (
+        document.getElementById("rules-editor-selection").childElementCount === null ||
+        document.getElementById("row-" + x.position.row).childElementCount === null
+    ) {
+        let p = setInterval(function () {
+            if (
+                document.getElementById("rules-editor-selection").childElementCount !== null ||
+                document.getElementById("row-" + x.position.row).childElementCount !== null
+            ) {
+                clearInterval(p);
+                rows = document.getElementById("rules-editor-selection").childElementCount - 1;
+                colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+            }
+        }, 10)
+    } else {
+        rows = document.getElementById("rules-editor-selection").childElementCount - 1;
+        colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+    }
     let colsInRowAbove = document.getElementById("row-" + (x.position.row - 1));
     if (colsInRowAbove !== null) {
         colsInRowAbove = colsInRowAbove.childElementCount - 1;
@@ -396,7 +419,15 @@ guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
     } else {
         colsInRowBelow = -1;
     }
+    //default is to insert a character
     let innerText = what;
+    //if not a character....
+    if (what === "<delete") {
+        innerText = "";
+    }
+    if (what === "delete>") {
+        innerText = "";
+    }
     if (what === "linefeed") {
         innerText = "";
         x.position.row++;
@@ -452,7 +483,52 @@ guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
     }
     x.position.rowStamp = Date.now();
     x.position.colStamp = Date.now();
-    console.log(x.position);
+    if (innerText !== "") {
+        x.position.col++;
+        let z = guiEasy.popper.rules.syntaxHighlightTemporary;
+        z.addCharacter(innerText, x.position.row, x.position.col);
+    } else {
+        console.log(x.position);
+    }
+};
+
+guiEasy.popper.rules.syntaxHighlightTemporary.addCharacter = function(char, row, col) {
+    if (char === " ") {
+        char = "&nbsp;";
+    }
+    let selectElement = document.createElement("div");
+    let charElement = document.createElement("div");
+    let syntaxElement = document.createElement("div");
+    selectElement.innerHTML = "&nbsp;";
+    charElement.innerHTML = char;
+    charElement.classList.add("input-temp");
+    syntaxElement.innerHTML = "&nbsp;";
+    let rowSelectElement = document.getElementById("row-" + row);
+    let rowInputElement = document.getElementById("input-row-" + row);
+    let rowSyntaxElement = document.getElementById("syntax-row-" + row);
+    if (rowInputElement === null || rowSelectElement === null) {
+        let p = setInterval(function () {
+            if (document.getElementById("input-row-" + row) !== null) {
+                clearInterval(p);
+                rowSelectElement = document.getElementById("row-" + row);
+                rowInputElement = document.getElementById("input-row-" + row);
+                rowSyntaxElement = document.getElementById("syntax-row-" + row);
+            }
+        }, 10)
+    }
+    let pos = col - 1;
+    let siblingSelect = rowSelectElement.children[pos];
+    let siblingInput = rowInputElement.children[pos];
+    let siblingSyntax = rowSyntaxElement.children[pos];
+    if (siblingSelect === undefined) {
+        rowSelectElement.appendChild(selectElement);
+        rowInputElement.appendChild(charElement);
+        rowSyntaxElement.appendChild(syntaxElement);
+    } else {
+        rowSelectElement.insertBefore(selectElement, siblingSelect);
+        rowInputElement.insertBefore(charElement, siblingInput);
+        rowSyntaxElement.insertBefore(syntaxElement, siblingSyntax);
+    }
 };
 
 guiEasy.popper.rules.focus = function (event) {
@@ -563,9 +639,9 @@ guiEasy.popper.rules.syntaxHighlightAll = function(editor, syntax) {
     let p = -1;
     let s = -1;
     let currentRow = 0;
-    let syntaxHighlight = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
-    let syntaxSelection = "<div class='syntax-row' id='row-" + currentRow + "' data-row-number='1'>";
-    let syntaxInput = "<div class='syntax-row' name='row-" + currentRow + "' data-row-number='1'>";
+    let syntaxHighlight = "<div class='syntax-row' id='syntax-row-" + currentRow + "'>";
+    let syntaxSelection = "<div class='syntax-row' id='row-" + currentRow + "'>";
+    let syntaxInput = "<div class='syntax-row' id='input-row-" + currentRow + "'>";
     let l = syntaxArray.length;
     for (let i = 0; i < l; i++) {
         //p++; //Did not work with minify (grunt)...
@@ -577,17 +653,17 @@ guiEasy.popper.rules.syntaxHighlightAll = function(editor, syntax) {
         let char = x.syntaxHighlightAll.fixSpecialChars(syntaxArray[i]);
         if (char === "NEW_ROW") {
             currentRow++;
-            syntaxHighlight += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
+            syntaxHighlight += "&zwnj;</div><div class='syntax-row' id='syntax-row-" + currentRow + "'>";
             syntaxSelection += `<div class='` + selectionSyntax + `' id='select-` + p + `' data-end-of-line></div>
                                 &zwnj;</div>
-                                <div class='syntax-row' id='row-` + currentRow + `' data-row-number='` + (currentRow + 1) + `'>
+                                <div class='syntax-row' id='row-` + currentRow + `'>
                                 `;
-            syntaxInput += "&zwnj;</div><div class='syntax-row' name='row-" + currentRow + "' data-row-number='" + (currentRow + 1) + "'>";
+            syntaxInput += "&zwnj;</div><div class='syntax-row' id='input-row-" + currentRow + "'>";
         } else {
             s = s + 1;
             syntaxHighlight += "<div class='syntax-element {{TYPE_OF_SYNTAX_" + s + "}}' id='hightlight-" + s + "'>" + char + "</div>";
-            syntaxSelection += "<div class='" + selectionSyntax + "' id='select-" + p + "'>" + char + "</div>";
-            syntaxInput += "<div id='input-" + s + "'>" + char + "</div>";
+            syntaxSelection += "<div class='" + selectionSyntax + "' id='select-" + p + "'>&nbsp;</div>";
+            syntaxInput += "<div id='input-" + s + "'>&nbsp;</div>";
         }
     }
     p = p + 1;
