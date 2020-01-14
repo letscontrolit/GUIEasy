@@ -1241,8 +1241,12 @@ div.editor.is-inactive {
 div.editor.too-big {
     border: 5px solid var(--main-warning-color-rgba, red);
 }
-div#rules-editor-file-size.too-big::after {
+div#rules-editor-file-size.too-big {
+    display: inline;
+}
+div#rules-editor-file-size.too-big::before {
     content: "🔺";
+    animation: blinking .5s step-end infinite alternate;
 }
 div#rules-editor-inactive {
     opacity: 0;
@@ -1315,6 +1319,9 @@ div.syntax-is-statement {
 div.syntax-is-comma {
     color: rgba(var(--main-font-color), 0.5);
 }
+div.input-temp {
+    color: var(--main-font-color-rgba, white);
+}
 div.syntax-row {
     display: flex;
     flex-direction: row;
@@ -1322,7 +1329,7 @@ div.syntax-row {
     min-height: calc(1.06555555555555 * var(--default-font-size, 19pt) + 0.75pt + 3 * (10 / var(--scale-size)));
     max-height: calc(1.06555555555555 * var(--default-font-size, 19pt) + 0.75pt + 3 * (10 / var(--scale-size)));
 }
-div.syntax-row:nth-child(even) {
+div#rules-editor-syntax > div.syntax-row:nth-child(even) {
     background: rgba(0, 0, 0, 0.1);
 }
 select {
