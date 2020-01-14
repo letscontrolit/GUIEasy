@@ -1,4 +1,5 @@
 /* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
+
 guiEasy.popper.rules = function(){
     let x = guiEasy.popper.rules;
     x.splitSyntax();
@@ -463,19 +464,15 @@ guiEasy.popper.rules.focus = function (event) {
     }
 };
 
-guiEasy.popper.rules.selection = function (state = "up") {
-    if (state.type === "mouseup") {
-        state = "up";
-    }
+guiEasy.popper.rules.selection = function () {
     let x = guiEasy.popper.rules.syntax.selectionElement;
     let y = guiEasy.popper.rules.syntax.editorElement;
     x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
     x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
     let caretElement = document.getElementById("select-" + y.selectionStart);
-    if (state === "up" && y.selectionEnd - y.selectionStart === 0) {
+    if (y.selectionEnd - y.selectionStart === 0) {
         if (caretElement !== null) {
             caretElement.classList.add("editor-caret");
-            x.position.col = -1;
             x.position.col = Array.from(caretElement.parentNode.children).indexOf(caretElement);
             x.position.colStamp = Date.now();
         }
@@ -485,12 +482,10 @@ guiEasy.popper.rules.selection = function (state = "up") {
             x.position.colStamp = Date.now();
         }
     }
-    let test = Date.now() - x.position.rowStamp;
-    if (state === "up" && test > 100 && caretElement !== null) {
+    if (caretElement !== null) {
         x.position.row = parseInt((caretElement.parentElement.id).replace("row-", ""));
         x.position.rowStamp = Date.now();
     }
-    console.log(x.position);
 };
 
 guiEasy.popper.rules.input.specialKeys = function (event) {

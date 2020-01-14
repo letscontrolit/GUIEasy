@@ -3,12 +3,19 @@
   "timestamp": 1578820861737,
   "version": "0.0.1",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
-  "license": "GPL-3.0-or-later",
   "description": "Front End for ESP Easy",
-  "bin": {
+  "main": {
     "index.html.gz": "build/main/0.0.nightly.1/"
   },
-  "repository": "github:letscontrolit/GUIEasy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/letscontrolit/GUIEasy.git"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/letscontrolit/GUIEasy/issues"
+  },
+  "homepage": "https://github.com/letscontrolit/GUIEasy#readme"
   "devDependencies": {
     "grunt": "^1.0.4",
     "grunt-contrib-uglify-es": "^3.3.0",
