@@ -26,7 +26,9 @@ guiEasy.popper.rules = function(){
     editor.addEventListener("blur", x.focus, false);
     editor.addEventListener("focus", x.focus, false);
     x.handleScroll();
-    x.input();
+    x.syntax.lastRun = Date.now();
+    selection.position = {"col": 0, "row": 0};
+    x.input({isComposing: false});
     selection.classList.add("no-focus");
 };
 
@@ -336,48 +338,30 @@ guiEasy.popper.rules.splitSyntax = function() {
 };
 
 guiEasy.popper.rules.input = function (event) {
-    let x = guiEasy.popper.rules.syntax;
     let y = guiEasy.popper.rules;
-    let start = x.editorElement.selectionStart;
-    let end = x.editorElement.selectionEnd;
-    if (x.lastRun === undefined) {
-        y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
-        x.lastRun = Date.now();
-        x.selectionElement.position = {
-            "col": 0,
-            "colStamp": Date.now(),
-            "row": 0,
-            "rowStamp": Date.now()
-        };
-        y.selection();
-        return;
+    if (event.isComposing) {
+        y.syntax.timePunch = false;
+        y.syntax.selectionElement.classList.add("no-focus");
+        y.syntaxHighlightTemporary(event.data, y.syntax.editorElement.selectionStart, y.syntax.editorElement.selectionEnd);
+    } else {
+        if (event.inputType === "insertFromPaste") {
+            y.syntax.editorElement.selectionStart = 0;
+            y.syntax.editorElement.selectionEnd = 0;
+            y.syntax.editorElement.scrollLeft = 0;
+            y.syntax.editorElement.scrollTop = 0;
+        }
+        y.syntax.timePunch = true;  //makes the parser trigger
     }
-    let whatToDo;
-    if (event.inputType === "deleteContentForward") {
-        whatToDo = "delete>";
-    }
-    if (event.inputType === "deleteContentBackward") {
-        whatToDo = "<delete";
-    }
-    if (event.inputType === "insertLineBreak") {
-        whatToDo = "linefeed";
-    }
-    if (event.inputType === "insertText") {
-        whatToDo = event.data;
-    }
-    x.selectionElement.classList.add("no-focus");
-    y.syntaxHighlightTemporary(whatToDo, start, end);
     // as long as the user is entering new data this will not be executed. Once the user stops for X ms the parser will kick in
-    x.timePunch = false;
     if (!y.timeoutStarted) {
         y.timeoutStarted = true;
         let p = setInterval(function () {
-            x.timePunch = true;
-            if (x.timePunch) {
+            y.syntax.timePunch = true;
+            if (y.syntax.timePunch) {
                 clearInterval(p);
                 y.timeoutStarted = false;
-                x.selectionElement.classList.remove("no-focus");
-                y.syntaxHighlightAll(x.editorElement, x.syntaxElement);
+                y.syntax.selectionElement.classList.remove("no-focus");
+                y.syntaxHighlightAll(y.syntax.editorElement, y.syntax.syntaxElement);
                 y.selection();
             }
         }, 25)
@@ -386,9 +370,45 @@ guiEasy.popper.rules.input = function (event) {
 
 guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
     let x = guiEasy.popper.rules.syntax.selectionElement;
-    let y = guiEasy.popper.rules.syntax.editorElement;
+    //default is to insert a character
+    let innerText = guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput(what, start, end);
+    if (innerText !== false) {
+        x.position.col++;
+        let z = guiEasy.popper.rules.syntaxHighlightTemporary;
+        z.addCharacter(innerText, x.position.row, x.position.col);
+    }
+    // this one is special since the "selection" function deals with clicks and inputs, this part deals with the temporary selection
+    x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
+    x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
+    let children = document.getElementById("row-" + x.position.row).children;
+    if (children[x.position.col] !== null) {
+        children[x.position.col].classList.add("editor-caret");
+    }
+    if (children[x.position.col] !== null && children[x.position.col].dataset.endOfLine !== undefined) {
+        children[x.position.col].classList.add("end-of-line-caret");
+    }
+};
+
+guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput = function (what, start, end) {
+    if (
+        what === "up" ||
+        what === "down" ||
+        what === "left" ||
+        what === "right" ||
+        what === "tab" ||
+        what === "home" ||
+        what === "ctrl+home" ||
+        what === "end" ||
+        what === "ctrl+end"
+    ) {
+        // nothing
+    } else {
+        return what;
+    }
     let rows;
     let colsInRow;
+    let x = guiEasy.popper.rules.syntax.selectionElement;
+    let y = guiEasy.popper.rules.syntax.editorElement;
     if (
         document.getElementById("rules-editor-selection").childElementCount === null ||
         document.getElementById("row-" + x.position.row).childElementCount === null
@@ -419,48 +439,25 @@ guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
     } else {
         colsInRowBelow = -1;
     }
-    //default is to insert a character
-    let innerText = what;
-    //if not a character....
-    if (what === "<delete") {
-        innerText = "";
-    }
-    if (what === "delete>") {
-        innerText = "";
-    }
-    if (what === "linefeed") {
-        innerText = "";
-        x.position.row++;
-        x.position.col = 0;
-    }
     if (what === "down") {
-        innerText = "";
         if (rows > x.position.row) {
             x.position.row++;
             if (colsInRowBelow < x.position.col) {
                 x.position.col = colsInRowBelow;
             }
         }
+        return false;
     }
     if (what === "up") {
-        innerText = "";
         if (x.position.row > 0) {
             x.position.row--;
             if (colsInRowAbove < x.position.col) {
                 x.position.col = colsInRowAbove;
             }
         }
-    }
-    if (what === "tab") {
-        //if its a TAB add 3 spaces
-        innerText = ["&nbsp;", "&nbsp;", "&nbsp;"];
-        y.value = y.value.substring(0, start) + "\x20\x20\x20" + y.value.substring(end);
-        y.selectionStart = start + 3;
-        y.selectionEnd = start + 3;
-        x.position.col += 3;
+        return false;
     }
     if (what === "left") {
-        innerText = "";
         if (x.position.col > 0) {
             x.position.col--;
         } else {
@@ -469,9 +466,9 @@ guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
                 x.position.col = colsInRowAbove;
             }
         }
+        return false;
     }
     if (what === "right") {
-        innerText = "";
         if (x.position.col < colsInRow) {
             x.position.col++;
         } else {
@@ -480,55 +477,79 @@ guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
                 x.position.col = 0;
             }
         }
+        return false;
     }
-    x.position.rowStamp = Date.now();
-    x.position.colStamp = Date.now();
-    if (innerText !== "") {
-        x.position.col++;
-        let z = guiEasy.popper.rules.syntaxHighlightTemporary;
-        z.addCharacter(innerText, x.position.row, x.position.col);
-    } else {
-        console.log(x.position);
+    if (what === "tab") {
+        //if its a TAB add 3 spaces
+        y.value = y.value.substring(0, start) + "\x20\x20\x20" + y.value.substring(end);
+        y.selectionStart = start + 3;
+        y.selectionEnd = start + 3;
+        return ["&nbsp;", "&nbsp;", "&nbsp;"];
+    }
+    if (what === "home") {
+        x.position.col = 0;
+        return false;
+    }
+    if (what === "ctrl+home") {
+        x.position.col = 0;
+        x.position.row = 0;
+        return false;
+    }
+    if (what === "end") {
+        x.position.col = colsInRow;
+        return false;
+    }
+    if (what === "ctrl+end") {
+        x.position.col = document.getElementById("row-" + rows).childElementCount - 1;
+        x.position.row = rows;
+        return false;
     }
 };
 
 guiEasy.popper.rules.syntaxHighlightTemporary.addCharacter = function(char, row, col) {
-    if (char === " ") {
-        char = "&nbsp;";
+    if (!Array.isArray(char)) {
+        if (char === " ") {
+            char = "&nbsp;";
+        }
+        char = [char];
     }
-    let selectElement = document.createElement("div");
-    let charElement = document.createElement("div");
-    let syntaxElement = document.createElement("div");
-    selectElement.innerHTML = "&nbsp;";
-    charElement.innerHTML = char;
-    charElement.classList.add("input-temp");
-    syntaxElement.innerHTML = "&nbsp;";
-    let rowSelectElement = document.getElementById("row-" + row);
-    let rowInputElement = document.getElementById("input-row-" + row);
-    let rowSyntaxElement = document.getElementById("syntax-row-" + row);
-    if (rowInputElement === null || rowSelectElement === null) {
-        let p = setInterval(function () {
-            if (document.getElementById("input-row-" + row) !== null) {
-                clearInterval(p);
-                rowSelectElement = document.getElementById("row-" + row);
-                rowInputElement = document.getElementById("input-row-" + row);
-                rowSyntaxElement = document.getElementById("syntax-row-" + row);
-            }
-        }, 10)
+    for (let i = 0; i < char.length; i++) {
+        let selectElement = document.createElement("div");
+        let charElement = document.createElement("div");
+        let syntaxElement = document.createElement("div");
+        selectElement.innerHTML = "&nbsp;";
+        charElement.innerHTML = char[i];
+        charElement.classList.add("input-temp");
+        syntaxElement.innerHTML = "&nbsp;";
+        let rowSelectElement = document.getElementById("row-" + row);
+        let rowInputElement = document.getElementById("input-row-" + row);
+        let rowSyntaxElement = document.getElementById("syntax-row-" + row);
+        if (rowInputElement === null || rowSelectElement === null) {
+            let p = setInterval(function () {
+                if (document.getElementById("input-row-" + row) !== null) {
+                    clearInterval(p);
+                    rowSelectElement = document.getElementById("row-" + row);
+                    rowInputElement = document.getElementById("input-row-" + row);
+                    rowSyntaxElement = document.getElementById("syntax-row-" + row);
+                }
+            }, 10)
+        }
+        let pos = col - 1 + i;
+        let siblingSelect = rowSelectElement.children[pos];
+        let siblingInput = rowInputElement.children[pos];
+        let siblingSyntax = rowSyntaxElement.children[pos];
+        if (siblingSelect === undefined) {
+            rowSelectElement.appendChild(selectElement);
+            rowInputElement.appendChild(charElement);
+            rowSyntaxElement.appendChild(syntaxElement);
+        } else {
+            rowSelectElement.insertBefore(selectElement, siblingSelect);
+            rowInputElement.insertBefore(charElement, siblingInput);
+            rowSyntaxElement.insertBefore(syntaxElement, siblingSyntax);
+        }
     }
-    let pos = col - 1;
-    let siblingSelect = rowSelectElement.children[pos];
-    let siblingInput = rowInputElement.children[pos];
-    let siblingSyntax = rowSyntaxElement.children[pos];
-    if (siblingSelect === undefined) {
-        rowSelectElement.appendChild(selectElement);
-        rowInputElement.appendChild(charElement);
-        rowSyntaxElement.appendChild(syntaxElement);
-    } else {
-        rowSelectElement.insertBefore(selectElement, siblingSelect);
-        rowInputElement.insertBefore(charElement, siblingInput);
-        rowSyntaxElement.insertBefore(syntaxElement, siblingSyntax);
-    }
+    let p = guiEasy.popper.rules.syntax.selectionElement.position;
+    p.col = p.col + char.length - 1;  //we do this to not have the input glitch, x.position.col++; is adding this before running this function
 };
 
 guiEasy.popper.rules.focus = function (event) {
@@ -550,17 +571,14 @@ guiEasy.popper.rules.selection = function () {
         if (caretElement !== null) {
             caretElement.classList.add("editor-caret");
             x.position.col = Array.from(caretElement.parentNode.children).indexOf(caretElement);
-            x.position.colStamp = Date.now();
         }
         if (caretElement !== null && caretElement.dataset.endOfLine !== undefined) {
             caretElement.classList.add("end-of-line-caret");
             x.position.col = caretElement.parentElement.childElementCount - 1;
-            x.position.colStamp = Date.now();
         }
     }
     if (caretElement !== null) {
         x.position.row = parseInt((caretElement.parentElement.id).replace("row-", ""));
-        x.position.rowStamp = Date.now();
     }
 };
 
@@ -571,17 +589,34 @@ guiEasy.popper.rules.input.specialKeys = function (event) {
     if (event.type === "keydown") {
         if (event.code === "Tab") {
             event.preventDefault();
+            return;
+        }
+        if (event.code === "Home") {
+            if (event.ctrlKey === false) {
+                x.syntaxHighlightTemporary("home", start, end);
+            } else {
+                x.syntaxHighlightTemporary("ctrl+home", start, end);
+            }
+            return;
+        }
+        if (event.code === "End") {
+            if (event.ctrlKey === false) {
+                x.syntaxHighlightTemporary("end", start, end);
+            } else {
+                x.syntaxHighlightTemporary("ctrl+end", start, end);
+            }
+            return;
         }
         let test = (event.code).toLowerCase().indexOf("arrow");
         if (test === 0) {
             let what = (event.code).toLowerCase().replace("arrow", "");
-            guiEasy.popper.rules.syntaxHighlightTemporary(what, start, end);
+            x.syntaxHighlightTemporary(what, start, end);
         }
     }
     if (event.type === "keyup") {
         //console.log(event.code);
         if (event.code === "Tab" ) {
-            guiEasy.popper.rules.syntaxHighlightTemporary("tab", start, end);
+            x.syntaxHighlightTemporary("tab", start, end);
         }
     }
 };
