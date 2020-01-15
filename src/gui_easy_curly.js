@@ -431,7 +431,7 @@ guiEasy.curly.drawer = function (arg) {
         let columnRowsMax = Math.round((x.length + 1) / 3 + 1);
         //  data-open="is-full-size", "is-quarter-size", "is-half-size", "is-small-size" ... no size setting will make it auto height.
         html =  `
-                    <div class="bottom-drawer is-inactive" data-open="is-half-size" id="drawer-theme" data-close="is-inactive">
+                    <div class="bottom-drawer is-inactive is-hidden" data-open="is-half-size" id="drawer-theme" data-close="is-inactive">
                         <div class="bottom-tab" tabindex="0" data-click="drawer-theme">
                         <div id="custom-theme-settings"></div>
                         {{ICON-THEME}}
@@ -563,5 +563,8 @@ guiEasy.curly.info = function (what) {
     }
     if (what[0] === "footer") {
         helpEasy.addToLogDOM("footer", 0, "info");
+    }
+    if (what[0] === "patreon") {
+        helpEasy.addToLogDOM("patreon", 0, "info");
     }
 };

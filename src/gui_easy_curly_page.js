@@ -289,6 +289,8 @@ guiEasy.curly.page.rules = function () {
                             tabindex="-1"
                             id="rules-editor-input"
                 >‌</div>
+                <div class="is-right text-tiny" id="rules-editor-file-size"></div>
+                <div id="rules-editor-inactive">{{ICON-LOCKED}}</div>
             </div>
         </div>
         `;

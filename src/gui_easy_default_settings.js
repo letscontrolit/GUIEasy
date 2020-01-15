@@ -15,7 +15,7 @@ const defaultSettings = {
         },
         'areasMinimized': 0,
         'helpLinks': 1,
-        'waitForTheme': 0,
+        'fastBoot': 0,               //only use if you have no theme and no extra feature such as dashboard etc.
         'internetLostShow': 1,
         'clipboardSyntax': "Default",
         'dropdownList': "Default"

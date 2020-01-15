@@ -267,6 +267,7 @@ are placed here.
 --max-width-page-size:	    1400px;
 --state-of-navbar-toggle:   fixed;
 --button-radius-size:	    1;
+--button-icon-size:         0;
 --main-bg-color:	    52,146,226;
 --main-inverted-color:	    47,66,82;
 --main-sunny-color:         255,209,0;
@@ -386,3 +387,51 @@ Please refer to [LICENSE.md](LICENSE.md) file for details.
 * Weather information API using [weatherstack](https://weatherstack.com/)
 * Screenshots using [html2canvas](https://html2canvas.hertzen.com/)
 * Inspiration for the terminal look of the Drones come from ``Terminal.css`` found [here](https://terminalcss.xyz/)
+
+## Sponsors
+
+The following awesome fans are sponsoring us via Patreon, at gold level or more, each month.
+
+### Company Level
+
+### BOM Level
+
+💎 Friedrich Bader
+
+### 2x Platinum
+
+👑 CARL E FORSTER
+
+### Platinum
+
+🏆 Bert van den Bergh,
+🏆 Dennis van der Weck,
+🏆 Droscovi,
+🏆 Harald Fauland,
+🏆 Mikael Brusman
+
+### Gold
+
+🥇 Alain,
+🥇 Alex Bik,
+🥇 Andrew Piechocki,
+🥇 Anupam Singh,
+🥇 Armin Krämer,
+🥇 Clinton Lee Taylor,
+🥇 Etienne Bottke,
+🥇 Hightower,
+🥇 IoTPlay,
+🥇 Jan Kazimour,
+🥇 KJ Dijkema,
+🥇 Marcus Lindberg,
+🥇 Markus Kuntz,
+🥇 marzog,
+🥇 Michael Buchholz,
+🥇 Olaf,
+🥇 Reinhold Kainhofer,
+🥇 Rich Schiffli,
+🥇 Stefan Boschert
+
+### ❤ Thank you notes ❤
+
+Thank you from the bottom of our hearts, without your support we wouldn't be able to do this.

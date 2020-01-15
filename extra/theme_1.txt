@@ -1,15 +1,15 @@
+button-icon-size|0
 button-radius-size|3
 custom-wallpaper-url|https://media.giphy.com/media/orTEFD4GoRufhL7ex0/giphy.gif
 default-font-family|'Dosis', 'Segoe UI', Calibri, Arial
 main-bg-color|0,0,0
 main-font-color|0,255,0
-main-info-color|134,67,0
-main-inverted-color|43,43,43
-main-success-color|0,64,0
-main-sunny-color|157,157,0
-main-warning-color|134,0,67
+main-info-color|255,202,149
+main-inverted-color|108,108,108
+main-success-color|215,255,215
+main-sunny-color|255,255,142
+main-warning-color|255,151,203
 max-width-page-size|1400px
 overflow-tab-text-size|24
 row-size|20
-scale-size|16
 state-of-navbar-toggle|fixed

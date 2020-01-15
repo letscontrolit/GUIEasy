@@ -87,6 +87,7 @@ div.area {
     justify-content: flex-start;
     border: 2px solid rgba(var(--main-inverted-color), 0.5);
     margin-bottom: 3px;
+    transition: 0.4s;
 }
 div.area-title {
     width: 100%;
@@ -1234,18 +1235,55 @@ div.editor-container > div {
     flex-direction: column;
     border-radius: calc(0.2 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
+div.editor.is-inactive {
+    pointer-events: none;
+}
+div.editor.too-big {
+    border: 5px solid var(--main-warning-color-rgba, red);
+}
+div#rules-editor-file-size.too-big {
+    display: inline;
+}
+div#rules-editor-file-size.too-big::before {
+    content: "🔺";
+    animation: blinking .5s step-end infinite alternate;
+}
+div#rules-editor-inactive {
+    opacity: 0;
+}
+div.is-inactive div#rules-editor-inactive {
+    opacity: 0.5;
+    top: 50%;
+    height: 20%;
+    transform: translateY(-50%);
+}
+div.is-inactive div#rules-editor-inactive::after {
+    content: "rules are not enabled"
+}
 div.editor-input {
     z-index: 2;
+    color: transparent;
 }
 div.editor-syntax {
     z-index: 6;
 }
 div.editor-selection {
     z-index: 8;
+    color: transparent;
 }
-div.editor-caret::after {
-    content: "|";
-    color: red;
+div.editor-caret::before {
+    content: "│";
+    color: rgba(var(--main-font-color), 0.75);
+    animation: blinking .5s step-end infinite alternate;
+    position: relative;
+    left: calc(-5px * 0.0625 * var(--scale-size, 16));
+}
+div.end-of-line-caret.editor-caret::before {
+    content: "█";
+    left: unset;
+}
+div.editor-selection.no-focus {
+    opacity: 0;
 }
 div.syntax-element {
     color: var(--main-font-color-rgba, white);
@@ -1281,6 +1319,9 @@ div.syntax-is-statement {
 div.syntax-is-comma {
     color: rgba(var(--main-font-color), 0.5);
 }
+div.input-temp {
+    color: var(--main-font-color-rgba, white);
+}
 div.syntax-row {
     display: flex;
     flex-direction: row;
@@ -1288,7 +1329,7 @@ div.syntax-row {
     min-height: calc(1.06555555555555 * var(--default-font-size, 19pt) + 0.75pt + 3 * (10 / var(--scale-size)));
     max-height: calc(1.06555555555555 * var(--default-font-size, 19pt) + 0.75pt + 3 * (10 / var(--scale-size)));
 }
-div.syntax-row:nth-child(even) {
+div#rules-editor-syntax > div.syntax-row:nth-child(even) {
     background: rgba(0, 0, 0, 0.1);
 }
 select {
@@ -2154,6 +2195,12 @@ div.is-hidden,
         opacity: 1
     }
     100% {
+        opacity: 0;
+    }
+}
+
+@keyframes blinking {
+    50% {
         opacity: 0;
     }
 }
