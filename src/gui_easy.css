@@ -1300,6 +1300,7 @@ div.syntax-is-parentheses {
 div.syntax-is-command {
     color: var(--main-warning-color-rgba, red);
 }
+div.syntax-is-transformer,
 div.syntax-is-event,
 div.syntax-is-variable {
     color: var(--main-info-color-rgba, orange);
@@ -1591,7 +1592,7 @@ label.checkbox  {
     font-size: calc(1 * var(--default-font-size, 19pt));
     width: calc(3 * var(--default-height-size, 20));
     height: calc(1.2 * var(--default-height-size, 20));
-    margin-bottom: calc(0.12 * var(--default-height-size, 20));
+    margin-top: calc(0.12 * var(--default-height-size, 20));
     background: var(--main-font-color-rgba, white);
     border-radius: calc(1 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }
