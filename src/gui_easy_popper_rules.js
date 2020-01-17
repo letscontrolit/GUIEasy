@@ -71,6 +71,7 @@ guiEasy.popper.rules["syntax"] = {
         ['Forward','48','P'],
         ['GetLevel','21','P'],
         ['GPIO','1','P'],
+        ['GPIOtoggle','1','P'],
         ['High','36','P'],
         ['HLWCalibrate','76','P'],
         ['HLWReset','76','P'],
@@ -215,7 +216,8 @@ guiEasy.popper.rules["syntax"] = {
     ],
         'parentheses': [
         [')'],
-        ['(']
+        ['('],
+        ['%']
     ],
         'logic': [
         ['and'],
@@ -243,35 +245,36 @@ guiEasy.popper.rules["syntax"] = {
     ],
         'variable': [
         ['[VAR#'],
-        ['[INT#']
+        ['[INT#'],
+        ['[Plugin#GPIO#Pinstate#']
     ],
         'transformer-binary': [
         [']'],
         ['#C]'],
-        ['#C!]'],
+        ['#!C]'],
         ['#H]'],
-        ['#H!]'],
+        ['#!H]'],
         ['#I]'],
-        ['#I!]'],
+        ['#!I]'],
         ['#M]'],
-        ['#M!]'],
+        ['#!M]'],
         ['#m]'],
-        ['#m!]'],
+        ['#!m]'],
         ['#O]'],
-        ['#O!]'],
+        ['#!O]'],
         ['#U]'],
-        ['#U!]'],
+        ['#!U]'],
         ['#u]'],
-        ['#u!]'],
+        ['#!u]'],
         ['#V]'],
         ['#X]'],
-        ['#X!]'],
+        ['#!X]'],
         ['#Y]'],
-        ['#Y!]'],
+        ['#!Y]'],
         ['#y]'],
-        ['#y!]'],
+        ['#!y]'],
         ['#Z]'],
-        ['#Z!]']
+        ['#!Z]']
     ],
         'transformer-floatingPoint': [
         ['#D000.000]'],
@@ -792,7 +795,6 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
         if (tempChar === " ") {
             foundSyntax = false;
         }
-        console.log(tempChar, testString[tempChar]);
         if (testString[tempChar] !== undefined) {
             testString = testString[tempChar];
             if (testString.full !== undefined) {
@@ -800,7 +802,6 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                 let checkLeftNum = parseFloat(checkLeft);
                 let checkRight = rowChar[(i + 1)];
                 let checkRightNum = parseFloat(checkRight);
-                console.log(checkLeftNum, checkRightNum);
 
                 if (testString.type === "comment") {
                     type = "syntax-is-" + testString.type;
@@ -879,20 +880,10 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                 }
 
                 if (testString.type === "parentheses") {
-                    if (
-                        !isNaN(checkRightNum) ||
-                        checkRight === " " ||
-                        checkRight === "/" ||
-                        checkRight === "*" ||
-                        checkRight === "+" ||
-                        checkRight === "-" ||
-                        checkRight === undefined
-                    ) {
-                        type = "syntax-is-" + testString.type;
-                        foundSyntax = true;
-                        nextK = i;
-                        s = testString.elementsPriorToHighlight;
-                    }
+                    type = "syntax-is-" + testString.type;
+                    foundSyntax = true;
+                    nextK = i;
+                    s = testString.elementsPriorToHighlight;
                 }
 
                 if (testString.type === "variable") {
@@ -906,7 +897,11 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                     }
                 }
 
-                if (testString.type === "transformer-binary" ) {
+                if (
+                    testString.type === "transformer-binary" ||
+                    testString.type === "transformer-floatingPoint" ||
+                    testString.type === "transformer-justification"
+                ) {
                         type = "syntax-is-" + testString.type.split("-")[0];
                         foundSyntax = true;
                         nextK = i;
