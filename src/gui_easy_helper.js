@@ -74,7 +74,7 @@ const helpEasy = {
             "cpu",
             "dhcp","dns","dst",
             "esp",
-            "gui","gw","gpio",
+            "gui","gw","gpio","gps",
             "http","https",
             "ip","id","i2c","io",
             "json",

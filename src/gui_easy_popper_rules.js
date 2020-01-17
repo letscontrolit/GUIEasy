@@ -714,6 +714,7 @@ guiEasy.popper.rules.syntaxHighlightAll = function(editor, syntax) {
 };
 
 guiEasy.popper.rules.syntaxHighlightAll.regEx = function(syntaxHighlight, rawTextArray) {
+    //TODO: redo the whole parser, use RegEx all the way?
     let matrixRow = [];
     let matrixFull = [];
     let x = guiEasy.popper.rules.syntaxHighlightAll;
