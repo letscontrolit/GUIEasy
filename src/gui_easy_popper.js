@@ -576,23 +576,19 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.action.copy = "clipboard-pinstate";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
+    if (x === "experimental") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "experimental settings";
+        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
+    }
     if (x === "info" && y === "log") {
         z.modal = "yep";
         z.button.close = "yep";
         z.action.close = "stop-log";
-        let level = {};
-        level["0"] = "no web log set";
-        level["1"] = "error";
-        level["2"] = "info";
-        level["3"] = "debug";
-        level["4"] = "debug more";
-        level["5"] = "not used";
-        level["6"] = "not used";
-        level["7"] = "not used";
-        level["8"] = "not used";
-        level["9"] = "debug development";
-        let currentLevel = level[guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.log.web_level];
-        z.title = "web log (" + currentLevel + ")";
+        let levels = guiEasy.logLevels();
+        let currentLevel = levels[guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.log.web_level];
+        z.title = "web log (" + helpEasy.capitalWord(currentLevel.text) + ")";
         z.button.copy = "yep";
         z.action.copy = "clipboard-log";
         z.info = `
@@ -1226,6 +1222,45 @@ guiEasy.popper.modal.settings = function (type) {
                     {"text": "128000", "value": 128000, "disabled":true, "note":""},
                     {"text": "256000", "value": 256000, "disabled":true, "note":""}
                 ]
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "serial log level",
+                "settingsId": "config--log--serial_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 2,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "web log level",
+                "settingsId": "config--log--web_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 2,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "syslog server level",
+                "settingsId": "config--log--syslog_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": guiEasy.logLevels()
             }
         );
     }

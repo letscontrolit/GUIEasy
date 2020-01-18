@@ -29,7 +29,9 @@ guiEasy.popper.rules = function(){
     x.syntax.lastRun = Date.now();
     selection.position = {"col": 0, "row": 0};
     x.input({isComposing: false});
-    selection.classList.add("no-focus");
+    setTimeout(function () {
+        selection.classList.add("no-focus");
+    }, 1000)
 };
 
 guiEasy.popper.rules["syntax"] = {

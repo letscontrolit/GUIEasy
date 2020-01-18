@@ -81,7 +81,7 @@ const helpEasy = {
             "led","l/r","lcd",
             "mqtt",
             "ntp",
-            "ok",
+            "ok","oled",
             "p2p",
             "rssi","ram","rfid",
             "ssid","spi","sda","scl","sta","ssl","smtp",
@@ -97,7 +97,7 @@ const helpEasy = {
             "MCP23017",
             "PCF8591",
             "RCW-0001",
-            "SI7021/HTU21D",
+            "SI7021/HTU21D","SSD1306/SH1106",
             "TSL2561"
         ];
         let words = str.toLowerCase().split(" ");
@@ -1617,9 +1617,9 @@ const helpEasy = {
                     note = " " + options[i].note;
                 }
                 if (i === args.default) {
-                    html += "<option value='" + value + "' selected='selected'>" + text + note + "</option>";
+                    html += "<option value='" + value + "' selected='selected'>" + helpEasy.capitalWord(text + note) + "</option>";
                 } else {
-                    html += "<option value='" + value + "' " + disabled + ">" + text + note + "</option>";
+                    html += "<option value='" + value + "' " + disabled + ">" + helpEasy.capitalWord(text + note) + "</option>";
                 }
             }
             html +=  `</select>
