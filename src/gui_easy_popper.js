@@ -1148,9 +1148,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
-                    {"text": "GitHub", "value": "GitHub", "disabled":false, "note":""},
-                    {"text": "phpBB", "value": "phpBB", "disabled":false, "note":""}
+                    {"text": "default", "value": "default", "disabled":false, "note":""},
+                    {"text": "github", "value": "github", "disabled":false, "note":""},
+                    {"text": "phpbb", "value": "phpbb", "disabled":false, "note":""}
                 ]
             }
         );
@@ -1165,9 +1165,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
-                    {"text": "No State", "value": "NoState", "disabled":false, "note":""},
-                    {"text": "Stripped", "value": "Stripped", "disabled":false, "note":""}
+                    {"text": "default", "value": "default", "disabled":false, "note":""},
+                    {"text": "no state", "value": "nostate", "disabled":false, "note":""},
+                    {"text": "stripped", "value": "stripped", "disabled":false, "note":""}
                 ]
             }
         );
@@ -1788,7 +1788,7 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
     if (type === "toggle") {
         let toggle = document.getElementById(whatToDo.args.id);
         let label = document.getElementById("label-" + whatToDo.args.id);
-        if (label.children.length > 0) {
+        if (label.childNodes[0].classList.contains("got-tooltip")) {
             //we got tooltip
             let tooltip = label.innerHTML.match(/<div class="tooltip">([\s\S]*?)<\/div>/)[1];
             label.innerHTML = `

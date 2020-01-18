@@ -89,25 +89,28 @@ const helpEasy = {
             "udp","uuid",
             "wpa"
         ];
-        let leaveAsIs = [
+        let reformat = [
             "BMP085/180","BH1750",
             "DS18b20","DHT11/12/22",
+            "GitHub",
             "HC-SR04",
             "LCD2004",
             "MCP23017",
-            "PCF8591",
+            "PCF8591","phpBB",
             "RCW-0001",
             "SI7021/HTU21D","SSD1306/SH1106",
             "TSL2561"
         ];
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
-            if (helpEasy.findInArray(words[i], leaveAsIs) === true) { //TODO: make this better and use indexOf instead!
-                words[i] = leaveAsIs[leaveAsIs.indexOf(words[i])];
+            let index = helpEasy.findInArray(words[i], reformat);
+            if (index > -1) {
+                words[i] = reformat[index];
                 continue;
             }
             //if the string is found in the allCaps it will be all caps.
-            if (helpEasy.findInArray(words[i], allCaps) === true) {
+            index = helpEasy.findInArray(words[i], allCaps);
+            if (index > -1) {
                 words[i] = words[i].toUpperCase();
             } else if (words[i].charAt(0) === "(") {
                 words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
@@ -482,10 +485,11 @@ const helpEasy = {
         let x = document.querySelectorAll("[data-json-path]");
         for (let i = 0; i < x.length; i++) {
             let y = x[i].dataset.jsonPath;
-            if (helpEasy.findInArray(y,z) === false) {
+            if (helpEasy.findInArray(y,z) === -1) {
                 z.push(y);
             }
         }
+        //jsonPathsIN is already set so we can reuse "z"
         if (guiEasy.jsonPathsSettings === undefined) {
             guiEasy.jsonPathsSettings = [];
         }
@@ -493,7 +497,7 @@ const helpEasy = {
         x = document.querySelectorAll("[data-settings]");
         for (let i = 0; i < x.length; i++) {
             let y = x[i].dataset.settings;
-            if (helpEasy.findInArray(y,z) === false) {
+            if (helpEasy.findInArray(y,z) === -1) {
                 z.push(y);
             }
         }
@@ -1237,7 +1241,7 @@ const helpEasy = {
                         z[k].checked = d["change-" + helpEasy.getjsonPathData(path, m)] === "true";
                         let label = document.getElementById("label-" + d.id);
                         if (d.gotTooltip === "") {
-                            label.innerText = helpEasy.capitalWord(d[z[k].checked + "Text"]);
+                            label.innerHTML = "<div>" + helpEasy.capitalWord(d[z[k].checked + "Text"]) + "</div>";
                         } else {
                             label.innerHTML = "<div class=" + d.gotTooltip + ">" + helpEasy.capitalWord(d[z[k].checked + "Text"]) + d.tooltip + "</div>";
                         }
@@ -1370,8 +1374,11 @@ const helpEasy = {
         return ((str || '').match(pattern) || []).length;
     },
     'findInArray': function (needle, haystack) {
-        let found = haystack.indexOf(needle);
-        return found > -1;
+        let lowercaseHaystack = [];
+        for (let i = 0; i < haystack.length; i++) {
+            lowercaseHaystack.push(haystack[i].toLowerCase());
+        }
+        return lowercaseHaystack.indexOf(needle);
     },
     'listOfProcesses': function (processID, processText, timestamp, type) {
         let logElement = document.getElementById("modal-loading-log");
@@ -1513,13 +1520,18 @@ const helpEasy = {
         if (args.disabled !== undefined && args.disabled === true) {
             disabled = "disabled";
         }
-        let id = args.title.split(" ").join("-");
-        let settingsIdPrefix = "generic-input-";
+        let id;
+        if (args.settingsId === undefined) {
+            id = args.title.split(" ").join("-");
+        } else {
+            id = args.settingsId;
+        }
+        let settingsIdPrefix = "generic-input--";
         let datasetBlob = "";
         let prefixHTML = "";
         let appendixHTML = "";
         if (args.toSettings === true) {
-            settingsIdPrefix = "settings-input-";
+            settingsIdPrefix = "settings--input--";
             datasetBlob += 'data-settings="' + args.settingsId + '"';
         }
         if (args.settingsIP !== undefined) {
@@ -1607,19 +1619,19 @@ const helpEasy = {
             let options = args.optionList;
             for (let i = 0; i < options.length; i++) {
                 let value = options[i].value;
-                let text = options[i].text;
+                let text = helpEasy.capitalWord(options[i].text);
                 let disabled = "";
                 if (options[i].disabled !== undefined && options[i].disabled === true) {
                     disabled = "disabled";
                 }
                 let note = "";
                 if (options[i].note !== undefined) {
-                    note = " " + options[i].note;
+                    note = " " + helpEasy.capitalWord(options[i].note);
                 }
                 if (i === args.default) {
-                    html += "<option value='" + value + "' selected='selected'>" + helpEasy.capitalWord(text + note) + "</option>";
+                    html += "<option value='" + value + "' selected='selected'>" + text + note + "</option>";
                 } else {
-                    html += "<option value='" + value + "' " + disabled + ">" + helpEasy.capitalWord(text + note) + "</option>";
+                    html += "<option value='" + value + "' " + disabled + ">" + text + note + "</option>";
                 }
             }
             html +=  `</select>

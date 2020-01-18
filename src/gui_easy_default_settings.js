@@ -17,8 +17,8 @@ const defaultSettings = {
         'helpLinks': 1,
         'fastBoot': 0,               //only use if you have no theme and no extra feature such as dashboard etc.
         'internetLostShow': 1,
-        'clipboardSyntax': "Default",
-        'dropdownList': "Default"
+        'clipboardSyntax': "default",
+        'dropdownList': "default"
     },
     'css': {
         'variables': [
