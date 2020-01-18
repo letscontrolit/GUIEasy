@@ -128,7 +128,7 @@ div.row:not(:empty) {
     /*overflow: hidden;*/
 }
 div.row > span {
-    margin: 4px 3px 5px 4px;
+    margin: 2px 3px 1px 4px;
     text-align: left;
 }
 /*MODAL STUFF BELOW THIS LINE*/
