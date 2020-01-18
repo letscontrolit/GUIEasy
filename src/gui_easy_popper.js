@@ -970,10 +970,11 @@ guiEasy.popper.modal.patreon = function () {
             "toSettings": true,
             "alt": "settings-change",
             "title": "uuid",
-            "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
+            "settingsId": "defaultSettings--userSettings--preventDefaults--KLFSLJ",
             "placeholder": ""
         }
     );
+    guiEasy.popper.modal.unlockStuff();
     return html + "</div>";
 };
 
@@ -1181,13 +1182,14 @@ guiEasy.popper.modal.settings = function (type) {
                 "title": "udp port",
                 "settingsId": "config--espnetwork--port",
                 "placeholder": "",
-                "tooltip": "8266 is the default<br>esp easy udp port.",
+                "tooltip": "8266 is the default<br>esp easy UDP port.",
                 "default": 8266,
                 "max": 65535,
                 "min": 0,
                 "step": 1
             }
         );
+        html += "<div class='is-left'>The setup for the P2P is made in the controller but here you set the port to be used. Why these are separated you may wonder, it's because the node list uses this port even if the P2P controller isn't activated.</div>";
     }
     if (type === "log") {
         html += helpEasy.addInput(
@@ -1248,6 +1250,20 @@ guiEasy.popper.modal.settings = function (type) {
                 "optionListOffset": 0,
                 "default": 2,
                 "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "string",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "syslog ip",
+                "settingsId": "config--log--syslog_ip",
+                "settingsMaxLength": (3 + 1 + 3 + 1 + 3 + 1 + 3),
+                "settingsIP": true,
+                "placeholder": "",
+                "valueIfBlank": "0.0.0.0",
+                "default": ""
             }
         );
         html += helpEasy.addInput(
@@ -1788,8 +1804,14 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
     if (type === "toggle") {
         let toggle = document.getElementById(whatToDo.args.id);
         let label = document.getElementById("label-" + whatToDo.args.id);
-        if (label.childNodes[0].classList.contains("got-tooltip")) {
-            //we got tooltip
+        let tooltipElement = false;
+        for (let i = 0; i < label.children.length; i++) {
+            if (label.children[i].classList.contains("got-tooltip")) {
+                tooltipElement = true;
+            }
+        }
+        if (tooltipElement) {
+            //we got tooltip TODO: we should make the function only update the text, not the tooltip. Now it flickers....
             let tooltip = label.innerHTML.match(/<div class="tooltip">([\s\S]*?)<\/div>/)[1];
             label.innerHTML = `
                     <div class="got-tooltip">
@@ -1798,7 +1820,7 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
                     </div>
             `;
         } else {
-            label.innerHTML = helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]);
+            label.innerHTML = "<div>" + helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]) + "</div>";
         }
     }
 };
