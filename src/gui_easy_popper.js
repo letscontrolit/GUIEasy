@@ -576,12 +576,6 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.action.copy = "clipboard-pinstate";
         //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
     }
-    if (x === "experimental") {
-        z.modal = "yep";
-        z.button.close = "yep";
-        z.title = "experimental settings";
-        //z.table = guiEasy.nodes[index].modal.table.sysinfo_json;
-    }
     if (x === "info" && y === "log") {
         z.modal = "yep";
         z.button.close = "yep";
@@ -671,6 +665,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "color": "warning"
         };
         z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+    }
+    if (x === "experimental") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "experimental settings";
+        z.setup = guiEasy.popper.modal.settings(x);
     }
     if (x === "patreon") {
         z.modal = "yep";
@@ -1191,6 +1191,23 @@ guiEasy.popper.modal.settings = function (type) {
         );
         html += "<div class='is-left'>The setup for the P2P is made in the controller but here you set the port to be used. Why these are separated you may wonder, it's because the node list uses this port even if the P2P controller isn't activated.</div>";
     }
+    //TODO: add experimental stuff here...
+    if (type === "experimental") {
+        html += helpEasy.addInput(
+            {
+                "type": "toggle",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "WDI2C address",
+                "settingsId": "config--experimental--WDI2CAddress",
+                "settingsTrue": 1,
+                "settingsFalse": 0,
+                "trueText": "todo1",
+                "falseText": "todo0",
+                "default": false
+            }
+        );
+    }
     if (type === "log") {
         html += helpEasy.addInput(
             {
@@ -1277,6 +1294,73 @@ guiEasy.popper.modal.settings = function (type) {
                 "optionListOffset": 0,
                 "default": 0,
                 "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "syslog facility",
+                "settingsId": "config--log--syslog_facility",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": [
+                    {'text':'kernel', 'value':0, 'disabled':false, 'note':''},
+                    {'text':'user', 'value':1, 'disabled':false, 'note':''},
+                    {'text':'daemon', 'value':3, 'disabled':false, 'note':''},
+                    {'text':'message', 'value':5, 'disabled':false, 'note':''},
+                    {'text':'local0', 'value':16, 'disabled':false, 'note':''},
+                    {'text':'local1', 'value':17, 'disabled':false, 'note':''},
+                    {'text':'local2', 'value':18, 'disabled':false, 'note':''},
+                    {'text':'local3', 'value':19, 'disabled':false, 'note':''},
+                    {'text':'local4', 'value':20, 'disabled':false, 'note':''},
+                    {'text':'local5', 'value':21, 'disabled':false, 'note':''},
+                    {'text':'local6', 'value':22, 'disabled':false, 'note':''},
+                    {'text':'local7', 'value':23, 'disabled':false, 'note':''}
+                ]
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "toggle",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "enable sd card logger",
+                "settingsId": "config--log--sd_log_enabled",
+                "settingsTrue": 1,
+                "settingsFalse": 0,
+                "trueText": "sd logger enabled",
+                "falseText": "sd logger not used",
+                "default":false
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "sd log level",
+                "settingsId": "config--log--sd_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "number",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "sd gpio",
+                "settingsId": "config--log--sd_port",
+                "placeholder": "",
+                "default": 0,
+                "max": 255,
+                "min": 0,
+                "step": 1
             }
         );
     }

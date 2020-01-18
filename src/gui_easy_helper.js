@@ -84,7 +84,7 @@ const helpEasy = {
             "ok","oled",
             "p2p",
             "rssi","ram","rfid",
-            "ssid","spi","sda","scl","sta","ssl","smtp",
+            "ssid","spi","sda","scl","sta","ssl","smtp","sd",
             "ttn",
             "udp","uuid",
             "wpa"
