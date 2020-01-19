@@ -636,7 +636,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
     }
     if (x === "controller" && y === "edit") {
         z.modal = "yep";
@@ -650,7 +655,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
     }
     if (x === "notification" && y === "edit") {
         z.modal = "yep";
@@ -664,7 +674,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
     }
     if (x === "experimental") {
         z.modal = "yep";

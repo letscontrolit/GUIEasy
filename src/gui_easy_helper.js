@@ -413,9 +413,9 @@ const helpEasy = {
         let fullList = {};
         let dropdownList = {};
         dropdownList.start = "<span>";
-        dropdownList.htmlNoState = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.htmlDefault = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.htmlStripped = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.html_nostate = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.html_default = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.html_stripped = "<select id='" + type + "-dropdown-list'>";
         if (type === "task") {
             list = node.plugins;
             fullList = all.plugin;
@@ -439,42 +439,42 @@ const helpEasy = {
         let keys = Object.keys(fullList);
         for (let k = 0; k < keys.length; k++) {
             let key = keys[k];
-            dropdownList.htmlNoState += "<option value='" + key + "'";
-            dropdownList.htmlDefault += "<option value='" + key + "'";
+            dropdownList.html_nostate += "<option value='" + key + "'";
+            dropdownList.html_default += "<option value='" + key + "'";
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped += "<option value='" + key + "'";
+                dropdownList.html_stripped += "<option value='" + key + "'";
             }
             if (fullList[key].active === undefined && key !== "0") {
-                dropdownList.htmlNoState += " disabled";
-                dropdownList.htmlDefault += " disabled";
+                dropdownList.html_nostate += " disabled";
+                dropdownList.html_default += " disabled";
             }
             if (key === "0") {
-                dropdownList.htmlNoState += ">" + helpEasy.capitalWord(fullList[key].name);
-                dropdownList.htmlDefault += ">" + helpEasy.capitalWord(fullList[key].name);
-                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
+                dropdownList.html_nostate += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_default += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_stripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
             let denied = "";
             if (fullList[key].active === undefined && key !== "0") {
                 denied = "⛔ ";
             }
             if (key !== "0") {
-                dropdownList.htmlNoState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_nostate += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
                 if (fullList[key].state === "") {
-                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                    dropdownList.html_default += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
                 } else {
-                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
+                    dropdownList.html_default += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
                 }
             }
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
+                dropdownList.html_stripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
-            dropdownList.htmlNoState += "</option>";
-            dropdownList.htmlDefault += "</option>";
+            dropdownList.html_nostate += "</option>";
+            dropdownList.html_default += "</option>";
         }
-        dropdownList.htmlNoState += "</select>";
-        dropdownList.htmlDefault += "</select>";
-        dropdownList.htmlStripped += "</select>";
-        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></llabel>";
+        dropdownList.html_nostate += "</select>";
+        dropdownList.html_default += "</select>";
+        dropdownList.html_stripped += "</select>";
+        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></label>";
         return dropdownList;
     },
     'getGuiInFields': function () {
