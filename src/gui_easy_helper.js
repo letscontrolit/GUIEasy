@@ -413,23 +413,23 @@ const helpEasy = {
         let fullList = {};
         let dropdownList = {};
         dropdownList.start = "<span>";
-        dropdownList.html_nostate = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.html_default = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.html_stripped = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.html_nostate = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
+        dropdownList.html_default = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
+        dropdownList.html_stripped = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
         if (type === "task") {
             list = node.plugins;
             fullList = all.plugin;
-            dropdownList.start += helpEasy.capitalWord("select plugin");
+            dropdownList.start += helpEasy.capitalWord("plugin");
         }
         if (type === "controller") {
             list = node.controllers;
             fullList = all.controller;
-            dropdownList.start += helpEasy.capitalWord("select controller");
+            dropdownList.start += helpEasy.capitalWord("controller");
         }
         if (type === "notification") {
             list = node.notifications;
             fullList = all.notification;
-            dropdownList.start += helpEasy.capitalWord("select notify");
+            dropdownList.start += helpEasy.capitalWord("notifier");
         }
         dropdownList.start += "</span>";
         for (let i = 0; i < list.length; i++) {

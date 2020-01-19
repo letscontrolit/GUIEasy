@@ -5,6 +5,21 @@ guiEasy.curly.forms = function (x) {
     return guiEasy.curly.forms[x.type](x);
 };
 
+guiEasy.curly.forms.iporhost = function (x) {
+    let html = "hej";
+    return html;
+};
+
+guiEasy.curly.forms.ip = function (x) {
+    let html = "";
+    return html;
+};
+
+guiEasy.curly.forms.string = function (x) {
+    let html = "";
+    return html;
+};
+
 guiEasy.curly.forms.toggle = function (x) {
     let html = "";
     let text = x.args[2].split("|");

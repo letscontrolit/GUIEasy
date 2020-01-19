@@ -816,6 +816,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             }
         }
     }
+    // we want to populate the setup container with html...
+    if (x === "controller" || x === "task" || x === "notification") {
+        setTimeout(function () {
+            guiEasy.forms.setupForm(x);
+        },90);
+    }
     if (x === "info" && y === "log") {
         let backlog = helpEasy.logListBacklog();
         if (backlog.length > 0) {
