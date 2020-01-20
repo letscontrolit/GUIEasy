@@ -1433,6 +1433,12 @@ input[type="password"] {
 input[type="number"] {
     width: calc(3 * var(--default-height-size, 20));
 }
+input[type="number"].double-width {
+    width: calc(6 * var(--default-height-size, 20));
+}
+input[type="number"].triple-width {
+    width: calc(9 * var(--default-height-size, 20));
+}
 input[type="search"] {
     padding-left: 4px;
     text-align: left;

@@ -241,6 +241,10 @@ const helpEasy = {
             guiEasy.current.live = index;
         }
     },
+    'findDiffInSettings': function () {
+        let unit = guiEasy.nodes[helpEasy.getCurrentIndex()].settings;
+        let browser = guiEasy.nodes[helpEasy.getCurrentIndex()].settingsBrowser;
+    },
     'fetchConfigDat': function (array, index, updateBrowserSettings = true) {
         let timeStart = Date.now();
         //part of ppisljar's code
@@ -1452,10 +1456,16 @@ const helpEasy = {
         return await response.json();
     },
     'blinkElement': function (id, color) {
-        let fontName = document.getElementById(id);
-        fontName.classList.add("main-" + color);
+        let element;
+        console.log(typeof id);
+        if (typeof id === "object") {
+            element = id;
+        } else {
+            element = document.getElementById(id);
+        }
+        element.classList.add("main-" + color);
         setTimeout(function (){
-            fontName.classList.remove("main-" + color);
+            element.classList.remove("main-" + color);
         }, 250)
     },
     'dashGroupContainerOpen': function (title = "") {
@@ -1673,8 +1683,13 @@ const helpEasy = {
             if (args.placeholder !== "") {
                 placeholderText = " [" + args.placeholder + "]";
             }
+            let extraWidth = "";
+            if (args.width !== undefined) {
+                extraWidth = " " + args.width + "-width";
+            }
             html += `
                 <input  type="number"
+                class="` + extraWidth  + `"
                 id="` + id + `"
                 min="` + args.min + `"
                 max="` + args.max + `"
@@ -1738,6 +1753,15 @@ const helpEasy = {
     },
     'checkIfIP': function (ipaddress) {
         return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress);
+    },
+    'showHideIpHost': function (isIp, input) {
+        if (isIp) {
+            document.getElementById(input.id + "-IP").classList.remove("is-hidden");
+            document.getElementById(input.id + "-HOST").classList.add("is-hidden");
+        } else {
+            document.getElementById(input.id + "-IP").classList.add("is-hidden");
+            document.getElementById(input.id + "-HOST").classList.remove("is-hidden");
+        }
     },
     'screenshot': function () {
         let html2canvasVersion = "v1.0.0-rc.5";

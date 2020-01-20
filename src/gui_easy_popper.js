@@ -820,7 +820,7 @@ guiEasy.popper.modal = function (modalToOpen) {
     if (x === "controller" || x === "task" || x === "notification") {
         setTimeout(function () {
             guiEasy.forms.setupForm(x);
-        },90);
+        },20);
     }
     if (x === "info" && y === "log") {
         let backlog = helpEasy.logListBacklog();
@@ -1397,7 +1397,8 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": 0,
                 "max": 180,
                 "min": -180,
-                "step": 0.00000000000001
+                "step": 0.00000000000001,
+                "width": "triple"
             }
         );
         html += helpEasy.addInput(
@@ -1411,7 +1412,8 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": 0,
                 "max": 90,
                 "min": -90,
-                "step": 0.00000000000001
+                "step": 0.00000000000001,
+                "width": "triple"
             }
         );
     }
@@ -1834,8 +1836,12 @@ guiEasy.popper.update = async function (whatToDo) {
             if (defaultSettings.location === undefined) {
                 defaultSettings.location = await helpEasy.locationByIP();
             }
-            document.getElementById("settings-input-Longitude-[°]").value = defaultSettings.location.longitude;
-            document.getElementById("settings-input-Latitude-[°]").value = defaultSettings.location.latitude;
+            let longEl = document.getElementById("settings--input--config--location--long");
+            let latEl = document.getElementById("settings--input--config--location--lat");
+            longEl.value = defaultSettings.location.longitude;
+            latEl.value = defaultSettings.location.latitude;
+            helpEasy.blinkElement(longEl, "inverted");
+            helpEasy.blinkElement(latEl, "inverted");
         } else {
             //flash the screen, since no internet we cannot use the external data..
             let eventDetails = {
@@ -1889,10 +1895,6 @@ guiEasy.popper.edit = function (whatToDo) {
 
 guiEasy.popper.settingsDiff = function (whatToDo) {
     let type = whatToDo.args.type;
-    let settingsPath = whatToDo.args.settings.split("--");
-    let index = helpEasy.getCurrentIndex();
-    let x = guiEasy.nodes[index].settings;
-    let y = guiEasy.nodes[index].settingsBrowser;
     if (type === "string") {
         if (whatToDo.args.settingsIp !== undefined) {
             let ip = whatToDo.newValue;
