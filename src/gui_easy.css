@@ -1596,7 +1596,7 @@ label.checkbox  {
     position: relative;
     white-space: nowrap;
     text-indent: calc(3 * var(--default-height-size, 20) + 8px);
-    font-size: calc(1 * var(--default-font-size, 19pt));
+    font-size: calc(0.95 * var(--default-font-size, 19pt));
     width: calc(3 * var(--default-height-size, 20));
     height: calc(1.2 * var(--default-height-size, 20));
     background: var(--main-font-color-rgba, white);
