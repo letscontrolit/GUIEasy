@@ -1432,6 +1432,7 @@ input[type="password"] {
 }
 input[type="number"] {
     width: calc(3 * var(--default-height-size, 20));
+    height: calc(1.3 * var(--default-height-size, 20));
 }
 input[type="number"].double-width {
     width: calc(6 * var(--default-height-size, 20));
@@ -1598,7 +1599,6 @@ label.checkbox  {
     font-size: calc(1 * var(--default-font-size, 19pt));
     width: calc(3 * var(--default-height-size, 20));
     height: calc(1.2 * var(--default-height-size, 20));
-    margin-top: calc(0.12 * var(--default-height-size, 20));
     background: var(--main-font-color-rgba, white);
     border-radius: calc(1 * var(--default-height-size, 20) / var(--button-radius-size, 2));
 }

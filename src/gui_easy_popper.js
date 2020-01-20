@@ -850,7 +850,7 @@ guiEasy.popper.modal = function (modalToOpen) {
                 }
                 let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
                 if (element !== undefined && element !== "") {
-                    let holdScroll = document.getElementById("generic-input-auto-scroll").checked;
+                    let holdScroll = document.getElementById("generic-input--auto-scroll").checked;
                     if (holdScroll === false) {
                         document.getElementById(element).scrollIntoView({behavior: "smooth"});
                     }
@@ -1203,7 +1203,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "title": "udp port",
                 "settingsId": "config--espnetwork--port",
                 "placeholder": "",
-                "tooltip": "8266 is the default<br>esp easy UDP port.",
+                "tooltip": "8266 is the default<br>ESP Easy UDP port.",
                 "default": 8266,
                 "max": 65535,
                 "min": 0,
