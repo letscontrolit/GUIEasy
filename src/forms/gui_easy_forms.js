@@ -81,11 +81,11 @@ guiEasy.forms.notification.end = function () {
 };
 
 guiEasy.forms.controller.start = function () {
-    return "----start----";
+    return "<div class='column'>";
 };
 
 guiEasy.forms.controller.end = function () {
-    return "----end----";
+    return "</div>";
 };
 guiEasy.forms.plugin.start = function () {
     return "----start----";

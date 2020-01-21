@@ -683,7 +683,6 @@ div.menu {
     bottom: 8px;
     padding: 30px;
     float: right;
-    z-index: 19999;
     overflow: visible;
     display: flex;
     flex-flow: column-reverse;

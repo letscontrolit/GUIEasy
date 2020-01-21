@@ -1635,7 +1635,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "settingsId": "config--rules--useNewEngine",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
-                "falseText": "old engine",
+                "falseText": "default engine",
                 "trueText": "experimental engine",
                 "default": true
             }

@@ -9,7 +9,7 @@ const helpEasy = {
         el.style.left = '-9999px';
         document.body.appendChild(el);
         const selected =
-            document.getSelection().rangeCount > 0
+                document.getSelection().rangeCount > 0
                 ? document.getSelection().getRangeAt(0)
                 : false;
         el.select();
@@ -128,11 +128,13 @@ const helpEasy = {
         return timeHH + ":" + timeMM + ":" + timeSS;
     },
     'pingIP': async function (ipArray, isUpFunction, isDownFunction) {
-        //TODO: try to catch these intentional errors so we don't see them in the console.
         for (let i =0; i < ipArray.length; i++) {
             let ip = ipArray[i].ip;
             let startPing = Date.now();
             let ws = await new WebSocket("ws://" + ip);
+            ws.onclose = async () => {
+                helpEasy.addToLogDOM("The above error is intentional. We do this to 'ping' the unit.", 0,"info");
+            };
             ws.onerror = function() {
                 ws.close();
                 ws = null;
@@ -240,10 +242,6 @@ const helpEasy = {
         if (guiEasy.fetchCount.current === guiEasy.fetchCount.max) {
             guiEasy.current.live = index;
         }
-    },
-    'findDiffInSettings': function () {
-        let unit = guiEasy.nodes[helpEasy.getCurrentIndex()].settings;
-        let browser = guiEasy.nodes[helpEasy.getCurrentIndex()].settingsBrowser;
     },
     'fetchConfigDat': function (array, index, updateBrowserSettings = true) {
         let timeStart = Date.now();
@@ -1457,7 +1455,6 @@ const helpEasy = {
     },
     'blinkElement': function (id, color) {
         let element;
-        console.log(typeof id);
         if (typeof id === "object") {
             element = id;
         } else {
@@ -1754,26 +1751,10 @@ const helpEasy = {
     'checkIfIP': function (ipaddress) {
         return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress);
     },
-    'showHideIpHost': function (isIp, input) {
-        if (isIp) {
-            document.getElementById(input.id + "-IP").classList.remove("is-hidden");
-            document.getElementById(input.id + "-HOST").classList.add("is-hidden");
-        } else {
-            document.getElementById(input.id + "-IP").classList.add("is-hidden");
-            document.getElementById(input.id + "-HOST").classList.remove("is-hidden");
-        }
-    },
     'screenshot': function () {
         let html2canvasVersion = "v1.0.0-rc.5";
         if (helpEasy.internet()) {
             let id = "screenshot-script";
-            /* THIS CHECK WAS A BAD IDEA... NO NEED TO REMOVE AN ALREADY LOADED LIB...
-            let check = document.getElementById(id);
-            if (check !== null) {
-                check.remove();
-            }
-            */
-            //flash the screen
             let eventDetails = {
                 "type": "wave",
                 "text": guiEasy.curly.icon(["screenshot"]),

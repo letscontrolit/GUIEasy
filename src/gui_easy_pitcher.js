@@ -100,7 +100,8 @@ guiEasy.pitcher = function (processID, processType) {
             console.log(urlParams);
             helpEasy.addToLogDOM("pageSize", 1);
             helpEasy.processDone(processID, processType);
-            console.log(guiEasy);
+            console.log(guiEasy.nodes[helpEasy.getCurrentIndex()]);
+            //console.log(JSON.stringify(guiEasy.nodes[helpEasy.getCurrentIndex()].settings));
 
         }
     }, timeoutU);
