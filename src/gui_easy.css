@@ -1115,24 +1115,6 @@ textarea,
 progress {
     cursor: auto;
 }
-input:checked + label {
-    background: var(--main-inverted-color-rgba);
-}
-div.modal input[type=checkbox]:checked + label:hover {
-    background: rgba(var(--main-font-color), 0.1);
-}
-div.modal input[type=checkbox] + label:hover {
-    background: rgba(var(--main-font-color), 0.9);
-}
-div.modal input[type=checkbox]:checked + label:hover,
-div.modal input[type=checkbox]:checked + label:active,
-div.modal input[type=checkbox]:checked + label:focus {
-    border-color: rgba(var(--main-bg-color), 0.5);
-}
-div.modal input[type=checkbox] + label:active,
-div.modal input[type=checkbox] + label:focus {
-    border-color: var(--main-bg-color-rgba);
-}
 input[type="color"],
 input[type="checkbox"],
 input[type="file"],
@@ -1604,15 +1586,24 @@ label.checkbox  {
 label.checkbox::after {
     content: '';
     position: absolute;
-    top: calc(0.2 * var(--default-height-size, 20));
+    top: calc(0.126 * var(--default-height-size, 20));
     left: calc(0.2 * var(--default-height-size, 20));
     width: calc(0.8 * var(--default-height-size, 20));
     height: calc(0.8 * var(--default-height-size, 20));
     background: var(--main-bg-color-rgba, blue);
     border-radius: calc(1 * var(--default-height-size, 20) / var(--button-radius-size, 2));
+    border-width: 2px;
+    border-style: solid;
     transition: 0.3s;
 }
+input + label.checkbox::after {
+    border-color: var(--main-font-color-rgba, white);
+}
+input:checked + label {
+    background: var(--main-inverted-color-rgba);
+}
 input:checked + label.checkbox::after {
+    border-color: var(--main-inverted-color-rgba);
     left: calc(100% - calc(0.2 * var(--default-height-size, 20)));
     transform: translateX(-100%);
 }
@@ -1635,13 +1626,12 @@ label.checkbox:active::after {
     margin-top: 3px;
     height: calc(0.6 * var(--default-height-size, 20));
 }
-select:hover ~ label.select,
-label:hover.select,
 div.tag.with-close:hover,
 label.color:hover,
 label.checkbox:hover,
 label.radio:hover,
 select:hover,
+select:hover ~ label.select,
 div.radio:hover,
 div.nav:hover,
 textarea:not(.editor):hover,
@@ -1652,17 +1642,16 @@ input[type="range"]:hover,
 input[type="number"]:hover,
 input[type="search"]:hover {
     border: 2px solid var(--main-inverted-color-rgba);
+    transition: 0.3s;
 }
-select:disabled ~ label.select,
-label:disabled.select,
 div.tag.with-close:disabled,
-label.color:disabled,
-label.checkbox:disabled,
-label.radio:disabled,
+input[type="checkbox"]:disabled ~ label.checkbox,
+input[type="color"]:disabled ~ label.color,
+input[type="radio"]:disabled ~ label.radio,
 select:disabled,
+select:disabled ~ label.select,
 div.radio:disabled,
 div.nav:disabled,
-textarea:not(.editor):disabled,
 textarea:not(.editor):disabled,
 input[type="password"]:disabled,
 input[type="text"]:disabled,
@@ -1674,12 +1663,12 @@ input[type="search"]:disabled {
     border: 2px solid rgba(var(--main-inverted-color), 0.5);
     cursor: not-allowed;
 }
-select:focus ~ label.select,
 div.tag.with-close:focus,
 label.color:focus,
 label.checkbox:focus,
 label.radio:focus,
 select:focus,
+select:focus ~ label.select,
 textarea:not(.editor):focus,
 input[type="password"]:focus,
 input[type="text"]:focus,
@@ -1693,6 +1682,7 @@ div.row[id*=modal-buttons] > button:active,
 div.row[id*=modal-buttons] > button:focus,
 div.row[id*=modal-buttons] > button:hover {
     box-shadow: 0 0 3px 3px var(--main-bg-color-rgba);
+    transition: 0.3s;
 }
 div.modal button.main-inverted:hover,
 div.bottom-container button.main-inverted:hover {
@@ -1705,12 +1695,36 @@ div.bottom-container button.main-inverted:focus {
     border-color: rgba(var(--main-bg-color), 0.5);
     background: rgba(var(--main-bg-color), 0.3);
 }
+input[type="checkbox"] + label:active::after,
+input[type="checkbox"] + label:focus::after,
+input[type="checkbox"] + label:hover::after {
+    background: rgba(var(--main-bg-color), 0.4);
+    border-color: rgba(var(--main-inverted-color), 0.9);
+}
+input[type="checkbox"]:checked + label:active::after,
+input[type="checkbox"]:checked + label:focus::after,
+input[type="checkbox"]:checked + label:hover::after {
+    border-color: rgba(var(--main-bg-color), 0.9);
+}
+div.modal input[type="checkbox"]:checked + label:active,
+div.modal input[type="checkbox"]:checked + label:focus,
+div.modal input[type="checkbox"]:checked + label:hover {
+    background: rgba(var(--main-font-color), 0.1);
+    border-color: rgba(var(--main-bg-color), 0.5);
+}
+div.modal input[type="checkbox"] + label:active,
+div.modal input[type="checkbox"] + label:focus,
+div.modal input[type="checkbox"] + label:hover {
+    background: rgba(var(--main-font-color), 0.9);
+    border-color: rgba(var(--main-inverted-color), 0.9);
+}
 div.icon-button > button:focus,
 div.icon-button > button:hover,
 button:focus,
 button:hover {
     box-shadow: 0 0 3px 3px var(--main-inverted-color-rgba);
     border-color: rgba(var(--main-inverted-color), 0.75);
+    transition: 0.3s;
 }
 label.file:hover,
 label.file:focus,
@@ -1761,6 +1775,7 @@ label.modal-upload:hover,
 label.modal-upload:focus {
     color: rgba(var(--main-font-color), 0.9);
     border-color: rgba(var(--main-font-color), 0.3);
+    transition: 0.3s;
 }
 label.modal-upload.drag-drop-highlight {
     background: rgba(var(--main-success-color), 0.3);
