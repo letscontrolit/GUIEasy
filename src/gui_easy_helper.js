@@ -79,7 +79,7 @@ const helpEasy = {
             "ip","id","i2c","io",
             "json",
             "led","l/r","lcd",
-            "mqtt",
+            "md5","mqtt",
             "ntp",
             "ok","oled",
             "p2p",
@@ -96,16 +96,39 @@ const helpEasy = {
             "HC-SR04",
             "LCD2004",
             "MCP23017",
+            "OpenHAB",
             "PCF8591","phpBB",
             "RCW-0001",
             "SI7021/HTU21D","SSD1306/SH1106",
             "TSL2561"
         ];
+        let reformatCheck = [[],[],[],[]];
+        for (let i = 0; i < reformat.length; i++) {
+            reformatCheck[0].push(reformat[i].toLowerCase());
+            reformatCheck[1].push("(" + reformat[i].toLowerCase());
+            reformatCheck[2].push(reformat[i].toLowerCase() + ")");
+            reformatCheck[3].push("(" + reformat[i].toLowerCase() + ")");
+        }
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
-            let index = helpEasy.findInArray(words[i], reformat);
+            let index = helpEasy.findInArray(words[i], reformatCheck[0]);
             if (index > -1) {
                 words[i] = reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[3]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index] + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck [1]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[2]);
+            if (index > -1) {
+                words[i] = reformat[index] + ")";
                 continue;
             }
             //if the string is found in the allCaps it will be all caps.
