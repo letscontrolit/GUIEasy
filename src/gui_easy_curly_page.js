@@ -245,9 +245,9 @@ guiEasy.curly.page.tools = function () {
     html += helpEasy.addToolsButton(
         {
             "type": "system",
-            "button": "log and serial",
+            "button": "serial & log",
             "buttonAction": "modal-settings-log",
-            "text": "log and serial <br> settings"
+            "text": "serial and log <br> settings"
         }
     );
     html += helpEasy.addToolsButton(

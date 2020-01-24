@@ -2,6 +2,12 @@
 
 guiEasy.popper.extra = "";
 
+guiEasy.popper.modal.unlockStuff = function () {
+    if (guiEasy.popper.extra !== undefined) {
+        document.getElementById("drawer-theme").classList.remove("is-hidden");
+    }
+};
+
 guiEasy.popper.drawer = function (drawerToOpen) {
     let drawerName = drawerToOpen.args[1];
     let drawerObject = document.getElementById("drawer-" + drawerName);

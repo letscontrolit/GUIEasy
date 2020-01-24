@@ -580,19 +580,9 @@ guiEasy.popper.modal = function (modalToOpen) {
         z.modal = "yep";
         z.button.close = "yep";
         z.action.close = "stop-log";
-        let level = {};
-        level["0"] = "no web log set";
-        level["1"] = "error";
-        level["2"] = "info";
-        level["3"] = "debug";
-        level["4"] = "debug more";
-        level["5"] = "not used";
-        level["6"] = "not used";
-        level["7"] = "not used";
-        level["8"] = "not used";
-        level["9"] = "debug development";
-        let currentLevel = level[guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.log.web_level];
-        z.title = "web log (" + currentLevel + ")";
+        let levels = guiEasy.logLevels();
+        let currentLevel = levels[guiEasy.nodes[helpEasy.getCurrentIndex()].settings.config.log.web_level];
+        z.title = "web log (" + helpEasy.capitalWord(currentLevel.text) + ")";
         z.button.copy = "yep";
         z.action.copy = "clipboard-log";
         z.info = `
@@ -646,7 +636,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
     }
     if (x === "controller" && y === "edit") {
         z.modal = "yep";
@@ -660,7 +655,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
     }
     if (x === "notification" && y === "edit") {
         z.modal = "yep";
@@ -674,7 +674,18 @@ guiEasy.popper.modal = function (modalToOpen) {
             "text":"delete",
             "color": "warning"
         };
-        z.setup = modalToOpen.args[3].start + modalToOpen.args[3]["html" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+        z.setup = "<div class='column'>";
+            z.setup += "<div class='row'>";
+            z.setup += modalToOpen.args[3].start + modalToOpen.args[3]["html_" + defaultSettings.userSettings.dropdownList] + modalToOpen.args[3].end;
+            z.setup += "</div>";
+            z.setup += "<div class='row' id='setup-container'></div>";
+        z.setup += "</div>";
+    }
+    if (x === "experimental") {
+        z.modal = "yep";
+        z.button.close = "yep";
+        z.title = "experimental settings";
+        z.setup = guiEasy.popper.modal.settings(x);
     }
     if (x === "patreon") {
         z.modal = "yep";
@@ -805,6 +816,12 @@ guiEasy.popper.modal = function (modalToOpen) {
             }
         }
     }
+    // we want to populate the setup container with html...
+    if (x === "controller" || x === "task" || x === "notification") {
+        setTimeout(function () {
+            guiEasy.forms.setupForm(x);
+        },20);
+    }
     if (x === "info" && y === "log") {
         let backlog = helpEasy.logListBacklog();
         if (backlog.length > 0) {
@@ -833,7 +850,7 @@ guiEasy.popper.modal = function (modalToOpen) {
                 }
                 let element = guiEasy.nodes[helpEasy.getCurrentIndex()].stats.logjson.lastEntryID;
                 if (element !== undefined && element !== "") {
-                    let holdScroll = document.getElementById("generic-input-auto-scroll").checked;
+                    let holdScroll = document.getElementById("generic-input--auto-scroll").checked;
                     if (holdScroll === false) {
                         document.getElementById(element).scrollIntoView({behavior: "smooth"});
                     }
@@ -974,10 +991,11 @@ guiEasy.popper.modal.patreon = function () {
             "toSettings": true,
             "alt": "settings-change",
             "title": "uuid",
-            "settingsId": "defaultSettings--userSettings--preventDefaults--escape",
+            "settingsId": "defaultSettings--userSettings--preventDefaults--KLFSLJ",
             "placeholder": ""
         }
     );
+    guiEasy.popper.modal.unlockStuff();
     return html + "</div>";
 };
 
@@ -1152,9 +1170,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
-                    {"text": "GitHub", "value": "GitHub", "disabled":false, "note":""},
-                    {"text": "phpBB", "value": "phpBB", "disabled":false, "note":""}
+                    {"text": "default", "value": "default", "disabled":false, "note":""},
+                    {"text": "github", "value": "github", "disabled":false, "note":""},
+                    {"text": "phpbb", "value": "phpbb", "disabled":false, "note":""}
                 ]
             }
         );
@@ -1169,9 +1187,9 @@ guiEasy.popper.modal.settings = function (type) {
                 "list2value": true,
                 "optionListOffset": -1,
                 "optionList": [
-                    {"text": "Default", "value": "Default", "disabled":false, "note":""},
-                    {"text": "No State", "value": "NoState", "disabled":false, "note":""},
-                    {"text": "Stripped", "value": "Stripped", "disabled":false, "note":""}
+                    {"text": "default", "value": "default", "disabled":false, "note":""},
+                    {"text": "no state", "value": "nostate", "disabled":false, "note":""},
+                    {"text": "stripped", "value": "stripped", "disabled":false, "note":""}
                 ]
             }
         );
@@ -1185,11 +1203,29 @@ guiEasy.popper.modal.settings = function (type) {
                 "title": "udp port",
                 "settingsId": "config--espnetwork--port",
                 "placeholder": "",
-                "tooltip": "8266 is the default<br>esp easy udp port.",
+                "tooltip": "8266 is the default<br>ESP Easy UDP port.",
                 "default": 8266,
                 "max": 65535,
                 "min": 0,
                 "step": 1
+            }
+        );
+        html += "<div class='is-left'>The setup for the P2P is made in the controller but here you set the port to be used. Why these are separated you may wonder, it's because the node list uses this port even if the P2P controller isn't activated.</div>";
+    }
+    //TODO: add experimental stuff here...
+    if (type === "experimental") {
+        html += helpEasy.addInput(
+            {
+                "type": "toggle",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "WDI2C address",
+                "settingsId": "config--experimental--WDI2CAddress",
+                "settingsTrue": 1,
+                "settingsFalse": 0,
+                "trueText": "todo1",
+                "falseText": "todo0",
+                "default": false
             }
         );
     }
@@ -1228,6 +1264,126 @@ guiEasy.popper.modal.settings = function (type) {
                 ]
             }
         );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "serial log level",
+                "settingsId": "config--log--serial_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 2,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "web log level",
+                "settingsId": "config--log--web_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 2,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "string",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "syslog ip",
+                "settingsId": "config--log--syslog_ip",
+                "settingsMaxLength": (3 + 1 + 3 + 1 + 3 + 1 + 3),
+                "settingsIP": true,
+                "placeholder": "",
+                "valueIfBlank": "0.0.0.0",
+                "default": ""
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "syslog server level",
+                "settingsId": "config--log--syslog_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "syslog facility",
+                "settingsId": "config--log--syslog_facility",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": [
+                    {'text':'kernel', 'value':0, 'disabled':false, 'note':''},
+                    {'text':'user', 'value':1, 'disabled':false, 'note':''},
+                    {'text':'daemon', 'value':3, 'disabled':false, 'note':''},
+                    {'text':'message', 'value':5, 'disabled':false, 'note':''},
+                    {'text':'local0', 'value':16, 'disabled':false, 'note':''},
+                    {'text':'local1', 'value':17, 'disabled':false, 'note':''},
+                    {'text':'local2', 'value':18, 'disabled':false, 'note':''},
+                    {'text':'local3', 'value':19, 'disabled':false, 'note':''},
+                    {'text':'local4', 'value':20, 'disabled':false, 'note':''},
+                    {'text':'local5', 'value':21, 'disabled':false, 'note':''},
+                    {'text':'local6', 'value':22, 'disabled':false, 'note':''},
+                    {'text':'local7', 'value':23, 'disabled':false, 'note':''}
+                ]
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "toggle",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "enable sd card logger",
+                "settingsId": "config--log--sd_log_enabled",
+                "settingsTrue": 1,
+                "settingsFalse": 0,
+                "trueText": "sd logger enabled",
+                "falseText": "sd logger not used",
+                "default":false
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "dropdown",
+                "toGuiSettings": true,
+                "alt": "settings-change",
+                "title": "sd log level",
+                "settingsId": "config--log--sd_level",
+                "list2value": true,
+                "optionListOffset": 0,
+                "default": 0,
+                "optionList": guiEasy.logLevels()
+            }
+        );
+        html += helpEasy.addInput(
+            {
+                "type": "number",
+                "toSettings": true,
+                "alt": "settings-change",
+                "title": "sd gpio",
+                "settingsId": "config--log--sd_port",
+                "placeholder": "",
+                "default": 0,
+                "max": 255,
+                "min": 0,
+                "step": 1
+            }
+        );
     }
     if (type === "location") {
         html += helpEasy.addInput(
@@ -1241,7 +1397,8 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": 0,
                 "max": 180,
                 "min": -180,
-                "step": 0.00000000000001
+                "step": 0.00000000000001,
+                "width": "triple"
             }
         );
         html += helpEasy.addInput(
@@ -1255,7 +1412,8 @@ guiEasy.popper.modal.settings = function (type) {
                 "default": 0,
                 "max": 90,
                 "min": -90,
-                "step": 0.00000000000001
+                "step": 0.00000000000001,
+                "width": "triple"
             }
         );
     }
@@ -1477,7 +1635,7 @@ guiEasy.popper.modal.settings = function (type) {
                 "settingsId": "config--rules--useNewEngine",
                 "settingsTrue": 1,
                 "settingsFalse": 0,
-                "falseText": "old engine",
+                "falseText": "default engine",
                 "trueText": "experimental engine",
                 "default": true
             }
@@ -1678,8 +1836,12 @@ guiEasy.popper.update = async function (whatToDo) {
             if (defaultSettings.location === undefined) {
                 defaultSettings.location = await helpEasy.locationByIP();
             }
-            document.getElementById("settings-input-Longitude-[°]").value = defaultSettings.location.longitude;
-            document.getElementById("settings-input-Latitude-[°]").value = defaultSettings.location.latitude;
+            let longEl = document.getElementById("settings--input--config--location--long");
+            let latEl = document.getElementById("settings--input--config--location--lat");
+            longEl.value = defaultSettings.location.longitude;
+            latEl.value = defaultSettings.location.latitude;
+            helpEasy.blinkElement(longEl, "inverted");
+            helpEasy.blinkElement(latEl, "inverted");
         } else {
             //flash the screen, since no internet we cannot use the external data..
             let eventDetails = {
@@ -1733,10 +1895,6 @@ guiEasy.popper.edit = function (whatToDo) {
 
 guiEasy.popper.settingsDiff = function (whatToDo) {
     let type = whatToDo.args.type;
-    let settingsPath = whatToDo.args.settings.split("--");
-    let index = helpEasy.getCurrentIndex();
-    let x = guiEasy.nodes[index].settings;
-    let y = guiEasy.nodes[index].settingsBrowser;
     if (type === "string") {
         if (whatToDo.args.settingsIp !== undefined) {
             let ip = whatToDo.newValue;
@@ -1753,8 +1911,14 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
     if (type === "toggle") {
         let toggle = document.getElementById(whatToDo.args.id);
         let label = document.getElementById("label-" + whatToDo.args.id);
-        if (label.children.length > 0) {
-            //we got tooltip
+        let tooltipElement = false;
+        for (let i = 0; i < label.children.length; i++) {
+            if (label.children[i].classList.contains("got-tooltip")) {
+                tooltipElement = true;
+            }
+        }
+        if (tooltipElement) {
+            //we got tooltip TODO: we should make the function only update the text, not the tooltip. Now it flickers....
             let tooltip = label.innerHTML.match(/<div class="tooltip">([\s\S]*?)<\/div>/)[1];
             label.innerHTML = `
                     <div class="got-tooltip">
@@ -1763,7 +1927,7 @@ guiEasy.popper.settingsDiff = function (whatToDo) {
                     </div>
             `;
         } else {
-            label.innerHTML = helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]);
+            label.innerHTML = "<div>" + helpEasy.capitalWord(toggle.dataset[toggle.checked + "Text"]) + "</div>";
         }
     }
 };

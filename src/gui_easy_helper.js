@@ -9,7 +9,7 @@ const helpEasy = {
         el.style.left = '-9999px';
         document.body.appendChild(el);
         const selected =
-            document.getSelection().rangeCount > 0
+                document.getSelection().rangeCount > 0
                 ? document.getSelection().getRangeAt(0)
                 : false;
         el.select();
@@ -74,40 +74,66 @@ const helpEasy = {
             "cpu",
             "dhcp","dns","dst",
             "esp",
-            "gui","gw","gpio",
+            "gui","gw","gpio","gps",
             "http","https",
             "ip","id","i2c","io",
             "json",
             "led","l/r","lcd",
-            "mqtt",
+            "md5","mqtt",
             "ntp",
-            "ok",
+            "ok","oled",
             "p2p",
             "rssi","ram","rfid",
-            "ssid","spi","sda","scl","sta","ssl","smtp",
+            "ssid","spi","sda","scl","sta","ssl","smtp","sd",
             "ttn",
             "udp","uuid",
             "wpa"
         ];
-        let leaveAsIs = [
+        let reformat = [
             "BMP085/180","BH1750",
             "DS18b20","DHT11/12/22",
+            "GitHub",
             "HC-SR04",
             "LCD2004",
             "MCP23017",
-            "PCF8591",
+            "OpenHAB",
+            "PCF8591","phpBB",
             "RCW-0001",
-            "SI7021/HTU21D",
+            "SI7021/HTU21D","SSD1306/SH1106",
             "TSL2561"
         ];
+        let reformatCheck = [[],[],[],[]];
+        for (let i = 0; i < reformat.length; i++) {
+            reformatCheck[0].push(reformat[i].toLowerCase());
+            reformatCheck[1].push("(" + reformat[i].toLowerCase());
+            reformatCheck[2].push(reformat[i].toLowerCase() + ")");
+            reformatCheck[3].push("(" + reformat[i].toLowerCase() + ")");
+        }
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
-            if (helpEasy.findInArray(words[i], leaveAsIs) === true) { //TODO: make this better and use indexOf instead!
-                words[i] = leaveAsIs[leaveAsIs.indexOf(words[i])];
+            let index = helpEasy.findInArray(words[i], reformatCheck[0]);
+            if (index > -1) {
+                words[i] = reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[3]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index] + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck [1]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[2]);
+            if (index > -1) {
+                words[i] = reformat[index] + ")";
                 continue;
             }
             //if the string is found in the allCaps it will be all caps.
-            if (helpEasy.findInArray(words[i], allCaps) === true) {
+            index = helpEasy.findInArray(words[i], allCaps);
+            if (index > -1) {
                 words[i] = words[i].toUpperCase();
             } else if (words[i].charAt(0) === "(") {
                 words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
@@ -125,11 +151,13 @@ const helpEasy = {
         return timeHH + ":" + timeMM + ":" + timeSS;
     },
     'pingIP': async function (ipArray, isUpFunction, isDownFunction) {
-        //TODO: try to catch these intentional errors so we don't see them in the console.
         for (let i =0; i < ipArray.length; i++) {
             let ip = ipArray[i].ip;
             let startPing = Date.now();
             let ws = await new WebSocket("ws://" + ip);
+            ws.onclose = async () => {
+                helpEasy.addToLogDOM("The above error is intentional. We do this to 'ping' the unit.", 0,"info");
+            };
             ws.onerror = function() {
                 ws.close();
                 ws = null;
@@ -410,23 +438,23 @@ const helpEasy = {
         let fullList = {};
         let dropdownList = {};
         dropdownList.start = "<span>";
-        dropdownList.htmlNoState = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.htmlDefault = "<select id='" + type + "-dropdown-list'>";
-        dropdownList.htmlStripped = "<select id='" + type + "-dropdown-list'>";
+        dropdownList.html_nostate = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
+        dropdownList.html_default = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
+        dropdownList.html_stripped = "<select id='" + type + "-dropdown-list' onchange='guiEasy.forms.setupForm(\"" + type + "\");'>";
         if (type === "task") {
             list = node.plugins;
             fullList = all.plugin;
-            dropdownList.start += helpEasy.capitalWord("select plugin");
+            dropdownList.start += helpEasy.capitalWord("plugin");
         }
         if (type === "controller") {
             list = node.controllers;
             fullList = all.controller;
-            dropdownList.start += helpEasy.capitalWord("select controller");
+            dropdownList.start += helpEasy.capitalWord("controller");
         }
         if (type === "notification") {
             list = node.notifications;
             fullList = all.notification;
-            dropdownList.start += helpEasy.capitalWord("select notify");
+            dropdownList.start += helpEasy.capitalWord("notifier");
         }
         dropdownList.start += "</span>";
         for (let i = 0; i < list.length; i++) {
@@ -436,42 +464,42 @@ const helpEasy = {
         let keys = Object.keys(fullList);
         for (let k = 0; k < keys.length; k++) {
             let key = keys[k];
-            dropdownList.htmlNoState += "<option value='" + key + "'";
-            dropdownList.htmlDefault += "<option value='" + key + "'";
+            dropdownList.html_nostate += "<option value='" + key + "'";
+            dropdownList.html_default += "<option value='" + key + "'";
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped += "<option value='" + key + "'";
+                dropdownList.html_stripped += "<option value='" + key + "'";
             }
             if (fullList[key].active === undefined && key !== "0") {
-                dropdownList.htmlNoState += " disabled";
-                dropdownList.htmlDefault += " disabled";
+                dropdownList.html_nostate += " disabled";
+                dropdownList.html_default += " disabled";
             }
             if (key === "0") {
-                dropdownList.htmlNoState += ">" + helpEasy.capitalWord(fullList[key].name);
-                dropdownList.htmlDefault += ">" + helpEasy.capitalWord(fullList[key].name);
-                dropdownList.htmlStripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
+                dropdownList.html_nostate += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_default += ">" + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_stripped +=  "<option value='" + key + "'>" + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
             let denied = "";
             if (fullList[key].active === undefined && key !== "0") {
                 denied = "⛔ ";
             }
             if (key !== "0") {
-                dropdownList.htmlNoState += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                dropdownList.html_nostate += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
                 if (fullList[key].state === "") {
-                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
+                    dropdownList.html_default += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name);
                 } else {
-                    dropdownList.htmlDefault += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
+                    dropdownList.html_default += ">" + denied + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + " [" + fullList[key].state.toUpperCase() + "] 🔺";
                 }
             }
             if (fullList[key].active !== undefined && key !== "0") {
-                dropdownList.htmlStripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
+                dropdownList.html_stripped +=  ">" + helpEasy.capitalWord(fullList[key].category) + " - " + helpEasy.capitalWord(fullList[key].name) + "</option>";
             }
-            dropdownList.htmlNoState += "</option>";
-            dropdownList.htmlDefault += "</option>";
+            dropdownList.html_nostate += "</option>";
+            dropdownList.html_default += "</option>";
         }
-        dropdownList.htmlNoState += "</select>";
-        dropdownList.htmlDefault += "</select>";
-        dropdownList.htmlStripped += "</select>";
-        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></llabel>";
+        dropdownList.html_nostate += "</select>";
+        dropdownList.html_default += "</select>";
+        dropdownList.html_stripped += "</select>";
+        dropdownList.end = "<label class='select' for='" + type + "-dropdown-list'></label>";
         return dropdownList;
     },
     'getGuiInFields': function () {
@@ -482,10 +510,11 @@ const helpEasy = {
         let x = document.querySelectorAll("[data-json-path]");
         for (let i = 0; i < x.length; i++) {
             let y = x[i].dataset.jsonPath;
-            if (helpEasy.findInArray(y,z) === false) {
+            if (helpEasy.findInArray(y,z) === -1) {
                 z.push(y);
             }
         }
+        //jsonPathsIN is already set so we can reuse "z"
         if (guiEasy.jsonPathsSettings === undefined) {
             guiEasy.jsonPathsSettings = [];
         }
@@ -493,7 +522,7 @@ const helpEasy = {
         x = document.querySelectorAll("[data-settings]");
         for (let i = 0; i < x.length; i++) {
             let y = x[i].dataset.settings;
-            if (helpEasy.findInArray(y,z) === false) {
+            if (helpEasy.findInArray(y,z) === -1) {
                 z.push(y);
             }
         }
@@ -1237,7 +1266,7 @@ const helpEasy = {
                         z[k].checked = d["change-" + helpEasy.getjsonPathData(path, m)] === "true";
                         let label = document.getElementById("label-" + d.id);
                         if (d.gotTooltip === "") {
-                            label.innerText = helpEasy.capitalWord(d[z[k].checked + "Text"]);
+                            label.innerHTML = "<div>" + helpEasy.capitalWord(d[z[k].checked + "Text"]) + "</div>";
                         } else {
                             label.innerHTML = "<div class=" + d.gotTooltip + ">" + helpEasy.capitalWord(d[z[k].checked + "Text"]) + d.tooltip + "</div>";
                         }
@@ -1370,8 +1399,11 @@ const helpEasy = {
         return ((str || '').match(pattern) || []).length;
     },
     'findInArray': function (needle, haystack) {
-        let found = haystack.indexOf(needle);
-        return found > -1;
+        let lowercaseHaystack = [];
+        for (let i = 0; i < haystack.length; i++) {
+            lowercaseHaystack.push(haystack[i].toLowerCase());
+        }
+        return lowercaseHaystack.indexOf(needle);
     },
     'listOfProcesses': function (processID, processText, timestamp, type) {
         let logElement = document.getElementById("modal-loading-log");
@@ -1445,10 +1477,15 @@ const helpEasy = {
         return await response.json();
     },
     'blinkElement': function (id, color) {
-        let fontName = document.getElementById(id);
-        fontName.classList.add("main-" + color);
+        let element;
+        if (typeof id === "object") {
+            element = id;
+        } else {
+            element = document.getElementById(id);
+        }
+        element.classList.add("main-" + color);
         setTimeout(function (){
-            fontName.classList.remove("main-" + color);
+            element.classList.remove("main-" + color);
         }, 250)
     },
     'dashGroupContainerOpen': function (title = "") {
@@ -1513,13 +1550,18 @@ const helpEasy = {
         if (args.disabled !== undefined && args.disabled === true) {
             disabled = "disabled";
         }
-        let id = args.title.split(" ").join("-");
-        let settingsIdPrefix = "generic-input-";
+        let id;
+        if (args.settingsId === undefined) {
+            id = args.title.split(" ").join("-");
+        } else {
+            id = args.settingsId;
+        }
+        let settingsIdPrefix = "generic-input--";
         let datasetBlob = "";
         let prefixHTML = "";
         let appendixHTML = "";
         if (args.toSettings === true) {
-            settingsIdPrefix = "settings-input-";
+            settingsIdPrefix = "settings--input--";
             datasetBlob += 'data-settings="' + args.settingsId + '"';
         }
         if (args.settingsIP !== undefined) {
@@ -1607,14 +1649,14 @@ const helpEasy = {
             let options = args.optionList;
             for (let i = 0; i < options.length; i++) {
                 let value = options[i].value;
-                let text = options[i].text;
+                let text = helpEasy.capitalWord(options[i].text);
                 let disabled = "";
                 if (options[i].disabled !== undefined && options[i].disabled === true) {
                     disabled = "disabled";
                 }
                 let note = "";
                 if (options[i].note !== undefined) {
-                    note = " " + options[i].note;
+                    note = " " + helpEasy.capitalWord(options[i].note);
                 }
                 if (i === args.default) {
                     html += "<option value='" + value + "' selected='selected'>" + text + note + "</option>";
@@ -1661,8 +1703,13 @@ const helpEasy = {
             if (args.placeholder !== "") {
                 placeholderText = " [" + args.placeholder + "]";
             }
+            let extraWidth = "";
+            if (args.width !== undefined) {
+                extraWidth = " " + args.width + "-width";
+            }
             html += `
                 <input  type="number"
+                class="` + extraWidth  + `"
                 id="` + id + `"
                 min="` + args.min + `"
                 max="` + args.max + `"
@@ -1731,13 +1778,6 @@ const helpEasy = {
         let html2canvasVersion = "v1.0.0-rc.5";
         if (helpEasy.internet()) {
             let id = "screenshot-script";
-            /* THIS CHECK WAS A BAD IDEA... NO NEED TO REMOVE AN ALREADY LOADED LIB...
-            let check = document.getElementById(id);
-            if (check !== null) {
-                check.remove();
-            }
-            */
-            //flash the screen
             let eventDetails = {
                 "type": "wave",
                 "text": guiEasy.curly.icon(["screenshot"]),

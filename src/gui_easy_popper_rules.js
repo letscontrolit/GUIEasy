@@ -29,7 +29,9 @@ guiEasy.popper.rules = function(){
     x.syntax.lastRun = Date.now();
     selection.position = {"col": 0, "row": 0};
     x.input({isComposing: false});
-    selection.classList.add("no-focus");
+    setTimeout(function () {
+        selection.classList.add("no-focus");
+    }, 1000)
 };
 
 guiEasy.popper.rules["syntax"] = {
@@ -71,6 +73,7 @@ guiEasy.popper.rules["syntax"] = {
         ['Forward','48','P'],
         ['GetLevel','21','P'],
         ['GPIO','1','P'],
+        ['GPIOtoggle','1','P'],
         ['High','36','P'],
         ['HLWCalibrate','76','P'],
         ['HLWReset','76','P'],
@@ -215,7 +218,8 @@ guiEasy.popper.rules["syntax"] = {
     ],
         'parentheses': [
         [')'],
-        ['(']
+        ['('],
+        ['%']
     ],
         'logic': [
         ['and'],
@@ -243,55 +247,51 @@ guiEasy.popper.rules["syntax"] = {
     ],
         'variable': [
         ['[VAR#'],
-        ['[INT#']
+        ['[INT#'],
+        ['[Plugin#GPIO#Pinstate#']
     ],
-        'transformer': {
-        'binary':
-        [
-            ']',
-            '#C]',
-            '#C!]',
-            '#H]',
-            '#H!]',
-            '#I]',
-            '#I!]',
-            '#M]',
-            '#M!]',
-            '#m]',
-            '#m!]',
-            '#O]',
-            '#O!]',
-            '#U]',
-            '#U!]',
-            '#u]',
-            '#u!]',
-            '#V]',
-            '#X]',
-            '#X!]',
-            '#Y]',
-            '#Y!]',
-            '#y]',
-            '#y!]',
-            '#Z]',
-            '#Z!]'
-        ],
-            'floatingPoint':
-        [
-            '#D000.000]',
-            '#D000]',
-            '#D.000]',
-            '#F]',
-            '#E]'
-        ],
-            'justification':
-        [
-            '#P000]',
-            '#S000]',
-            '#L000]',
-            '#R000]',
-            '#U000.000]'
-        ]
-    }
+        'transformer-binary': [
+        [']'],
+        ['#C]'],
+        ['#!C]'],
+        ['#H]'],
+        ['#!H]'],
+        ['#I]'],
+        ['#!I]'],
+        ['#M]'],
+        ['#!M]'],
+        ['#m]'],
+        ['#!m]'],
+        ['#O]'],
+        ['#!O]'],
+        ['#U]'],
+        ['#!U]'],
+        ['#u]'],
+        ['#!u]'],
+        ['#V]'],
+        ['#X]'],
+        ['#!X]'],
+        ['#Y]'],
+        ['#!Y]'],
+        ['#y]'],
+        ['#!y]'],
+        ['#Z]'],
+        ['#!Z]']
+    ],
+        'transformer-floatingPoint': [
+        ['#D000.000]'],
+        ['#D000]'],
+        ['#D.000]'],
+        ['#F]'],
+        ['#E]']
+    ],
+        'transformer-justification': [
+        ['#P000]'],
+        ['#S000]'],
+        ['#L000]'],
+        ['#R000]'],
+        ['#U000.000]']
+    ]
 };
 
 
@@ -307,7 +307,10 @@ guiEasy.popper.rules.splitSyntax = function() {
         'statement',
         'comment',
         'parentheses',
-        'variable'
+        'variable',
+        'transformer-binary',
+        'transformer-floatingPoint',
+        'transformer-justification'
     ];
     let l = listOfTypes.length;
     for (let i = 0; i < l; i++) {
@@ -326,7 +329,7 @@ guiEasy.popper.rules.splitSyntax = function() {
                     //
                 } else {
                     y[z].type = listOfTypes[i];
-                    y[z].full = tempK;
+                    y[z].full = tempK[0];
                     y[z].elementsPriorToHighlight = s;
                 }
                 y = y[z];
@@ -334,7 +337,7 @@ guiEasy.popper.rules.splitSyntax = function() {
         }
     }
     guiEasy.popper.rules.syntax.hightlight = syntaxArray;
-    //console.log(guiEasy.syntax);
+    //console.log(guiEasy.popper.rules.syntax);
 };
 
 guiEasy.popper.rules.input = function (event) {
@@ -345,10 +348,7 @@ guiEasy.popper.rules.input = function (event) {
         y.syntaxHighlightTemporary(event.data, y.syntax.editorElement.selectionStart, y.syntax.editorElement.selectionEnd);
     } else {
         if (event.inputType === "insertFromPaste") {
-            y.syntax.editorElement.selectionStart = 0;
-            y.syntax.editorElement.selectionEnd = 0;
-            y.syntax.editorElement.scrollLeft = 0;
-            y.syntax.editorElement.scrollTop = 0;
+            // TODO: fix the issue when pasting in... position is lost currently!
         }
         y.syntax.timePunch = true;  //makes the parser trigger
     }
@@ -716,6 +716,7 @@ guiEasy.popper.rules.syntaxHighlightAll = function(editor, syntax) {
 };
 
 guiEasy.popper.rules.syntaxHighlightAll.regEx = function(syntaxHighlight, rawTextArray) {
+    //TODO: redo the whole parser, use RegEx all the way?
     let matrixRow = [];
     let matrixFull = [];
     let x = guiEasy.popper.rules.syntaxHighlightAll;
@@ -804,7 +805,6 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                 let checkLeftNum = parseFloat(checkLeft);
                 let checkRight = rowChar[(i + 1)];
                 let checkRightNum = parseFloat(checkRight);
-                //console.log(checkLeftNum, checkRightNum);
 
                 if (testString.type === "comment") {
                     type = "syntax-is-" + testString.type;
@@ -883,20 +883,10 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                 }
 
                 if (testString.type === "parentheses") {
-                    if (
-                        !isNaN(checkRightNum) ||
-                        checkRight === " " ||
-                        checkRight === "/" ||
-                        checkRight === "*" ||
-                        checkRight === "+" ||
-                        checkRight === "-" ||
-                        checkRight === undefined
-                    ) {
-                        type = "syntax-is-" + testString.type;
-                        foundSyntax = true;
-                        nextK = i;
-                        s = testString.elementsPriorToHighlight;
-                    }
+                    type = "syntax-is-" + testString.type;
+                    foundSyntax = true;
+                    nextK = i;
+                    s = testString.elementsPriorToHighlight;
                 }
 
                 if (testString.type === "variable") {
@@ -910,15 +900,15 @@ guiEasy.popper.rules.syntaxHighlightAll.parseRow = function(rowChar, k, checkSyn
                     }
                 }
 
-                if (testString.type === "transformer" ) {
-                    if (
-                        !isNaN(checkRightNum)
-                    ) {
-                        type = "syntax-is-" + testString.type;
+                if (
+                    testString.type === "transformer-binary" ||
+                    testString.type === "transformer-floatingPoint" ||
+                    testString.type === "transformer-justification"
+                ) {
+                        type = "syntax-is-" + testString.type.split("-")[0];
                         foundSyntax = true;
                         nextK = i;
                         s = testString.elementsPriorToHighlight;
-                    }
                 }
             }
         }

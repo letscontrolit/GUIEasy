@@ -3,6 +3,16 @@ guiEasy.forms = function(type, number) {
     return guiEasy.forms[type](number);
 };
 
+guiEasy.forms.setupForm = function (type) {
+    let number = document.getElementById(type + "-dropdown-list").value;
+    let html = "";
+    if (guiEasy.forms(type, number) !== null) {
+        html = guiEasy.forms(type, number);
+    }
+    let container = document.getElementById("setup-container");
+    container.innerHTML = html;
+};
+
 guiEasy.forms.regEx = function(string) {
     guiEasy.syntax.curlyLC++;
     const regExp = /(?:{{)([^}]{1,256})(?:}})/g;  //THIS MEANS THAT A FORM CURLY CAN BE 256 CHARS LONG = longer than regular curly...
@@ -36,7 +46,7 @@ guiEasy.forms.plugin = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.toString());
+    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
@@ -47,7 +57,7 @@ guiEasy.forms.controller = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.toString());
+    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
@@ -58,7 +68,7 @@ guiEasy.forms.notification = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.toString());
+    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
@@ -71,11 +81,11 @@ guiEasy.forms.notification.end = function () {
 };
 
 guiEasy.forms.controller.start = function () {
-    return "----start----";
+    return "<div class='column'>";
 };
 
 guiEasy.forms.controller.end = function () {
-    return "----end----";
+    return "</div>";
 };
 guiEasy.forms.plugin.start = function () {
     return "----start----";

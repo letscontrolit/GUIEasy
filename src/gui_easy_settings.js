@@ -222,6 +222,20 @@ const guiEasy = {
         }
 
     },
+    'logLevels': function () {
+        return [
+            {'text':'- none -', 'value':0, 'disabled':false, 'note':''},
+            {'text':'error', 'value':1, 'disabled':false, 'note':''},
+            {'text':'info', 'value':2, 'disabled':false, 'note':''},
+            {'text':'debug', 'value':3, 'disabled':false, 'note':''},
+            {'text':'debug more', 'value':4, 'disabled':false, 'note':''},
+            {'text':'not used', 'value':5, 'disabled':true, 'note':'(5)'},
+            {'text':'not used', 'value':6, 'disabled':true, 'note':'(6)'},
+            {'text':'not used', 'value':7, 'disabled':true, 'note':'(7)'},
+            {'text':'not used', 'value':8, 'disabled':true, 'note':'(8)'},
+            {'text':'debug development', 'value':9, 'disabled':false, 'note':''}
+        ]
+    },
     'tabs': {
         'left': ['main', 'config', 'hardware', 'tasks'],
         'right': ['controllers', 'notification', 'tools', 'rules']

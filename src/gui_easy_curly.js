@@ -25,6 +25,7 @@ guiEasy.curly = function (processID, processType) {
         let args = curlyMatches[i][3];
         let r = "";  //This will delete non-correct curly.
         let v = helpEasy.findInArray(x, guiEasy.syntax.curly);
+        v = v > -1;
         helpEasy.addToLogDOM(("x: '" + x + "' args: '" + args + "' found: " + v), 3);
         if (v === true) { r = guiEasy.curly[x](args); }
         //this one will remove curly where first is met but next one is undefined
