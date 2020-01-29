@@ -242,7 +242,7 @@ module.exports = function(grunt) {
         let packageJSON = grunt.file.read('package.json');
         packageJSON = JSON.parse(packageJSON);
         packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
-        packageJSON.bin["index.html.gz"] = "build/main/" + version + "/";
+        packageJSON.main["index.html.gz"] = "build/main/" + version + "/";
         packageJSON.timestamp = Date.now();
         grunt.file.write('package.json',
             JSON.stringify(packageJSON,null,2)
