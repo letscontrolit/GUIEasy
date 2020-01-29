@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/letscontrolit/GUIEasy/issues"
   },
-  "homepage": "https://github.com/letscontrolit/GUIEasy#readme"
+  "homepage": "https://github.com/letscontrolit/GUIEasy#readme",
   "devDependencies": {
     "grunt": "^1.0.4",
     "grunt-contrib-uglify-es": "^3.3.0",
