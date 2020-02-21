@@ -1,14 +1,21 @@
 {
   "name": "gui-easy",
-  "timestamp": 1578820861737,
+  "timestamp": 1582313902799,
   "version": "0.0.1",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
-  "license": "GPL-3.0-or-later",
   "description": "Front End for ESP Easy",
-  "bin": {
+  "main": {
     "index.html.gz": "build/main/0.0.nightly.1/"
   },
-  "repository": "github:letscontrolit/GUIEasy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/letscontrolit/GUIEasy.git"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/letscontrolit/GUIEasy/issues"
+  },
+  "homepage": "https://github.com/letscontrolit/GUIEasy#readme",
   "devDependencies": {
     "grunt": "^1.0.4",
     "grunt-contrib-uglify-es": "^3.3.0",
@@ -21,6 +28,8 @@
     "grunt-file-append": "^0.0.7",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-folder-list": "^1.1.0",
+    "grunt-size-report": "^0.1.4",
+    "grunt-filesize": "^0.0.7",
     "npm": "^6.13.4"
   },
   "scripts": {
@@ -31,5 +40,6 @@
     "CSS framework",
     "GUI",
     "Frontend"
-  ]
+  ],
+  "versionName": "0.0.nightly.1"
 }

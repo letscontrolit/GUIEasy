@@ -24,12 +24,26 @@
                 a.style.color = "red";
             }
         };
-        fetchData = function () {
-            const data = "";
-            return data;
+        fetchReleases = async function () {
+            let releases = "";
+            let timeStart = Date.now();
+            const releaseList = "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt" + "?callback=" + timeStart;
+            await fetch(releaseList)
+                .then(res => res.text())
+                .then((list) => {
+                    releases = list.split(/\n/);
+                })
+                .catch(error => {
+                    console.warn('Error fetching releases: ' + error, 0, "error");
+                });
+            return releases;
         };
         download = function () {
             //start downloading gui
+            const releases = fetchReleases();
+            console.log(releases);
+            const t = document.getElementById("t"); //text
+            t.style.color = "red";
         }
     </script>
 </head>

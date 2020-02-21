@@ -326,6 +326,17 @@ const helpEasy = {
                 array[index].stats["configDat"].run = Date.now() - timeStart;
                 array[index].stats["configDat"].timestamp = timeStart;
             })
+            .catch(error => {
+                helpEasy.addToLogDOM('Error fetching (config.dat): ' + error, 0, "error");
+                array[index].stats.error++;
+                let nextRun = Date.now() + array[index].stats[endpoint].TTL_fallback;
+                array[index]["scheduler"].push([nextRun, endpoint]);
+                array[index]["scheduler"].sort();
+                array[index].stats["lastRun"] = Date.now();
+                array[index].stats["configDat"].run = Date.now() - timeStart;
+                array[index].stats["configDat"].timestamp = Date.now();
+                guiEasy.fetchCount.error++;
+            });
     },
     'parseConfigDat': function (data, config, start) {
         //part of ppisljar's code
