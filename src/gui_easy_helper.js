@@ -90,24 +90,26 @@ const helpEasy = {
             "wpa"
         ];
         let reformat = [
-            "BMP085/180","BH1750",
+            "BMP085/180","BMx280","BH1750",
+            "CO2",
             "DS18b20","DHT11/12/22",
             "GitHub",
             "HC-SR04",
             "LCD2004",
-            "MCP23017",
+            "MCP23017","MH-Z19",
             "OpenHAB",
             "PCF8591","phpBB",
             "RCW-0001",
-            "SI7021/HTU21D","SSD1306/SH1106",
+            "SI7021/HTU21D","SSD1306/SH1106","SDS011/018/198",
             "TSL2561"
         ];
-        let reformatCheck = [[],[],[],[]];
+        let reformatCheck = [[],[],[],[],[]];
         for (let i = 0; i < reformat.length; i++) {
             reformatCheck[0].push(reformat[i].toLowerCase());
             reformatCheck[1].push("(" + reformat[i].toLowerCase());
             reformatCheck[2].push(reformat[i].toLowerCase() + ")");
             reformatCheck[3].push("(" + reformat[i].toLowerCase() + ")");
+            reformatCheck[4].push(reformat[i].toLowerCase() + ",");
         }
         let words = str.toLowerCase().split(" ");
         for (let i = 0; i < words.length; i++) {
@@ -129,6 +131,11 @@ const helpEasy = {
             index = helpEasy.findInArray(words[i], reformatCheck[2]);
             if (index > -1) {
                 words[i] = reformat[index] + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[4]);
+            if (index > -1) {
+                words[i] = reformat[index] + ",";
                 continue;
             }
             //if the string is found in the allCaps it will be all caps.

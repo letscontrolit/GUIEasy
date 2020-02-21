@@ -2,6 +2,7 @@
   "name": "gui-easy",
   "timestamp": 1582313902799,
   "version": "0.0.1",
+  "versionName": "0.0.nightly.1",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
   "description": "Front End for ESP Easy",
   "main": {
@@ -40,6 +41,5 @@
     "CSS framework",
     "GUI",
     "Frontend"
-  ],
-  "versionName": "0.0.nightly.1"
+  ]
 }
