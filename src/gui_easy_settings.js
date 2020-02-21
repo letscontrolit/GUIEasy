@@ -79,7 +79,7 @@ const guiEasy = {
         'get':[
             {'endpoint':'json',                 'ttl_fallback':2000},
             {'endpoint':'buildinfo',            'ttl_fallback':99999999},       //will not update very often...
-            {'endpoint':'logjson'},          //Fallback of 29999 will not be part of first boot fetch
+            {'endpoint':'logjson'},             //Fallback of 29999 will not be part of first boot fetch
             {'endpoint':'sysinfo_json'},
             {'endpoint':'node_list_json'},
             {'endpoint':'filelist_json'},

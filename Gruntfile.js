@@ -171,18 +171,54 @@ module.exports = function(grunt) {
               ]
           }
       },
-// file sizes
-      folder_list : {
+// file size report
+      size_report: {
+          source_files: {
               options: {
-                  files: true,
-                  folders: true
+                  header: 'source files:'
               },
-              files:
+              files: {
+                  list: ['src/*']
+              }
+          },
+          release_files: {
+              options: {
+                  header: 'release files:'
+              },
+              files: {
+                  list: ['build/temp/*/*.gz']
+              }
+          }
+      },
+// source report
+      folder_list : {
+              files :
                   {
                       src: ['**'],
                       dest: 'build/temp/info/source_files.json',
                       cwd: 'src/'
                   }
+      },
+// release files
+      filesize: {
+          release: {
+              files: [
+                  {
+                      expand: true,
+                      cwd: 'build/temp',
+                      src: ['main/*.gz', 'noDash/*.gz', 'mini/*.gz']
+                  }
+              ],
+              options: {
+                  output: [
+                        {
+                            path: "build/release_sizes.txt",
+                            format: "{filename}:{size}",
+                            append: true
+                        }
+                    ]
+              }
+          }
       },
 // copy release info
       copy: {
@@ -211,6 +247,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-file-append');
     grunt.loadNpmTasks('grunt-folder-list');
+    grunt.loadNpmTasks('grunt-size-report');
+    grunt.loadNpmTasks('grunt-filesize');
 
     // the 'default' task can be run just by typing "grunt" on the command line
     grunt.registerTask('default', [
@@ -242,13 +280,11 @@ module.exports = function(grunt) {
         let packageJSON = grunt.file.read('package.json');
         packageJSON = JSON.parse(packageJSON);
         packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        packageJSON.versionName = version;
         packageJSON.main["index.html.gz"] = "build/main/" + version + "/";
         packageJSON.timestamp = Date.now();
         grunt.file.write('package.json',
             JSON.stringify(packageJSON,null,2)
-        );
-        grunt.file.write('release.txt',
-          'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
         );
         grunt.log.ok(version);
         // add version as a property for the grunt ini loop
@@ -266,11 +302,20 @@ module.exports = function(grunt) {
             'clean:tempFiles',
             'clean:noDash',
             'folder_list',
+            'filesize',
+            'size_report',
             'copy',
             'rename',
             'clean:releaseInfo',
-            'listBuilds'
+            'listBuilds',
+            'releaseFileSizes'
         );
+
+        grunt.log.ok('writing release info file');
+        grunt.file.write('release.txt',
+          'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
+        );
+        grunt.log.ok('DONE!');
     });
 
     grunt.registerTask('verifyCopyright', function () {
@@ -329,6 +374,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('listBuilds', function () {
+        grunt.log.ok('looking for release folders...');
         let folders = "";
         grunt.file.expand(
             {filter: 'isDirectory', cwd: 'build/'},
@@ -336,6 +382,31 @@ module.exports = function(grunt) {
             .forEach(function (dir) {
                 folders += dir + "\n";
         });
+        grunt.log.ok((folders.split(/\n/).length - 1) + " releases found.");
         grunt.file.write( 'build/releases.txt', folders);
+    });
+
+    grunt.registerTask('releaseFileSizes', function () {
+        grunt.log.ok('parsing release file sizes...');
+        let files = "files:[";
+        let packageJSON = grunt.file.read('package.json');
+        let version = JSON.parse(packageJSON).versionName;
+        let releaseInfo = grunt.file.read('build/' + version + '/info/release.txt');
+        let fileSizes = grunt.file.read('build/release_sizes.txt');
+        grunt.file.delete('build/release_sizes.txt');
+        fileSizes = fileSizes.split(/\n/);
+        fileSizes.forEach(function (file) {
+                if (file.length > 0) {
+                    let build = file.split(":")[0].split(/[\\/]/);
+                    build = build[(build.length - 2)];
+                    let size = file.split(":")[1];
+                    files += '{"build":"' + build + '","size":' + size + "}";
+                }
+            }
+        );
+        files += "]";
+        files = files.replace(/}{/g, "},{");
+        files = files.replace(/\r?\n|\r/g, "");
+        grunt.file.write( 'build/' + version + '/info/release.txt', releaseInfo + "\n" + files);
     });
 };

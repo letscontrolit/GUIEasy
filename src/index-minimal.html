@@ -31,14 +31,17 @@
             await fetch(releaseList)
                 .then(res => res.text())
                 .then((list) => {
-                    let temp = list.split(/\n/);
-                    releases = temp;
+                    releases = list.split(/\n/);
+                })
+                .catch(error => {
+                    console.warn('Error fetching releases: ' + error, 0, "error");
                 });
             return releases;
         };
         download = function () {
             //start downloading gui
-            console.log(fetchReleases());
+            const releases = fetchReleases();
+            console.log(releases);
             const t = document.getElementById("t"); //text
             t.style.color = "red";
         }

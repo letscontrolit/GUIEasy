@@ -1,6 +1,6 @@
 {
   "name": "gui-easy",
-  "timestamp": 1582300231096,
+  "timestamp": 1582313235629,
   "version": "0.0.1",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
   "description": "Front End for ESP Easy",
@@ -28,6 +28,8 @@
     "grunt-file-append": "^0.0.7",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-folder-list": "^1.1.0",
+    "grunt-size-report": "^0.1.4",
+    "grunt-filesize": "^0.0.7",
     "npm": "^6.13.4"
   },
   "scripts": {
@@ -38,5 +40,6 @@
     "CSS framework",
     "GUI",
     "Frontend"
-  ]
+  ],
+  "versionName": "0.0.nightly.1"
 }
