@@ -159,7 +159,7 @@ we need to put static html here. This is where the loading animation comes in.
 ###### fallback-loading-animation [id]
 
 If the boot sequence isn't successful we still want to see something on the screen.
-So we put five dots that pulses, this would be the equivalent of Windows' ``blue screen
+So we put **five dots (of horror)** that pulses, this would be the equivalent of Windows' ``blue screen
 of death`` or Amiga's ``guru meditation``. In other words, not good. But still a necessity.
 
 ###### modal-loading-screen [id] & boot sequence
