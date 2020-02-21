@@ -89,8 +89,8 @@ Congrats, you just compiled your build from source!
 In the folder ``src`` you find (currently) two html files. The ``index.html`` is the main
 file we use when developing. ``index-minimal.html`` is the frontend for units that do not
 have the full frontend installed. If you develop you might want to connect to an existing unit
-in your local network. Point to this unit inside a file called ``custom.js``, see the
- ``custom-template.js`` for reference on the syntax. If this file doesn't exist when you
+in your local network. Point to this unit inside a file called ``custom.json``, see the
+ ``custom-template.json`` for reference on the syntax. If this file doesn't exist when you
  try the frontend from your local machine you will get an error in the browser console and
  the frontend will not load. 
 
