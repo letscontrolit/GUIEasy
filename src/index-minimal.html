@@ -24,12 +24,23 @@
                 a.style.color = "red";
             }
         };
-        fetchData = function () {
-            const data = "";
-            return data;
+        fetchReleases = async function () {
+            let releases = "";
+            let timeStart = Date.now();
+            const releaseList = "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt" + "?callback=" + timeStart;
+            await fetch(releaseList)
+                .then(res => res.text())
+                .then((list) => {
+                    let temp = list.split(/\n/);
+                    releases = temp;
+                });
+            return releases;
         };
         download = function () {
             //start downloading gui
+            console.log(fetchReleases());
+            const t = document.getElementById("t"); //text
+            t.style.color = "red";
         }
     </script>
 </head>

@@ -19,7 +19,12 @@ guiEasy.curly.forms.iporhost = function (x) {
             `;
         return html + "</div>";
     }
-    if (x.args[0] === "port") {
+    if (
+        x.args[0] === "port" ||
+        x.args[0] === "interval" ||
+        x.args[0] === "que" ||
+        x.args[0] === "tries"
+    ) {
         let html = "<div class='row'>";
         html += `
             <input
@@ -31,15 +36,35 @@ guiEasy.curly.forms.iporhost = function (x) {
             <label
                 class="number"
                 for="` + x.args[1] + `"
-                tabindex="0"
             >` +
             helpEasy.capitalWord(x.args[3])
             + `</label>
        `;
         return html + "</div>";
     }
-    if (x.args[0] === "port") {
-
+    if (
+        x.args[0] === "que_action" ||
+        x.args[0] === "acknowledge"
+    ) {
+        let html = "<div class='row'>";
+        let text = x.args[3].split("|");
+        html += `
+            <input
+                type="checkbox"
+                id="` + x.args[1] + `"
+                data-alt="settings-change"
+                data-iporhost="` + x.args[2] + `"
+                data-true-text="` + helpEasy.capitalWord(text[0]) + `"
+                data-false-text="` + helpEasy.capitalWord(text[1]) + `"
+                oninput='guiEasy.curly.forms.controllerSetup(this)'>
+            <label
+                class="checkbox"
+                for="` + x.args[1] + `"
+                tabindex="0"
+            >
+            </label>
+        `;
+        return html + "</div>";
     }
 };
 
@@ -67,7 +92,7 @@ guiEasy.curly.forms.string = function (x) {
     return html + "</div>";
 };
 
-guiEasy.curly.forms.toggle = function (x) {;
+guiEasy.curly.forms.toggle = function (x) {
     let html = "<div class='row'>";
     let text = x.args[2].split("|");
     html += `
@@ -81,6 +106,7 @@ guiEasy.curly.forms.toggle = function (x) {;
                 data-settings-path="` + x.args[0] + `"
             >
             <label
+                class="checkbox"
                 for="` + x.args[1] + `"
                 tabindex="0"
             >
@@ -113,7 +139,6 @@ guiEasy.curly.forms.number = function (x) {
             <label
                 class="number"
                 for="` + x.args[1] + `"
-                tabindex="0"
             >` +
               helpEasy.capitalWord(x.args[2])
             + `</label>

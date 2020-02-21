@@ -248,7 +248,7 @@ module.exports = function(grunt) {
             JSON.stringify(packageJSON,null,2)
         );
         grunt.file.write('release.txt',
-          'major:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate
+          'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
         );
         grunt.log.ok(version);
         // add version as a property for the grunt ini loop
