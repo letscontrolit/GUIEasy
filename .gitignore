@@ -9,4 +9,4 @@ node_modules
 package-lock.json
 
 # private ***********
-src/custom.js
+src/custom.json

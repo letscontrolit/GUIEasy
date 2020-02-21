@@ -7,15 +7,15 @@ guiEasy.pitcher = async function (processID, processType) {
     helpEasy.setCurrentIndex(-1);
     if (window.location.hostname === "localhost") {
         let path = window.location.origin + window.location.pathname;
-        path = path.replace("index.html", "custom.js");
+        path = path.replace("index.html", "custom.json");
         await fetch(path)
             .then(res => res.json())
             .then((jsonData) => {
                 guiEasy.nodes.push(jsonData);  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
             })
             .catch(error => {
-                helpEasy.addToLogDOM('Error fetching (custom.js): ' + error, 0, "error");
-                helpEasy.addToLogDOM('You should create a "custom.js", please refer to the "custom-template.js".', 0, "info");
+                helpEasy.addToLogDOM('Error fetching (custom.json): ' + error, 0, "error");
+                helpEasy.addToLogDOM('You should create a "custom.json", please refer to the "custom-template.json".', 0, "info");
                 helpEasy.addToLogDOM('With this file you can specify what unit you want to connect to during development...', 0, "info");
             });
         //guiEasy.nodes.push({"ip":"192.168.73.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
