@@ -14,7 +14,7 @@ If you want to manually download and install the front end you should head over 
 [build](/build)/**version** folder you will find the following files:
 
 * gui.min.css
-* src-``<version>``.
+* src-``<version>``.zip
 * main/index.htm.gz &larr; **This is what you're looking for**
 * mini/index.htm.gz
 * noDash/index.htm.gz
