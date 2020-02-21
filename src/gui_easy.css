@@ -963,6 +963,7 @@ div.modal.is-black > div.spinner-box {
     display: flex;
     height: 95%;
     width: 99%;
+    animation: waitToShow 2s;
 }
 div.modal.is-black ~ div.page-contents,
 div.modal.is-black > div.message {
@@ -2196,6 +2197,18 @@ div.is-hidden,
     100% {
         opacity: 0;
         height: 0;
+    }
+}
+
+@keyframes waitToShow {
+    0% {
+        opacity: 0;
+    }
+    99% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
