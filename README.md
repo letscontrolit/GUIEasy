@@ -32,16 +32,14 @@ order to bug test as close as release conditions as possible. What you need to d
 
 1. Install [Node.js](https://nodejs.org/en/download/), this will include [npm](https://www.npmjs.com/get-npm) which is what we use
 to compile the project. 
-2. Install [Grunt.js](https://gruntjs.com/) (use the command line once ``npm`` is installed)
-3. Install Grunt dependencies ([package.json](/package.json), run ``npm install``)
-
-Install Grunt using your command line interface, and thanks to npm it's this easy:
+2. Install [Grunt.js](https://gruntjs.com/) + dependencies ([package.json](/package.json), run ``npm install`` from the project root level)
+3. Install Grunt Command Line Interface using your terminal/cmd, and thanks to npm it's this easy:
 
 ```
 npm install -g grunt-cli
 ```
 
-The compile is then done using your command line once again, make sure you're in the same
+The compile is then done using your terminal/cmd, make sure you're in the same
 directory as the **Gruntfile.js** (this is the root of the project). Run the compile script
 using this command:
 
@@ -49,7 +47,7 @@ using this command:
 grunt
 ```
 
-The script will output something like this:
+The script will output something like this (but much more text):
 
 ```
 Running "buildGuiEasy" task
@@ -85,6 +83,13 @@ Done.
 ```
 
 Congrats, you just compiled your build from source!
+
+### Run as localhost
+
+In the folder ``src`` you find (currently) three html files. The ``index.html`` is the main
+file we use when developing. ``index-minimal.html`` is the frontend for units that do not
+have the full frontend installed. If you develop you might want to connect to an existing unit
+in your local network. Point to this unit inside the 
 
 ### Source Code Ideology
 
