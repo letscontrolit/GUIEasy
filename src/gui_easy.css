@@ -1388,7 +1388,7 @@ label.file {
 }
 label.modal-upload {
     width: 100%;
-    margin: unset;
+    margin: 5px 0 0;
     color: rgba(var(--main-font-color), 0.8);
     border-color: rgba(var(--main-font-color), 0.8);
     border-radius: calc(var(--default-height-size, 20) / var(--button-radius-size, 2) / 3);
