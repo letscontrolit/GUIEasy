@@ -1132,6 +1132,7 @@ const helpEasy = {
         }
     },
     'downloadFile': function (url, fileName) {
+        //TODO: catch error!
         fetch(url).then(function(t) {
             return t.blob().then((b)=>{
                     let a = document.createElement("a");
@@ -1524,7 +1525,7 @@ const helpEasy = {
     'locationByIP': async function () {
         let timestamp = Date.now();
         let path = "https://ipapi.co/json" + "?at=" + timestamp + "&gui=" + guiEasy.geekNameFull();
-        let response = await fetch(path);
+        let response = await fetch(path);  //TODO: catch error!
         return await response.json();
     },
     'blinkElement': function (id, color) {

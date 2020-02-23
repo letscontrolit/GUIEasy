@@ -2,7 +2,7 @@
 
 guiEasy.forms.plugin.P083 = {};
 guiEasy.forms.plugin.P083.name = "sgp30";
-guiEasy.forms.plugin.P083.category = "gas";
+guiEasy.forms.plugin.P083.category = "gases";
 guiEasy.forms.plugin.P083.state = "testing"; //normal, testing, development
 //------------------------------- HTML or CURLY -------------------------------//
 guiEasy.forms.plugin.P083.html = `
