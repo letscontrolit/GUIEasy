@@ -193,7 +193,7 @@ const helpEasy = {
         return timeHH + ":" + timeMM + ":" + timeSS;
     },
     'pingIP': async function (ipArray, isUpFunction, isDownFunction) {
-        for (let i =0; i < ipArray.length; i++) {
+        for (let i = 0; i < ipArray.length; i++) {
             let ip = ipArray[i].ip;
             let startPing = Date.now();
             let ws = await new WebSocket("ws://" + ip);
@@ -207,9 +207,7 @@ const helpEasy = {
             };
             setTimeout(function() {
                 if(ws != null) {
-
                     ws.close();
-
                     ws = null;
                     isDownFunction(ipArray, i);
                 }
@@ -348,7 +346,7 @@ const helpEasy = {
                     return x(securityResponse, z.securitySettings, 1024 * i);
                 });
 
-                array[index].settings = Object.assign({},settings);
+                array[index].settings = Object.assign({}, settings);
                 array[index].settings.timestamp = timeStart;
 
                 guiEasy.configDat.variousBits();
@@ -356,7 +354,7 @@ const helpEasy = {
                 guiEasy.configDat.dst("end");
 
                 if (updateBrowserSettings === true) {
-                    array[index].settingsBrowser = Object.assign({},settings);
+                    array[index].settingsBrowser = Object.assign({}, settings);
                     array[index].settingsBrowser.timestamp = timeStart;
                 }
 
