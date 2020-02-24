@@ -333,6 +333,57 @@ data. This is made possible by the opening ``//--GRUNT-START--`` and closing ``/
 tags. Please observe that the ``,`` after the closing tag need to be on the line below
 the tag for the script to function correctly.
 
+### Grunt bump command
+
+To bump revision we have created a Grunt command called ``grunt bump``. You can do the following
+to update the ``src/gui_easy_settings.js`` file:
+
+```
+grunt bump:minimal
+>>0.0.nightly.2 --> 0.0.nightly.3
+>>0.0.4 --> 0.0.nightly.5
+
+grunt bump:minor
+>> 0.0.nightly.2 --> 0.1.0
+
+grunt bump:major
+>> 0.0.nightly.2 --> 1.0.0
+
+grunt bump:rc
+>>0.0.nightly.2 --> 0.0.rc1.3
+
+grunt bump:dev=true
+>>0.0.2 --> 0.0.nightly.2
+
+grunt bump:dev=false
+>>0.0.nightly.2 --> 0.0.2
+>>0.0.rc1.3 --> 0.0.3     <--- this one isn't correct
+```
+
+As seen in the last example, if you have a release candidate number assigned when you set the
+development flag to true it will still have that rc number. That being said, you should only
+use the dev=BOOL to quickly set the version handler to development mode if you by some chance 
+made a mistake when you bumped. The workflow is like this.
+
+You're doing some development and want to bump the version. By simply using the ``grunt bump:minimal``
+the flag will automatically set the development flag to true. If this isn't desired (you want to push
+the current minimal version change as a production ready version) you can then use the ``grunt bump:dev=false``.
+Normally this isn't wanted, only major and minor releases are the ones that are released as production
+ready.
+
+Release candidates are by definition never set to the future major and/or minor level. See this example:
+
+```
+1.0.0 is released and we want to create a new version with extra stuff
+1.0.nightly.1 is created and we start adding the stuff
+...
+1.0.nightly.123 is ready to be tested by a broader user base
+1.0.rc1.124 is created
+...
+1.0.rc3.124 is the version that is finally accepted
+1.1.0 is created and released.
+```
+
 ## CSS Framework
 
 The entire CSS framework can be used for any other web site or project but currently we haven't

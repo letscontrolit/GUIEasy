@@ -426,6 +426,7 @@ module.exports = function(grunt) {
             }
             if (level === "minimal") {
                 guiEasy.minimal++;
+                guiEasy.development = true;
             }
             if (level === "minor") {
                 guiEasy.minor++;
