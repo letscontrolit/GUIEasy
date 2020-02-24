@@ -15,10 +15,9 @@ guiEasy.pitcher = async function (processID, processType) {
             })
             .catch(error => {
                 helpEasy.addToLogDOM('Error fetching (custom.json): ' + error, 0, "error");
-                helpEasy.addToLogDOM('You should create a "custom.json", please refer to the "custom-template.json".', 0, "info");
+                helpEasy.addToLogDOM('You should create a "custom.json", please refer to the "custom-template.json".', 0, "warn");
                 helpEasy.addToLogDOM('With this file you can specify what unit you want to connect to during development...', 0, "info");
             });
-        //guiEasy.nodes.push({"ip":"192.168.73.164", "type":"queen"});  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
     } else {
         guiEasy.nodes.push({"ip": window.location.hostname, "type":"queen"});
     }

@@ -14,7 +14,7 @@ If you want to manually download and install the front end you should head over 
 [build](/build)/**version** folder you will find the following files:
 
 * gui.min.css
-* src-``<version>``.
+* src-``<version>``.zip
 * main/index.htm.gz &larr; **This is what you're looking for**
 * mini/index.htm.gz
 * noDash/index.htm.gz
@@ -159,7 +159,7 @@ we need to put static html here. This is where the loading animation comes in.
 ###### fallback-loading-animation [id]
 
 If the boot sequence isn't successful we still want to see something on the screen.
-So we put five dots that pulses, this would be the equivalent of Windows' ``blue screen
+So we put **five dots (of horror)** that pulses, this would be the equivalent of Windows' ``blue screen
 of death`` or Amiga's ``guru meditation``. In other words, not good. But still a necessity.
 
 ###### modal-loading-screen [id] & boot sequence

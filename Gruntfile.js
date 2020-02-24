@@ -281,7 +281,7 @@ module.exports = function(grunt) {
         packageJSON = JSON.parse(packageJSON);
         packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
         packageJSON.versionName = version;
-        packageJSON.main["index.html.gz"] = "build/main/" + version + "/";
+        packageJSON.main = "build/" + version + "/main/index.html.gz";
         packageJSON.timestamp = Date.now();
         grunt.file.write('package.json',
             JSON.stringify(packageJSON,null,2)
