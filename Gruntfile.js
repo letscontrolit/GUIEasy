@@ -409,4 +409,67 @@ module.exports = function(grunt) {
         files = files.replace(/\r?\n|\r/g, "");
         grunt.file.write( 'build/' + version + '/info/release.txt', releaseInfo + "\n" + files);
     });
+
+    grunt.registerTask('bump', function(level) {
+        let settings_from = grunt.file.read('src/gui_easy_settings.js');
+        let settings = settings_from.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
+        let guiEasy = "{" + settings + "}";
+        guiEasy = guiEasy.replace(/'/g,"\"");
+        guiEasy = JSON.parse(guiEasy);
+        let version_from;
+            if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.minimal;
+            } else if (guiEasy.development === true) {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.minimal;
+            } else {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+            }
+            if (level === "minimal") {
+                guiEasy.minimal++;
+            }
+            if (level === "minor") {
+                guiEasy.minor++;
+                guiEasy.minimal = 0;
+                guiEasy.releaseCandidate = 0;
+                guiEasy.development = false;
+            }
+            if (level === "major") {
+                guiEasy.major++;
+                guiEasy.minor = 0;
+                guiEasy.minimal = 0;
+                guiEasy.releaseCandidate = 0;
+                guiEasy.development = false;
+            }
+            if (level === "rc") {
+                guiEasy.minimal++;
+                guiEasy.releaseCandidate++;
+                guiEasy.development = true;
+            }
+            if (level === "dev=true") {
+                guiEasy.development = true;
+            }
+            if (level === "dev=false") {
+                guiEasy.development = false;
+            }
+            let version_to;
+            if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.minimal;
+            } else if (guiEasy.development === true) {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.minimal;
+            } else {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+            }
+            grunt.log.ok(version_from + " --> " + version_to);
+            let replaceText = "//--GRUNT-START--\n" +
+                "        'major': " + guiEasy.major + ",\n" +
+                "        'minor': " + guiEasy.minor + ",\n" +
+                "        'minimal': " + guiEasy.minimal + ",\n" +
+                "        'development': " + guiEasy.development + ",\n" +
+                "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
+                "        //--GRUNT-END--"
+            ;
+            settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
+            grunt.file.write( 'src/gui_easy_settings.js', settings);
+        }
+    );
 };

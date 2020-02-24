@@ -6,21 +6,36 @@
     <meta name="theme-color" content="#000000">
     <title>I'm Headless</title>
     <script>
-        start = function () {
+        let releases;
+        start = async function () {
             const t = document.getElementById("t"); //text
+            const d = document.getElementById("d"); //button
             const b = document.getElementById("b"); //button
             const a = document.getElementById("a"); //ascii dude
             const p = document.getElementById("p"); //progress bar
             if (window.navigator.onLine === true) {
                 //It's ok to download
                 //TODO: have an external js that look if mem will fit the gui etc. etc.
+                releases = await fetchReleases();
+                for (let i = 0; i < releases.length; i++) {
+                    if (releases[i] === "") {
+                        continue;
+                    }
+                    let option = document.createElement("option");
+                    option.text = releases[i];
+                    option.value = releases[i];
+                    d.add(option);
+                }
                 t.innerHTML = "Click the button below to upgrade this unit to Queen status.";
+                d.style.display = "block";
                 b.style.display = "block";
-                a.style.display = "none";
+                a.style.display = "block";
+                a.innerHTML = "Select version in the dropdown below:";
             } else {
                 //Cannot download
                 t.innerHTML = "No Internet connection. Please connect to Internet to download graphical user interface - OR - browse to a Queen.";
                 t.style.color = "red";
+                a.style.display = "block";
                 a.style.color = "red";
             }
         };
@@ -39,9 +54,6 @@
             return releases;
         };
         download = function () {
-            //start downloading gui
-            const releases = fetchReleases();
-            console.log(releases);
             const t = document.getElementById("t"); //text
             t.style.color = "red";
         }
@@ -66,7 +78,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
 ">
-    <div id="a">
+    <div id="a"
+         style="
+            display: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        ">
         &nbsp;&nbsp;&nbsp;UR ASCIIN 4 IT!<br>
         &nbsp;&nbsp;&nbsp;&nbsp;/<br>
         &nbsp;&nbsp;,﹏<br>
@@ -74,10 +91,28 @@
         &nbsp;(ϑ͏  ꙻ)ϑ͏<br>
         &nbsp;√ ㄟ<br><br>
     </div>
+    <label for="d"></label><select
+            id="d"
+            style="
+            display: none;
+            width: 100%;
+            border-color: green;
+            border-style: solid;
+            border-width: 1px;
+            color: green;
+            background: transparent;
+            text-align-last: center;
+            text-align: center;
+            cursor: pointer;
+            outline: 0;
+            padding: .65em 2em;
+            font-family: inherit;
+    "></select>
     <div
         id="t"
         style="
-            min-height: 100px;
+            margin-top: 10px;
+            margin-bottom: 10px;
         "
     ></div>
     <div
