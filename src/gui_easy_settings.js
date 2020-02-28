@@ -7,7 +7,7 @@ const guiEasy = {
         //--GRUNT-START--
         'major': 0,
         'minor': 0,
-        'minimal': 3,
+        'minimal': 4,
         'development': true,
         'releaseCandidate': 0
         //--GRUNT-END--

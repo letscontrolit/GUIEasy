@@ -138,10 +138,6 @@ module.exports = function(grunt) {
           copyright: {
               files: [
                   {
-                      prepend: '<-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg -->',
-                      input: 'build/temp/index.min.html'
-                  },
-                  {
                       prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
                       input: 'build/temp/gui.min.js'
                   },

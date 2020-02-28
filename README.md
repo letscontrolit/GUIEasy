@@ -333,15 +333,15 @@ data. This is made possible by the opening ``//--GRUNT-START--`` and closing ``/
 tags. Please observe that the ``,`` after the closing tag need to be on the line below
 the tag for the script to function correctly.
 
-### Grunt bump command
+### Grunt "bump" Command
 
 To bump revision we have created a Grunt command called ``grunt bump``. You can do the following
 to update the ``src/gui_easy_settings.js`` file:
 
 ```
 grunt bump:minimal
->>0.0.nightly.2 --> 0.0.nightly.3
->>0.0.4 --> 0.0.nightly.5
+>> 0.0.nightly.2 --> 0.0.nightly.3
+>> 0.0.4 --> 0.0.nightly.5
 
 grunt bump:minor
 >> 0.0.nightly.2 --> 0.1.0
@@ -350,14 +350,14 @@ grunt bump:major
 >> 0.0.nightly.2 --> 1.0.0
 
 grunt bump:rc
->>0.0.nightly.2 --> 0.0.rc1.3
+>> 0.0.nightly.2 --> 0.0.rc1.3
 
 grunt bump:dev=true
->>0.0.2 --> 0.0.nightly.2
+>> 0.0.2 --> 0.0.nightly.2
 
 grunt bump:dev=false
->>0.0.nightly.2 --> 0.0.2
->>0.0.rc1.3 --> 0.0.3     <--- this one isn't correct
+>> 0.0.nightly.2 --> 0.0.2
+>> 0.0.rc1.3 --> 0.0.3     <--- this one isn't correct
 ```
 
 As seen in the last example, if you have a release candidate number assigned when you set the
