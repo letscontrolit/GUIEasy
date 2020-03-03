@@ -297,10 +297,13 @@ module.exports = function(grunt) {
             grunt.file.write('package.json',
                 JSON.stringify(packageJSON,null,2)
             );
-            grunt.log.ok(version);
             // add version as a property for the grunt ini loop
             grunt.config("version", version);
             grunt.config("semVer", semVer);
+            grunt.log.ok('writing release info file');
+            grunt.file.write('release.txt',
+                'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nrevision:' + guiEasy.revision + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
+            );
             grunt.task.run(
                 'verifyCopyright',
                 'clean:temp',
@@ -319,13 +322,9 @@ module.exports = function(grunt) {
                 'rename',
                 'clean:releaseInfo',
                 'listBuilds',
-                'releaseFileSizes'
+                'releaseFileSizes',
+                'gruntDone:' + version
             );
-            grunt.log.ok('writing release info file');
-            grunt.file.write('release.txt',
-                'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nrevision:' + guiEasy.revision + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
-            );
-            grunt.log.ok('DONE!');
         } else {
             let timestamp = Date.now();
             grunt.config("version", version);
@@ -344,10 +343,15 @@ module.exports = function(grunt) {
                 'clean:noDash',
                 'copy',
                 'rename:test',
-                'testBuild'
+                'testBuild',
+                'gruntDone:' + version + "-test-" + timestamp
             );
-            grunt.log.ok(version + "-test-" + timestamp);
         }
+    });
+
+    grunt.registerTask('gruntDone', function (version) {
+        grunt.log.ok(version + '  <--- this one is compiled');
+        grunt.log.ok('DONE!');
     });
 
     grunt.registerTask('testBuild', function (timestamp) {
@@ -424,7 +428,9 @@ module.exports = function(grunt) {
             {filter: 'isDirectory', cwd: 'build/'},
             ['*'])
             .forEach(function (dir) {
-                folders += dir + "\n";
+                if (dir !== "0.0.0.0.0") {
+                    folders += dir + "\n";
+                }
         });
         grunt.log.ok((folders.split(/\n/).length - 1) + " releases found.");
         grunt.file.write( 'build/releases.txt', folders);
