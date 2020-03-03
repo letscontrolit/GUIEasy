@@ -74,6 +74,9 @@ module.exports = function(grunt) {
           version: {
               src: ['build/<%= version %>']
           },
+          test: {
+              src: ['build/0.0.0.0.0']
+          },
           noDash: {
               src: ['src/no-dash.index.html']
           },
@@ -138,10 +141,6 @@ module.exports = function(grunt) {
           copyright: {
               files: [
                   {
-                      prepend: '<-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg -->',
-                      input: 'build/temp/index.min.html'
-                  },
-                  {
                       prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
                       input: 'build/temp/gui.min.js'
                   },
@@ -167,6 +166,14 @@ module.exports = function(grunt) {
                   {
                       src: ['build/temp'],
                       dest: 'build/<%= version %>'
+                  }
+              ]
+          },
+          test: {
+              files: [
+                  {
+                      src: ['build/temp'],
+                      dest: 'build/0.0.0.0.0'
                   }
               ]
           }
@@ -255,9 +262,12 @@ module.exports = function(grunt) {
       'buildGuiEasy'
     ]);
 
+    grunt.registerTask('test', [
+        'buildGuiEasy:test'
+    ]);
     // build gui easy task
     grunt.registerTask('buildGuiEasy', 'Will build the project',
-      function () {
+      function (type = "new") {
         let settings = grunt.file.read('src/gui_easy_settings.js');
         settings = settings.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
         let guiEasy = "{" + settings + "}";
@@ -265,13 +275,13 @@ module.exports = function(grunt) {
         guiEasy = JSON.parse(guiEasy);
         let version;
         if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
-          version = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.minimal;
+          version = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.revision;
         } else if (guiEasy.development === true) {
-          version = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.minimal;
+          version = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.revision;
         } else {
-          version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+          version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
         }
-        let semVer = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        let semVer = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
         // create a file with no dash (to save space)
         let noDashDoc = grunt.file.read('src/index.html');
         noDashDoc = noDashDoc.replace(/<!-- build:js inline ..\/build\/temp\/dash.min.js -->([\s\S]*?)<!-- \/build -->/, "");
@@ -279,43 +289,81 @@ module.exports = function(grunt) {
         // update the package.json
         let packageJSON = grunt.file.read('package.json');
         packageJSON = JSON.parse(packageJSON);
-        packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.minimal;
+        packageJSON.version = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
         packageJSON.versionName = version;
         packageJSON.main = "build/" + version + "/main/index.html.gz";
-        packageJSON.timestamp = Date.now();
-        grunt.file.write('package.json',
-            JSON.stringify(packageJSON,null,2)
-        );
-        grunt.log.ok(version);
-        // add version as a property for the grunt ini loop
-        grunt.config("version", version);
-        grunt.config("semVer", semVer);
-        grunt.task.run(
-            'verifyCopyright',
-            'clean:temp',
-            'clean:version',
-            'uglify',
-            'cssmin',
-            'processhtml',
-            'file_append',
-            'compress',
-            'clean:tempFiles',
-            'clean:noDash',
-            'folder_list',
-            'filesize',
-            'size_report',
-            'copy',
-            'rename',
-            'clean:releaseInfo',
-            'listBuilds',
-            'releaseFileSizes'
-        );
+        if (type === "new") {
+            packageJSON.timestamp = Date.now();
+            grunt.file.write('package.json',
+                JSON.stringify(packageJSON,null,2)
+            );
+            // add version as a property for the grunt ini loop
+            grunt.config("version", version);
+            grunt.config("semVer", semVer);
+            grunt.log.ok('writing release info file');
+            grunt.file.write('release.txt',
+                'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nrevision:' + guiEasy.revision + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
+            );
+            grunt.task.run(
+                'verifyCopyright',
+                'clean:temp',
+                'clean:version',
+                'uglify',
+                'cssmin',
+                'processhtml',
+                'file_append',
+                'compress',
+                'clean:tempFiles',
+                'clean:noDash',
+                'folder_list',
+                'filesize',
+                'size_report',
+                'copy',
+                'rename',
+                'clean:releaseInfo',
+                'listBuilds',
+                'releaseFileSizes',
+                'gruntDone:' + version
+            );
+        } else {
+            let timestamp = Date.now();
+            grunt.config("version", version);
+            grunt.config("semVer", semVer);
+            grunt.task.run(
+                'testBuild:' + timestamp,
+                'verifyCopyright',
+                'clean:temp',
+                'clean:test',
+                'uglify',
+                'cssmin',
+                'processhtml',
+                'file_append',
+                'compress',
+                'clean:tempFiles',
+                'clean:noDash',
+                'copy',
+                'rename:test',
+                'testBuild',
+                'gruntDone:' + version + "-test-" + timestamp
+            );
+        }
+    });
 
-        grunt.log.ok('writing release info file');
-        grunt.file.write('release.txt',
-          'timestamp:' + packageJSON.timestamp + '\nmajor:' + guiEasy.major + '\nminor:' + guiEasy.minor + '\nminimal:' + guiEasy.minimal + '\nrc:' + guiEasy.releaseCandidate + '\ndev:' + guiEasy.development
-        );
+    grunt.registerTask('gruntDone', function (version) {
+        grunt.log.ok(version + '  <--- this one is compiled');
         grunt.log.ok('DONE!');
+    });
+
+    grunt.registerTask('testBuild', function (timestamp) {
+        let settings = grunt.file.read('src/gui_easy_settings.js');
+        if (timestamp > 0) {
+            grunt.log.ok('adding temporary test timestamp');
+            settings = settings.replace(/'test': null,/, "'test': " + timestamp + ",");
+        } else {
+            grunt.log.ok('removing temporary test timestamp');
+            settings = settings.replace(/'test': \d*,/, "'test': null,");
+        }
+        grunt.file.write( 'src/gui_easy_settings.js', settings);
     });
 
     grunt.registerTask('verifyCopyright', function () {
@@ -380,7 +428,9 @@ module.exports = function(grunt) {
             {filter: 'isDirectory', cwd: 'build/'},
             ['*'])
             .forEach(function (dir) {
-                folders += dir + "\n";
+                if (dir !== "0.0.0.0.0") {
+                    folders += dir + "\n";
+                }
         });
         grunt.log.ok((folders.split(/\n/).length - 1) + " releases found.");
         grunt.file.write( 'build/releases.txt', folders);
@@ -409,4 +459,68 @@ module.exports = function(grunt) {
         files = files.replace(/\r?\n|\r/g, "");
         grunt.file.write( 'build/' + version + '/info/release.txt', releaseInfo + "\n" + files);
     });
+
+    grunt.registerTask('bump', function(level) {
+        let settings_from = grunt.file.read('src/gui_easy_settings.js');
+        let settings = settings_from.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
+        let guiEasy = "{" + settings + "}";
+        guiEasy = guiEasy.replace(/'/g,"\"");
+        guiEasy = JSON.parse(guiEasy);
+        let version_from;
+            if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.revision;
+            } else if (guiEasy.development === true) {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.revision;
+            } else {
+                version_from = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
+            }
+            if (level === "revision") {
+                guiEasy.revision++;
+                guiEasy.development = true;
+            }
+            if (level === "minor") {
+                guiEasy.minor++;
+                guiEasy.revision = 0;
+                guiEasy.releaseCandidate = 0;
+                guiEasy.development = false;
+            }
+            if (level === "major") {
+                guiEasy.major++;
+                guiEasy.minor = 0;
+                guiEasy.revision = 0;
+                guiEasy.releaseCandidate = 0;
+                guiEasy.development = false;
+            }
+            if (level === "rc") {
+                guiEasy.revision++;
+                guiEasy.releaseCandidate++;
+                guiEasy.development = true;
+            }
+            if (level === "dev=true") {
+                guiEasy.development = true;
+            }
+            if (level === "dev=false") {
+                guiEasy.development = false;
+            }
+            let version_to;
+            if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.revision;
+            } else if (guiEasy.development === true) {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.nightly.' + guiEasy.revision;
+            } else {
+                version_to = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
+            }
+            grunt.log.ok(version_from + " --> " + version_to);
+            let replaceText = "//--GRUNT-START--\n" +
+                "        'major': " + guiEasy.major + ",\n" +
+                "        'minor': " + guiEasy.minor + ",\n" +
+                "        'revision': " + guiEasy.revision + ",\n" +
+                "        'development': " + guiEasy.development + ",\n" +
+                "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
+                "        //--GRUNT-END--"
+            ;
+            settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
+            grunt.file.write( 'src/gui_easy_settings.js', settings);
+        }
+    );
 };

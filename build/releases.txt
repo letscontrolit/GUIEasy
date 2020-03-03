@@ -1,2 +1,5 @@
 0.0.nightly.1
 0.0.nightly.2
+0.0.nightly.3
+0.0.nightly.4
+0.0.nightly.5
