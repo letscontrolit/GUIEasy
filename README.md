@@ -84,6 +84,13 @@ Done.
 
 Congrats, you just compiled your build from source!
 
+### Test compile
+
+If you want to just make a dirty compile you can use the command ``grunt test``. This
+command will make a compile of your current code base. The compile script will put the
+test build in the ``/build/0.0.0.0.0`` folder and also add a timestamp to the "version".
+If you do a new ```grunt test``` the ``/build/0.0.0.0.0`` folder will be wiped clean!  
+
 ### Run as localhost
 
 In the folder ``src`` you find (currently) two html files. The ``index.html`` is the main
@@ -311,8 +318,8 @@ set manually when an official new release is deployed.
 Y = minor version number: any new features or updates will render at least a minor bump.
 This is always set manually when an official new release is deployed.
 
-Z = minimal version number: any change in source code will be followed by a bump in
-the minimal version number. This is always set automatically each night by our robot.
+Z = revision version number: any change in source code will be followed by a bump in
+the revision version number. This is always set automatically each night by our robot.
 Official releases will always reset this number back to zero and at only very rare
 occasions (critical bug fix etc.) be part of a official release version.
 
@@ -339,7 +346,7 @@ To bump revision we have created a Grunt command called ``grunt bump``. You can 
 to update the ``src/gui_easy_settings.js`` file:
 
 ```
-grunt bump:minimal
+grunt bump:revision
 >> 0.0.nightly.2 --> 0.0.nightly.3
 >> 0.0.4 --> 0.0.nightly.5
 
