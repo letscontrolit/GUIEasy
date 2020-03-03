@@ -11,7 +11,7 @@
         :root {
             --frontend-color: 70, 128, 45;
             --backend-color: 128, 75, 45;
-            --color: var(--frontend-color);
+            /*--color: var(--frontend-color);*/
             --color-1: rgb(var(--color));
             --color-2: rgba(var(--color), 0.4);
         }
@@ -71,10 +71,10 @@
         #p {
             background-color: var(--color-1);
             height: 3px;
-            width: 10%;
             margin-bottom: 10px;
         }
         #t {
+            display: none;
             margin-top: 10px;
             margin-bottom: 10px;
         }
@@ -110,6 +110,7 @@
             b.style.display = "none";
             a.style.display = "none";
             t.style.display = "none";
+            p.style.width = "0";
             document.documentElement.style.setProperty("--color", "var(--" + type + "-color)");
             if (window.navigator.onLine === true) {
                 //It's ok to download
@@ -146,8 +147,9 @@
                 //Cannot download
                 t.innerHTML = "No Internet connection. Please connect to Internet to download graphical user interface - OR - browse to a Queen.";
                 t.style.color = "red";
-                a.style.display = "block";
+                t.style.display = "block";
                 a.style.color = "red";
+                a.style.display = "block";
             }
         };
         fetchReleases = async function (type) {
@@ -165,8 +167,8 @@
             return r;
         };
         download = function () {
-            const t = document.getElementById("t"); //text
-            t.style.color = "red";
+            const p = document.getElementById("p"); //progress bar
+            p.style.width = "20%";
         }
     </script>
 </head>
