@@ -372,9 +372,9 @@ development flag to true it will still have that rc number. That being said, you
 use the dev=BOOL to quickly set the version handler to development mode if you by some chance 
 made a mistake when you bumped. The workflow is like this.
 
-You're doing some development and want to bump the version. By simply using the ``grunt bump:minimal``
+You're doing some development and want to bump the version. By simply using the ``grunt bump:revision``
 the flag will automatically set the development flag to true. If this isn't desired (you want to push
-the current minimal version change as a production ready version) you can then use the ``grunt bump:dev=false``.
+the current revision number as a production ready version) you can then use the ``grunt bump:dev=false``.
 Normally this isn't wanted, only major and minor releases are the ones that are released as production
 ready.
 
