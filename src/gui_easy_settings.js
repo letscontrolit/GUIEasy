@@ -1,5 +1,12 @@
 /* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 //HERE'S THE SETTINGS USED FOR THE SPA ENGINE = TRANSLATIONS ARE PUT IN ANOTHER FILE
+/*
+    V.R.M.build.state
+    x.y.odd.odd = test builds
+    x.y.odd.even = beta builds
+    x.y.even.odd = RC build
+    x.y.even.even = released build
+*/
 const guiEasy = {
     'logLevel': 0,
     'name': 'GUI Easy',
@@ -7,19 +14,24 @@ const guiEasy = {
         //--GRUNT-START--
         'major': 0,
         'minor': 0,
-        'minimal': 4,
+        'revision': 5,
         'development': true,
         'releaseCandidate': 0
         //--GRUNT-END--
         ,
+        'test': null,    //this one should always be "null", we set it to a timestamp if a test build is made
         'full': function () {
             let x = guiEasy.version;
+            let testBuild = "";
+            if (x.test !== null) {
+                testBuild = "-test-" + x.test;
+            }
             if (x.development === true && x.releaseCandidate > 0) {
-                return x.major + '.' + x.minor + '.rc' + x.releaseCandidate + '.' + x.minimal;
+                return x.major + '.' + x.minor + '.rc' + x.releaseCandidate + '.' + x.revision + testBuild;
             } else if (x.development === true) {
-                return x.major + '.' + x.minor + '.nightly.' + x.minimal;
+                return x.major + '.' + x.minor + '.nightly.' + x.revision + testBuild;
             } else {
-                return x.major + '.' + x.minor + '.' + x.minimal;
+                return x.major + '.' + x.minor + '.' + x.revision + testBuild;
             }
         }
     },
