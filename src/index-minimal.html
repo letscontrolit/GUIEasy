@@ -112,9 +112,10 @@
         }
     </style>
     <script>
-        let releases = {};
-        releases.list = [];
-        releases.frontend = {
+        let obj = {};
+        obj.list = [];
+        obj.file = "";
+        obj.frontend = {
             "b": "Upgrade Front End",
             "a": "Select version in the dropdown below (latest is always first):",
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
@@ -122,7 +123,7 @@
             "infoEndpoint": "release.txt",
             "t": "Click the button below to upgrade this unit."
         };
-        releases.backend = {
+        obj.backend = {
             "b": "Update Firmware",
             "a": "Select version in the dropdown below (latest is always first):",
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
@@ -165,8 +166,8 @@
             filter('r');
             if (window.navigator.onLine === true) {
                 //It's ok to download
-                releases.list = await fetchReleases(type);
-                releases.list.reverse();
+                obj.list = await fetchReleases(type);
+                obj.list.reverse();
                 filter('r');
                 d.onfocus=function () {
                     this.size = 10;
@@ -197,7 +198,7 @@
                     this.style.fontSize = "unset";
                     this.style.padding = ".65em 2em";
                 };
-                t.innerHTML = releases[type].t;
+                t.innerHTML = obj[type].t;
                 if (type === "frontend") {
                     fe.classList.add("active");
                     be.classList.remove("active");
@@ -221,7 +222,7 @@
                     [b, "b"]
                 ];
                 for (let i = 0; i < innerHTMLs.length; i++) {
-                    innerHTMLs[i][0].innerHTML = releases[type][innerHTMLs[i][1]];
+                    innerHTMLs[i][0].innerHTML = obj[type][innerHTMLs[i][1]];
                 }
             } else {
                 //Cannot download
@@ -238,13 +239,13 @@
             m.classList.add("active");
             dragDropEvent(true);
             if (type === "offline") {
-                let disabledButtons = [fe, be];
-                for (let i = 0; i < disabledButtons.length; i++) {
-                    disabledButtons[i].disabled = "true";
-                    disabledButtons[i].style.cursor = "not-allowed";
-                    disabledButtons[i].style.textDecorationLine = "line-through";
-                    disabledButtons[i].style.textDecorationColor = "rgb(var(--" + type + "-color))";
-                    disabledButtons[i].style.textDecorationStyle = "wavy";
+                let disables = [fe, be];
+                for (let i = 0; i < disables.length; i++) {
+                    disables[i].disabled = "true";
+                    disables[i].style.cursor = "not-allowed";
+                    disables[i].style.textDecorationLine = "line-through";
+                    disables[i].style.textDecorationColor = "rgb(var(--" + type + "-color))";
+                    disables[i].style.textDecorationStyle = "wavy";
                 }
                 m.disabled = "true";
                 m.style.cursor = "not-allowed";
@@ -286,49 +287,49 @@
             if (type === "n") {
                 contains = "nightly";
             }
-            for (let i = 0; i < releases.list.length; i++) {
-                if (releases.list[i] === "") {
+            for (let i = 0; i < obj.list.length; i++) {
+                if (obj.list[i] === "") {
                     continue;
                 }
                 if (contains === "") {
-                    if (releases.list[i].includes("rc") || releases.list[i].includes("nightly")) {
+                    if (obj.list[i].includes("rc") || obj.list[i].includes("nightly")) {
                         continue;
                     }
                 } else {
-                    if (releases.list[i].includes(contains) !== true) {
+                    if (obj.list[i].includes(contains) !== true) {
                         continue;
                     }
                 }
                 let option = document.createElement("option");
-                option.text = releases.list[i];
-                option.value = releases.list[i];
+                option.text = obj.list[i];
+                option.value = obj.list[i];
                 d.add(option);
             }
         };
         dragDropEvent = function () {
-            let uploadArea = upload;
-            let defaultText = upload.innerText;
+            let defaultText = upload.innerText.toString();
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, function (e) {
+                upload.addEventListener(eventName, function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                 }, false)
             });
             ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, function () {
-                    uploadArea.innerText = "Drop File Here...";
-                    uploadArea.classList.add('drag-drop');
+                upload.addEventListener(eventName, function () {
+                    upload.innerText = "Drop File Here...";
+                    upload.classList.add('drag-drop');
                 }, false)
             });
             ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, function (event) {
-                    uploadArea.classList.remove('drag-drop');
-                    uploadArea.innerText = defaultText;
-                    if (eventName === "drop") {
+                upload.addEventListener(eventName, function (event) {
+                    upload.classList.remove('drag-drop');
+                    upload.innerText = defaultText;
+                    if (eventName === "drop" && obj.file === "") {
                         let file = event.dataTransfer.files[0];
+                        obj.file = file.name;
                         uploadFile(file);
                     }
-                }, true)
+                }, false)
             });
         };
         browseFile = function () {
@@ -336,17 +337,22 @@
             i.type = "file";
             i.oninput = function (event) {
                 let file = event.path[0].files[0];
+                obj.file = file.name;
                 uploadFile(file);
+                i.remove();
             };
             i.dispatchEvent(new MouseEvent("click"));
-            i.remove();
         };
         uploadFile = function (file) {
+            file.ext = file.name.match(/\.[0-9a-z]+$/i)[0].toLowerCase();
             console.log(file);
+            setTimeout( function () {
+                obj.file = "";
+            }, 100);
         };
         fetchInfo = async function (type, version) {
             let info = {};
-            const releaseList = releases[type].baseURL + version + "/info/" + releases[type].infoEndpoint + "?callback=" + Date.now();
+            const releaseList = obj[type].baseURL + version + "/info/" + obj[type].infoEndpoint + "?callback=" + Date.now();
             await fetch(releaseList)
                 .then(res => res.text())
                 .then((list) => {
@@ -365,7 +371,7 @@
         };
         fetchReleases = async function (type) {
             let rl = "";
-            const releaseList = releases[type].baseURL + releases[type].rlEndpoint + "?callback=" + Date.now();
+            const releaseList = obj[type].baseURL + obj[type].rlEndpoint + "?callback=" + Date.now();
             await fetch(releaseList)
                 .then(res => res.text())
                 .then((list) => {
@@ -392,7 +398,7 @@
         <button id="m" style="width:10%;" onclick="start('manual')">☰</button>
     </div>
     <div id="a"></div>
-    <button id="upload" onclick="browseFile()">Click or Drag and Drop File Onto This Area to Manually Upload a New Front or Back End to the Unit</button>
+    <button id="upload" onclick="browseFile()">Click or Drag and Drop 1 File Onto This Area to Manually Upload a New Front or Back End to the Unit</button>
     <div style="width:100%; display:inline-flex;">
         <button id="r" style="width:40%;" onclick="filter('r')">Release</button>
         <button id="rc" style="width:30%;" onclick="filter('rc')">RC</button>
