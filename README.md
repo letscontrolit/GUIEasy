@@ -335,6 +335,20 @@ The full version name exemplified:
 
 ``2.3.0``
 
+A release cycle exemplified:
+
+``1.0.0``  <--- release
+
+``1.0.nightly.1``  <--- working on a fix or a new major/minor release
+...
+``1.0.nightly.123``  <--- we decide that this one will be next 1.1.0
+
+``1.0.rc1.124``  <--- here's the release candidate (1.0.nightly.123 code base)
+
+``1.0.rc2.125``  <--- we found some stuff we wanted to change in the rc1
+
+``1.1.0``  <--- we release 1.0.rc2.125 as 1.1.0
+
 When the Gruntfile.js file is executed it will look into the source and parse the version
 data. This is made possible by the opening ``//--GRUNT-START--`` and closing ``//--GRUNT-END--``
 tags. Please observe that the ``,`` after the closing tag need to be on the line below
@@ -372,9 +386,9 @@ development flag to true it will still have that rc number. That being said, you
 use the dev=BOOL to quickly set the version handler to development mode if you by some chance 
 made a mistake when you bumped. The workflow is like this.
 
-You're doing some development and want to bump the version. By simply using the ``grunt bump:minimal``
+You're doing some development and want to bump the version. By simply using the ``grunt bump:revision``
 the flag will automatically set the development flag to true. If this isn't desired (you want to push
-the current minimal version change as a production ready version) you can then use the ``grunt bump:dev=false``.
+the current revision number as a production ready version) you can then use the ``grunt bump:dev=false``.
 Normally this isn't wanted, only major and minor releases are the ones that are released as production
 ready.
 

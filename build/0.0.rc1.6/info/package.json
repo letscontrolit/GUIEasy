@@ -1,11 +1,11 @@
 {
   "name": "gui-easy",
-  "timestamp": 1583399404019,
-  "version": "0.1.0",
-  "versionName": "0.1.0",
+  "timestamp": 1583398498783,
+  "version": "0.0.6",
+  "versionName": "0.0.rc1.6",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
   "description": "Front End for ESP Easy",
-  "main": "build/0.1.0/main/index.html.gz",
+  "main": "build/0.0.rc1.6/main/index.html.gz",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/letscontrolit/GUIEasy.git"
