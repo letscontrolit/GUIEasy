@@ -11,6 +11,8 @@
         :root {
             --frontend-color: 0, 255, 45;
             --backend-color: 100, 200, 245;
+            --manual-color: 255, 255, 45;
+            --offline-color: 255, 0, 45;
             /*--color: var(--frontend-color);*/
             --color-1: rgb(var(--color));
             --color-2: rgba(var(--color), 0.4);
@@ -78,8 +80,8 @@
             background: linear-gradient(to bottom, var(--color-1) 0%, var(--color-1) 100%);
         }
         #x {
-            min-width: 250px;
-            max-width: 250px;
+            min-width: 300px;
+            max-width: 300px;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -100,103 +102,157 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
+        #upload {
+            display: none;
+            min-height: 240px;
+            max-height: 240px;
+        }
+        .drag-drop {
+            border-style: dashed;
+        }
     </style>
     <script>
-        let releases = {};
-        releases.frontend = {
-            "b": "Make This Drone A Queen",
+        let obj = {};
+        obj.list = [];
+        obj.file = "";
+        obj.frontend = {
+            "b": "Upgrade Front End",
             "a": "Select version in the dropdown below (latest is always first):",
-            "url": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt",
-            "t": "Click the button below to upgrade this unit to Queen status."
+            "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
+            "rlEndpoint": "releases.txt",
+            "infoEndpoint": "release.txt",
+            "t": "Click the button below to upgrade this unit."
         };
-        releases.backend = {
+        obj.backend = {
             "b": "Update Firmware",
             "a": "Select version in the dropdown below (latest is always first):",
-            "url": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt",
+            "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
+            "rlEndpoint": "releases.txt",
+            "infoEndpoint": "release.txt",
             "t": "Click the button below to upgrade this unit to selected firmware version."
         };
-        let fe, be, r, rc, n, t, d, b, a, p;
-
+        let fe, be, r, rc, n, t, d, f, m, upload, b, a, p;
+        ini = function () {
+            start('frontend');
+            dragDropEvent();
+        };
         start = async function (type) {
+            document.body.dataset.type = type;
             fe = document.getElementById("fe"); //front end button
             be = document.getElementById("be"); //back end button
+            m = document.getElementById("m"); //manual button
+            upload = document.getElementById("upload"); //manual upload button
             r = document.getElementById("r"); //filter release button
             rc = document.getElementById("rc"); //filter release candidates button
             n = document.getElementById("n"); //filter nightlies button
+            a = document.getElementById("a"); //text
             t = document.getElementById("t"); //text
-            d = document.getElementById("d"); //select
+            d = document.getElementById("d"); //select version
+            f = document.getElementById("f"); //select build
             b = document.getElementById("b"); //button
-            a = document.getElementById("a"); //ascii dude
             p = document.getElementById("p"); //progress bar
             //------------
-            fe.style.display = "none";
-            be.style.display = "none";
-            d.style.display = "none";
-            b.style.display = "none";
-            a.style.display = "none";
-            t.style.display = "none";
-            r.style.display = "none";
-            rc.style.display = "none";
-            n.style.display = "none";
+            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n];
+            for (let i = 0; i < hides.length; i++) {
+                hides[i].style.display = "none";
+            }
             //------------
             p.style.width = "0";
             document.documentElement.style.setProperty("--color", "var(--" + type + "-color)");
+            if (type === "manual") {
+                setupManualPage();
+                return;
+            }
             filter('r');
             if (window.navigator.onLine === true) {
                 //It's ok to download
-                //TODO: have an external js that look if mem will fit the gui etc. etc.
-                d.innerHTML = "";
-                releases.list = await fetchReleases(type);
-                releases.list.reverse();
-                for (let i = 0; i < releases.list.length; i++) {
-                    if (releases.list[i] === "") {
-                        continue;
-                    }
-                    let option = document.createElement("option");
-                    option.text = releases.list[i];
-                    option.value = releases.list[i];
-                    d.add(option);
-                }
+                obj.list = await fetchReleases(type);
+                obj.list.reverse();
+                filter('r');
                 d.onfocus=function () {
-                    d.size = 10;
-                    d.style.fontSize = "1.5em";
-                    d.style.padding = "0";
+                    this.size = 10;
+                    this.style.fontSize = "1.5em";
+                    this.style.padding = "0";
                 };
                 d.onchange=function () {
-                    d.size = 1;
-                    d.blur();
+                    this.size = 1;
+                    this.blur();
                 };
                 d.onblur=function () {
-                    d.size = 0;
-                    d.style.fontSize = "unset";
-                    d.style.padding = ".65em 2em";
+                    this.size = 0;
+                    this.style.fontSize = "unset";
+                    this.style.padding = ".65em 2em";
+                    fetchFiles();
                 };
-                t.innerHTML = releases[type].t;
+                f.onfocus=function () {
+                    this.size = 5;
+                    this.style.fontSize = "1.5em";
+                    this.style.padding = "0";
+                };
+                f.onchange=function () {
+                    this.size = 1;
+                    this.blur();
+                };
+                f.onblur=function () {
+                    this.size = 0;
+                    this.style.fontSize = "unset";
+                    this.style.padding = ".65em 2em";
+                };
+                t.innerHTML = obj[type].t;
                 if (type === "frontend") {
                     fe.classList.add("active");
                     be.classList.remove("active");
-                } else {
+                    m.classList.remove("active");
+                }
+                if (type === "backend") {
                     fe.classList.remove("active");
                     be.classList.add("active");
+                    m.classList.remove("active");
                 }
-                fe.style.display = "flex";
-                be.style.display = "flex";
-                r.style.display = "flex";
-                rc.style.display = "flex";
-                n.style.display = "flex";
-                d.style.display = "block";
-                b.style.display = "block";
-                a.style.display = "block";
-                t.style.display = "block";
-                a.innerHTML = releases[type].a;
-                b.innerHTML = releases[type].b;
+                let flexes = [fe, be, m, r, rc, n];
+                for (let i = 0; i < flexes.length; i++) {
+                    flexes[i].style.display = "flex";
+                }
+                let blocks = [d, f, b, a, t];
+                for (let i = 0; i < blocks.length; i++) {
+                    blocks[i].style.display = "block";
+                }
+                let innerHTMLs = [
+                    [a, "a"],
+                    [b, "b"]
+                ];
+                for (let i = 0; i < innerHTMLs.length; i++) {
+                    innerHTMLs[i][0].innerHTML = obj[type][innerHTMLs[i][1]];
+                }
             } else {
                 //Cannot download
+                setupManualPage('offline');
+            }
+        };
+        setupManualPage = function (type = "") {
+            let flexes = [fe, be, m, upload];
+            for (let i = 0; i < flexes.length; i++) {
+                flexes[i].style.display = "flex";
+            }
+            fe.classList.remove("active");
+            be.classList.remove("active");
+            m.classList.add("active");
+            dragDropEvent(true);
+            if (type === "offline") {
+                let disables = [fe, be];
+                for (let i = 0; i < disables.length; i++) {
+                    disables[i].disabled = "true";
+                    disables[i].style.cursor = "not-allowed";
+                    disables[i].style.textDecorationLine = "line-through";
+                    disables[i].style.textDecorationColor = "rgb(var(--" + type + "-color))";
+                    disables[i].style.textDecorationStyle = "wavy";
+                }
+                m.disabled = "true";
+                m.style.cursor = "not-allowed";
+                document.documentElement.style.setProperty("--color", "var(--manual-color)");
                 t.innerHTML = "No Internet connection. Please connect to Internet to download graphical user interface - OR - browse to a Queen.";
-                t.style.color = "red";
+                t.style.color = "rgb(var(--" + type + "-color))";
                 t.style.display = "block";
-                a.style.color = "red";
-                a.style.display = "block";
             }
         };
         filter = function (type) {
@@ -204,11 +260,118 @@
             rc.classList.remove("active");
             n.classList.remove("active");
             document.getElementById(type).classList.add("active");
+            addOptions(type);
+            fetchFiles();
+        };
+        fetchFiles = async function () {
+            f.innerHTML = "";
+            let version = d.value;
+            let type = document.body.dataset.type;
+            let info = "";
+            if (version !== "") {
+                info = await fetchInfo(type, version);
+                for (let i = 0; i < info.files.length; i++) {
+                    let option = document.createElement("option");
+                    option.text = info.files[i].build + " (" + (Math.round(info.files[i].size * 10) / 10 / 1000).toFixed(1) + "kB)";
+                    option.value = info.files[i].build;
+                    f.add(option);
+                }
+            }
+        };
+        addOptions = function (type) {
+            d.innerHTML = "";
+            let contains = "";
+            if (type === "rc") {
+                contains = "rc";
+            }
+            if (type === "n") {
+                contains = "nightly";
+            }
+            for (let i = 0; i < obj.list.length; i++) {
+                if (obj.list[i] === "") {
+                    continue;
+                }
+                if (contains === "") {
+                    if (obj.list[i].includes("rc") || obj.list[i].includes("nightly")) {
+                        continue;
+                    }
+                } else {
+                    if (obj.list[i].includes(contains) !== true) {
+                        continue;
+                    }
+                }
+                let option = document.createElement("option");
+                option.text = obj.list[i];
+                option.value = obj.list[i];
+                d.add(option);
+            }
+        };
+        dragDropEvent = function () {
+            let defaultText = upload.innerText.toString();
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                upload.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false)
+            });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                upload.addEventListener(eventName, function () {
+                    upload.innerText = "Drop File Here...";
+                    upload.classList.add('drag-drop');
+                }, false)
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                upload.addEventListener(eventName, function (event) {
+                    upload.classList.remove('drag-drop');
+                    upload.innerText = defaultText;
+                    if (eventName === "drop" && obj.file === "") {
+                        let file = event.dataTransfer.files[0];
+                        obj.file = file.name;
+                        uploadFile(file);
+                    }
+                }, false)
+            });
+        };
+        browseFile = function () {
+            let i = document.createElement("input");
+            i.type = "file";
+            i.oninput = function (event) {
+                let file = event.path[0].files[0];
+                obj.file = file.name;
+                uploadFile(file);
+                i.remove();
+            };
+            i.dispatchEvent(new MouseEvent("click"));
+        };
+        uploadFile = function (file) {
+            file.ext = file.name.match(/\.[0-9a-z]+$/i)[0].toLowerCase();
+            console.log(file);
+            setTimeout( function () {
+                obj.file = "";
+            }, 100);
+        };
+        fetchInfo = async function (type, version) {
+            let info = {};
+            const releaseList = obj[type].baseURL + version + "/info/" + obj[type].infoEndpoint + "?callback=" + Date.now();
+            await fetch(releaseList)
+                .then(res => res.text())
+                .then((list) => {
+                    let temp = list.split(/\n/);
+                    for (let i = 0; i < temp.length; i++) {
+                        let att = temp[i].replace(":", "||");
+                        att = att.split("||");
+                        info[att[0]] = att[1];
+                    }
+                })
+                .catch(error => {
+                    console.warn('Error fetching info: ' + error, 0, "error");
+                });
+            info.files = JSON.parse(info.files);
+            return info;
         };
         fetchReleases = async function (type) {
             let rl = "";
-            let timeStart = Date.now();
-            const releaseList = releases[type].url + "?callback=" + timeStart;
+            const releaseList = obj[type].baseURL + obj[type].rlEndpoint + "?callback=" + Date.now();
             await fetch(releaseList)
                 .then(res => res.text())
                 .then((list) => {
@@ -219,27 +382,23 @@
                 });
             return rl;
         };
-        download = function () {
+        update = function () {
+            console.log(document.body.dataset.type);
             p.style.width = "20%";
         };
     </script>
 </head>
-<body onload="start('frontend')">
+<body onload="ini()">
 <!-- This file is used as a minimum GUI to download the GUI from GitHub -->
 <!-- Since Butler is used, do not rename or move the file /src/gui_easy_butler_gui_update.js !! -->
 <div id="x">
     <div style="width:100%; display:inline-flex;">
-        <button id="fe" style="width:50%;" onclick="start('frontend')">Front End</button>
-        <button id="be" style="width:50%;" onclick="start('backend')">Back End</button>
+        <button id="fe" style="width:45%;" onclick="start('frontend')">Front End</button>
+        <button id="be" style="width:45%;" onclick="start('backend')">Back End</button>
+        <button id="m" style="width:10%;" onclick="start('manual')">☰</button>
     </div>
-    <div id="a">
-        &nbsp;&nbsp;&nbsp;UR ASCIIN 4 IT!<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;/<br>
-        &nbsp;&nbsp;,﹏<br>
-        (҂॰ᨓ॰)<br>
-        &nbsp;(ϑ͏  ꙻ)ϑ͏<br>
-        &nbsp;√ ㄟ<br><br>
-    </div>
+    <div id="a"></div>
+    <button id="upload" onclick="browseFile()">Click or Drag and Drop 1 File Onto This Area to Manually Upload a New Front or Back End to the Unit</button>
     <div style="width:100%; display:inline-flex;">
         <button id="r" style="width:40%;" onclick="filter('r')">Release</button>
         <button id="rc" style="width:30%;" onclick="filter('rc')">RC</button>
@@ -247,10 +406,10 @@
     </div>
     <label for="d"></label>
     <select id="d"></select>
-    <label for="dopt"></label>
-    <select id="dopt"></select>
+    <label for="f"></label>
+    <select id="f"></select>
     <div id="t"></div>
-    <button onclick="download()" id="b"></button>
+    <button onclick="update()" id="b"></button>
     <div id="p"></div>
 </div>
 </body>
