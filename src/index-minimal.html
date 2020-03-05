@@ -145,18 +145,10 @@
             b = document.getElementById("b"); //button
             p = document.getElementById("p"); //progress bar
             //------------
-            fe.style.display = "none";
-            be.style.display = "none";
-            m.style.display = "none";
-            upload.style.display = "none";
-            d.style.display = "none";
-            f.style.display = "none";
-            b.style.display = "none";
-            a.style.display = "none";
-            t.style.display = "none";
-            r.style.display = "none";
-            rc.style.display = "none";
-            n.style.display = "none";
+            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n];
+            for (let i = 0; i < hides.length; i++) {
+                hides[i].style.display = "none";
+            }
             //------------
             p.style.width = "0";
             document.documentElement.style.setProperty("--color", "var(--" + type + "-color)");
@@ -165,7 +157,7 @@
                 return;
             }
             filter('r');
-            if (window.navigator.onLine === true) {
+            if (window.navigator.onLine !== true) {
                 //It's ok to download
                 //TODO: have an external js that look if mem will fit the gui etc. etc.
                 releases.list = await fetchReleases(type);
@@ -211,43 +203,43 @@
                     be.classList.add("active");
                     m.classList.remove("active");
                 }
-                fe.style.display = "flex";
-                be.style.display = "flex";
-                m.style.display = "flex";
-                r.style.display = "flex";
-                rc.style.display = "flex";
-                n.style.display = "flex";
-                d.style.display = "block";
-                f.style.display = "block";
-                b.style.display = "block";
-                a.style.display = "block";
-                t.style.display = "block";
-                a.innerHTML = releases[type].a;
-                b.innerHTML = releases[type].b;
+                let flexes = [fe, be, m, r, rc, n];
+                for (let i = 0; i < flexes.length; i++) {
+                    flexes[i].style.display = "flex";
+                }
+                let blocks = [d, f, b, a, t];
+                for (let i = 0; i < blocks.length; i++) {
+                    blocks[i].style.display = "block";
+                }
+                let innerHTMLs = [
+                    [a, "a"],
+                    [b, "b"]
+                ];
+                for (let i = 0; i < innerHTMLs.length; i++) {
+                    innerHTMLs[i][0].innerHTML = releases[type][innerHTMLs[i][1]];
+                }
             } else {
                 //Cannot download
                 setupManualPage('offline');
             }
         };
         setupManualPage = function (type = "") {
-            fe.style.display = "flex";
-            be.style.display = "flex";
-            m.style.display = "flex";
-            upload.style.display = "flex";
+            let flexes = [fe, be, m, upload];
+            for (let i = 0; i < flexes.length; i++) {
+                flexes[i].style.display = "flex";
+            }
             fe.classList.remove("active");
             be.classList.remove("active");
             m.classList.add("active");
             if (type === "offline") {
-                fe.disabled = "true";
-                fe.style.cursor = "not-allowed";
-                fe.style.textDecorationLine = "line-through";
-                fe.style.textDecorationColor = "rgb(var(--" + type + "-color))";
-                fe.style.textDecorationStyle = "wavy";
-                be.disabled = "true";
-                be.style.cursor = "not-allowed";
-                be.style.textDecoration = "line-through";
-                be.style.textDecorationColor = "rgb(var(--" + type + "-color))";
-                be.style.textDecorationStyle = "wavy";
+                let disabledButtons = [fe, be];
+                for (let i = 0; i < disabledButtons.length; i++) {
+                    disabledButtons[i].disabled = "true";
+                    disabledButtons[i].style.cursor = "not-allowed";
+                    disabledButtons[i].style.textDecorationLine = "line-through";
+                    disabledButtons[i].style.textDecorationColor = "rgb(var(--" + type + "-color))";
+                    disabledButtons[i].style.textDecorationStyle = "wavy";
+                }
                 m.disabled = "true";
                 m.style.cursor = "not-allowed";
                 document.documentElement.style.setProperty("--color", "var(--manual-color)");
