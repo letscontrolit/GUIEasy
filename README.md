@@ -335,6 +335,20 @@ The full version name exemplified:
 
 ``2.3.0``
 
+A release cycle exemplified:
+
+``1.0.0``  <--- release
+
+``1.0.nightly.1``  <--- working on a fix or a new major/minor release
+...
+``1.0.nightly.123``  <--- we decide that this one will be next 1.1.0
+
+``1.0.rc1.124``  <--- here's the release candidate (1.0.nightly.123 code base)
+
+``1.0.rc2.125``  <--- we found some stuff we wanted to change in the rc1
+
+``1.1.0``  <--- we release 1.0.rc2.125 as 1.1.0
+
 When the Gruntfile.js file is executed it will look into the source and parse the version
 data. This is made possible by the opening ``//--GRUNT-START--`` and closing ``//--GRUNT-END--``
 tags. Please observe that the ``,`` after the closing tag need to be on the line below
