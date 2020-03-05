@@ -5,6 +5,7 @@ guiEasy.pitcher = async function (processID, processType) {
     let urlParams = helpEasy.urlParams();
     helpEasy.getGuiInFields();
     helpEasy.setCurrentIndex(-1);
+    //TODO: remove this part when doing a build release (saves almost 1kB)
     if (window.location.hostname === "localhost") {
         let path = window.location.origin + window.location.pathname;
         path = path.replace("index.html", "custom.json");
