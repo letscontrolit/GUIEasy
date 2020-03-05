@@ -510,17 +510,21 @@ module.exports = function(grunt) {
             } else {
                 version_to = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
             }
-            grunt.log.ok(version_from + " --> " + version_to);
-            let replaceText = "//--GRUNT-START--\n" +
-                "        'major': " + guiEasy.major + ",\n" +
-                "        'minor': " + guiEasy.minor + ",\n" +
-                "        'revision': " + guiEasy.revision + ",\n" +
-                "        'development': " + guiEasy.development + ",\n" +
-                "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
-                "        //--GRUNT-END--"
-            ;
-            settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
-            grunt.file.write( 'src/gui_easy_settings.js', settings);
+            if (version_from === version_to) {
+                grunt.log.ok(version_from);
+            } else {
+                let replaceText = "//--GRUNT-START--\n" +
+                    "        'major': " + guiEasy.major + ",\n" +
+                    "        'minor': " + guiEasy.minor + ",\n" +
+                    "        'revision': " + guiEasy.revision + ",\n" +
+                    "        'development': " + guiEasy.development + ",\n" +
+                    "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
+                    "        //--GRUNT-END--"
+                ;
+                settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
+                grunt.file.write( 'src/gui_easy_settings.js', settings);
+                grunt.log.ok(version_from + " --> " + version_to);
+            }
         }
     );
 };
