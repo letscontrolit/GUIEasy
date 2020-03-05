@@ -105,35 +105,43 @@
         let releases = {};
         releases.frontend = {
             "b": "Make This Drone A Queen",
-            "a": "Select version in the dropdown below:",
+            "a": "Select version in the dropdown below (latest is always first):",
             "url": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt",
-            "t": "Click the button below to upgrade this unit to Queen status.",
-            "dopt": ["official", "rc", "nightly"]
+            "t": "Click the button below to upgrade this unit to Queen status."
         };
         releases.backend = {
             "b": "Update Firmware",
-            "a": "Select version in the dropdown below:",
+            "a": "Select version in the dropdown below (latest is always first):",
             "url": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/releases.txt",
-            "t": "Click the button below to upgrade this unit to selected firmware version.",
-            "dopt": ["official", "rc", "nightly"]
+            "t": "Click the button below to upgrade this unit to selected firmware version."
         };
+        let fe, be, r, rc, n, t, d, b, a, p;
+
         start = async function (type) {
-            const fe = document.getElementById("fe"); //front end button
-            const be = document.getElementById("be"); //back end button
-            const t = document.getElementById("t"); //text
-            const d = document.getElementById("d"); //select
-            const dopt = document.getElementById("dopt"); //select options
-            const b = document.getElementById("b"); //button
-            const a = document.getElementById("a"); //ascii dude
-            const p = document.getElementById("p"); //progress bar
+            fe = document.getElementById("fe"); //front end button
+            be = document.getElementById("be"); //back end button
+            r = document.getElementById("r"); //filter release button
+            rc = document.getElementById("rc"); //filter release candidates button
+            n = document.getElementById("n"); //filter nightlies button
+            t = document.getElementById("t"); //text
+            d = document.getElementById("d"); //select
+            b = document.getElementById("b"); //button
+            a = document.getElementById("a"); //ascii dude
+            p = document.getElementById("p"); //progress bar
+            //------------
             fe.style.display = "none";
             be.style.display = "none";
             d.style.display = "none";
             b.style.display = "none";
             a.style.display = "none";
             t.style.display = "none";
+            r.style.display = "none";
+            rc.style.display = "none";
+            n.style.display = "none";
+            //------------
             p.style.width = "0";
             document.documentElement.style.setProperty("--color", "var(--" + type + "-color)");
+            filter('r');
             if (window.navigator.onLine === true) {
                 //It's ok to download
                 //TODO: have an external js that look if mem will fit the gui etc. etc.
@@ -173,6 +181,9 @@
                 }
                 fe.style.display = "flex";
                 be.style.display = "flex";
+                r.style.display = "flex";
+                rc.style.display = "flex";
+                n.style.display = "flex";
                 d.style.display = "block";
                 b.style.display = "block";
                 a.style.display = "block";
@@ -188,24 +199,29 @@
                 a.style.display = "block";
             }
         };
+        filter = function (type) {
+            r.classList.remove("active");
+            rc.classList.remove("active");
+            n.classList.remove("active");
+            document.getElementById(type).classList.add("active");
+        };
         fetchReleases = async function (type) {
-            let r = "";
+            let rl = "";
             let timeStart = Date.now();
             const releaseList = releases[type].url + "?callback=" + timeStart;
             await fetch(releaseList)
                 .then(res => res.text())
                 .then((list) => {
-                    r = list.split(/\n/);
+                    rl = list.split(/\n/);
                 })
                 .catch(error => {
                     console.warn('Error fetching releases: ' + error, 0, "error");
                 });
-            return r;
+            return rl;
         };
         download = function () {
-            const p = document.getElementById("p"); //progress bar
             p.style.width = "20%";
-        }
+        };
     </script>
 </head>
 <body onload="start('frontend')">
@@ -223,6 +239,11 @@
         (҂॰ᨓ॰)<br>
         &nbsp;(ϑ͏  ꙻ)ϑ͏<br>
         &nbsp;√ ㄟ<br><br>
+    </div>
+    <div style="width:100%; display:inline-flex;">
+        <button id="r" style="width:40%;" onclick="filter('r')">Release</button>
+        <button id="rc" style="width:30%;" onclick="filter('rc')">RC</button>
+        <button id="n" style="width:30%;" onclick="filter('n')">Nightly</button>
     </div>
     <label for="d"></label>
     <select id="d"></select>
