@@ -352,15 +352,18 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:test',
+                'minimalVersionInjection:' + version + '-test-' + timestamp,
                 'uglify',
                 'cssmin',
                 'processhtml',
                 'file_append',
+                'htmlmin',
                 'compress',
                 'clean:tempFiles',
                 'clean:noDash',
                 'copy',
                 'rename:test',
+                'minimalVersionInjection',
                 'testBuild',
                 'gruntDone:' + version + "-test-" + timestamp
             );
@@ -388,10 +391,10 @@ module.exports = function(grunt) {
         let data = grunt.file.read('src/index-minimal.html');
         if (version !== undefined) {
             grunt.log.ok('adding temporary mini version');
-            data = data.replace(/let version = null;/, 'let version = "' + version + '";');
+            data = data.replace(/"v": "" \/\/FRONTEND/, '"v": "' + version + '" //FRONTEND');
         } else {
             grunt.log.ok('removing temporary mini version');
-            data = data.replace(/(?<=let version = ).*(?=;)/, "null");
+            data = data.replace(/(?<="v": ).*(?= \/\/FRONTEND)/, '""');
         }
         grunt.file.write( 'src/index-minimal.html', data);
     });
