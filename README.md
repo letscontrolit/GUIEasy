@@ -379,10 +379,13 @@ grunt bump:dev=true
 grunt bump:dev=false
 >> 0.0.nightly.2 --> 0.0.2
 >> 0.0.rc1.3 --> 0.0.3     <--- this one isn't correct
+
+grunt bump                 <--- will return current version
+>> 0.0.nightly.2
 ```
 
-As seen in the last example, if you have a release candidate number assigned when you set the
-development flag to true it will still have that rc number. That being said, you should only
+As seen in the second to last example, if you have a release candidate number assigned when you set
+the development flag to true it will still have that rc number. That being said, you should only
 use the dev=BOOL to quickly set the version handler to development mode if you by some chance 
 made a mistake when you bumped. The workflow is like this.
 
