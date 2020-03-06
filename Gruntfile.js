@@ -46,6 +46,21 @@ module.exports = function(grunt) {
               }
           }
       },
+// minify html
+      htmlmin: {
+          dist: {
+              options: {
+                  removeComments: false,
+                  collapseWhitespace: true
+              },
+              files: {
+                  'build/temp/index.min.html': 'build/temp/index.min.html',
+                  'build/temp/no-dash.index.min.html': 'build/temp/no-dash.index.min.html',
+                  'build/temp/index-minimal.html': 'src/index-minimal.html'
+              }
+          },
+
+      },
 // minify css
       cssmin: {
           options: {
@@ -130,7 +145,7 @@ module.exports = function(grunt) {
               },
               files: [{
                   expand: false,
-                  src: ['src/index-minimal.html'],
+                  src: ['build/temp/index-minimal.html'],
                   dest: 'build/temp/mini/index.htm.gz'
               }]
           }
@@ -250,6 +265,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-file-append');
     grunt.loadNpmTasks('grunt-folder-list');
@@ -307,10 +323,12 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:version',
+                'minimalVersionInjection:' + version,
                 'uglify',
                 'cssmin',
                 'processhtml',
                 'file_append',
+                'htmlmin',
                 'compress',
                 'clean:tempFiles',
                 'clean:noDash',
@@ -321,6 +339,7 @@ module.exports = function(grunt) {
                 'rename',
                 'clean:releaseInfo',
                 'listBuilds',
+                'minimalVersionInjection',
                 'releaseFileSizes',
                 'gruntDone:' + version
             );
@@ -333,15 +352,18 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:test',
+                'minimalVersionInjection:' + version + '-test-' + timestamp,
                 'uglify',
                 'cssmin',
                 'processhtml',
                 'file_append',
+                'htmlmin',
                 'compress',
                 'clean:tempFiles',
                 'clean:noDash',
                 'copy',
                 'rename:test',
+                'minimalVersionInjection',
                 'testBuild',
                 'gruntDone:' + version + "-test-" + timestamp
             );
@@ -363,6 +385,18 @@ module.exports = function(grunt) {
             settings = settings.replace(/'test': \d*,/, "'test': null,");
         }
         grunt.file.write( 'src/gui_easy_settings.js', settings);
+    });
+
+    grunt.registerTask('minimalVersionInjection', function (version) {
+        let data = grunt.file.read('src/index-minimal.html');
+        if (version !== undefined) {
+            grunt.log.ok('adding temporary mini version');
+            data = data.replace(/"v": "" \/\/FRONTEND/, '"v": "' + version + '" //FRONTEND');
+        } else {
+            grunt.log.ok('removing temporary mini version');
+            data = data.replace(/(?<="v": ).*(?= \/\/FRONTEND)/, '""');
+        }
+        grunt.file.write( 'src/index-minimal.html', data);
     });
 
     grunt.registerTask('verifyCopyright', function () {
