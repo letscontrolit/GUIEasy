@@ -406,9 +406,13 @@ Release candidates are by definition never set to the future major and/or minor 
 1.0.nightly.123 is ready to be tested by a broader user base
 1.0.rc1.124 is created
 ...
-1.0.rc3.124 is the version that is finally accepted
+1.0.rc3.126 is the version that is finally accepted
 1.1.0 is created and released.
 ```
+
+As you can see, ``nightly`` and ``rc`` is **only a state** of the code, the revision is still
+the actual version together with the major and minor number. You may be used to the term
+metadata or tag, anyway, they are not used as actual versions.
 
 ## CSS Framework
 
