@@ -48,6 +48,7 @@
              outline: 0;
              padding: .65em 2em;
              font-family: inherit;
+             margin-top: 10px;
         }
         button.active {
             background-color: var(--color-2);
@@ -87,12 +88,17 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        #a {
+        #a, #w {
             display: none;
             margin-top: 10px;
-            margin-bottom: 10px;
+        }
+        #w {
+            background-color: rgb(var(--offline-color));
+            font-weight: bold;
+            color: white;
         }
         #v {
+            margin-top: 10px;
             text-align: center;
         }
         #v:before {
@@ -101,12 +107,10 @@
         #p {
             background-color: var(--color-1);
             height: 3px;
-            margin-bottom: 10px;
         }
         #t {
             display: none;
             margin-top: 10px;
-            margin-bottom: 10px;
         }
         #upload {
             display: none;
@@ -124,7 +128,7 @@
         obj.file = "";
         obj.frontend = {
             "b": "Upgrade Front End",
-            "a": "Select version in the dropdown below (latest is always first):",
+            "a": "Select version in the dropdown below (sorted latest to oldest):",
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
             "rlEndpoint": "releases.txt",
             "infoEndpoint": "release.txt",
@@ -133,14 +137,14 @@
         };
         obj.backend = {
             "b": "Update Firmware",
-            "a": "Select version in the dropdown below (latest is always first):",
+            "a": "Select version in the dropdown below (sorted latest to oldest):",
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
             "rlEndpoint": "releases.txt",
             "infoEndpoint": "release.txt",
             "t": "Click the button below to upgrade this unit to selected firmware version.",
             "v": "" //BACKEND
         };
-        let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v;
+        let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v, w;
         ini = function () {
             start('frontend');
             dragDropEvent();
@@ -156,13 +160,14 @@
             n = document.getElementById("n"); //filter nightlies button
             a = document.getElementById("a"); //text
             t = document.getElementById("t"); //text
+            w = document.getElementById("w"); //warning
             d = document.getElementById("d"); //select version
             f = document.getElementById("f"); //select build
             b = document.getElementById("b"); //button
             p = document.getElementById("p"); //progress bar
             v = document.getElementById("v"); //version
             //------------
-            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n, v];
+            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n, v, w];
             for (let i = 0; i < hides.length; i++) {
                 hides[i].style.display = "none";
             }
@@ -192,7 +197,7 @@
                     this.size = 0;
                     this.style.fontSize = "unset";
                     this.style.padding = ".65em 2em";
-                    fetchFiles();
+                    addFilesToOption();
                 };
                 f.onfocus=function () {
                     this.size = 5;
@@ -271,10 +276,12 @@
             rc.classList.remove("active");
             n.classList.remove("active");
             document.getElementById(type).classList.add("active");
+            w.innerText = "";
+            w.style.display = "none";
             addOptions(type);
-            fetchFiles();
+            addFilesToOption();
         };
-        fetchFiles = async function () {
+        addFilesToOption = async function () {
             f.innerHTML = "";
             let version = d.value;
             let type = document.body.dataset.type;
@@ -286,6 +293,10 @@
                     option.text = info.files[i].build + " (" + (Math.round(info.files[i].size * 10) / 10 / 1000).toFixed(1) + "kB)";
                     option.value = info.files[i].build;
                     f.add(option);
+                }
+                if (info.warning !== "") {
+                    w.innerText = info.warning;
+                    w.style.display = "block";
                 }
             }
         };
@@ -378,6 +389,20 @@
                     console.warn('Error fetching info: ' + error, 0, "error");
                 });
             info.files = JSON.parse(info.files);
+            info.warning = "";
+            const warningTxt = obj[type].baseURL + version + "/info/warning.txt?callback=" + Date.now();
+            await fetch(warningTxt)
+                .then(res => res.text())
+                .then((txt) => {
+                    if (txt === "404: Not Found\n") {
+                        info.warning = "";
+                    } else {
+                        info.warning = txt;
+                    }
+                })
+                .catch(error => {
+                    console.warn('no warning.txt found: ' + error, 0, "error");
+                });
             return info;
         };
         fetchReleases = async function (type) {
@@ -394,7 +419,10 @@
             return rl;
         };
         update = function () {
-            console.log(document.body.dataset.type);
+            let url = obj[document.body.dataset.type].baseURL;
+            url += document.getElementById("d").value + "/";
+            url += document.getElementById("f").value + "/index.htm.gz";
+            console.log(url);
             p.style.width = "20%";
         };
     </script>
@@ -419,6 +447,7 @@
     <select id="d"></select>
     <label for="f"></label>
     <select id="f"></select>
+    <div id="w"></div>
     <div id="t"></div>
     <button onclick="update()" id="b"></button>
     <div id="p"></div>
