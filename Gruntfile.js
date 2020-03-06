@@ -22,7 +22,6 @@ module.exports = function(grunt) {
                       'src/gui_easy_curly_unit.js',
                       'src/gui_easy_curly_page.js',
                       'src/gui_easy_curly_icons.js',
-                      'src/gui_easy_curly_forms.js',
                       'src/gui_easy_scrubber.js',
                       'src/gui_easy_popper.js',
                       'src/gui_easy_popper_rules.js',
