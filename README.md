@@ -340,7 +340,9 @@ A release cycle exemplified:
 ``1.0.0``  <--- release
 
 ``1.0.nightly.1``  <--- working on a fix or a new major/minor release
+
 ...
+
 ``1.0.nightly.123``  <--- we decide that this one will be next 1.1.0
 
 ``1.0.rc1.124``  <--- here's the release candidate (1.0.nightly.123 code base)
