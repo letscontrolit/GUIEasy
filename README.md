@@ -400,7 +400,7 @@ ready.
 Release candidates are by definition never set to the future major and/or minor level. See this example:
 
 ```
-1.0.0 is released and we want to create a new version with extra stuff
+1.0.0 is already released and we want to create a new version with extra stuff
 1.0.nightly.1 is created and we start adding the stuff
 ...
 1.0.nightly.123 is ready to be tested by a broader user base
@@ -408,6 +408,17 @@ Release candidates are by definition never set to the future major and/or minor 
 ...
 1.0.rc3.126 is the version that is finally accepted
 1.1.0 is created and released.
+```
+
+Another example
+
+```
+1.1.0 is already released but we found a bug that cannot wait for next version to be resolved
+1.1.nightly.1 is created and we start fixing the bug
+...
+1.1.nightly.5 is ready to be tested by a broader user base
+1.1.rc1.6 is created and after testing accepted
+1.1.7 is created and released.
 ```
 
 As you can see, ``nightly`` and ``rc`` is **only a state** of the code, the revision is still
