@@ -92,6 +92,12 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
+        #v {
+            text-align: center;
+        }
+        #v:before {
+            content: "current: ";
+        }
         #p {
             background-color: var(--color-1);
             height: 3px;
@@ -112,7 +118,7 @@
         }
     </style>
     <script>
-        let version = null; //leave this as null, used for grunt
+        //TODO: make script external, as well as the style... better minifying possibilities that way
         let obj = {};
         obj.list = [];
         obj.file = "";
@@ -122,7 +128,8 @@
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
             "rlEndpoint": "releases.txt",
             "infoEndpoint": "release.txt",
-            "t": "Click the button below to upgrade this unit."
+            "t": "Click the button below to upgrade this unit.",
+            "v": "" //FRONTEND
         };
         obj.backend = {
             "b": "Update Firmware",
@@ -130,9 +137,10 @@
             "baseURL": "https://raw.githubusercontent.com/letscontrolit/GUIEasy/master/build/",
             "rlEndpoint": "releases.txt",
             "infoEndpoint": "release.txt",
-            "t": "Click the button below to upgrade this unit to selected firmware version."
+            "t": "Click the button below to upgrade this unit to selected firmware version.",
+            "v": "" //BACKEND
         };
-        let fe, be, r, rc, n, t, d, f, m, upload, b, a, p;
+        let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v;
         ini = function () {
             start('frontend');
             dragDropEvent();
@@ -152,8 +160,9 @@
             f = document.getElementById("f"); //select build
             b = document.getElementById("b"); //button
             p = document.getElementById("p"); //progress bar
+            v = document.getElementById("v"); //version
             //------------
-            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n];
+            let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n, v];
             for (let i = 0; i < hides.length; i++) {
                 hides[i].style.display = "none";
             }
@@ -214,13 +223,14 @@
                 for (let i = 0; i < flexes.length; i++) {
                     flexes[i].style.display = "flex";
                 }
-                let blocks = [d, f, b, a, t];
+                let blocks = [d, f, b, a, t, v];
                 for (let i = 0; i < blocks.length; i++) {
                     blocks[i].style.display = "block";
                 }
                 let innerHTMLs = [
                     [a, "a"],
-                    [b, "b"]
+                    [b, "b"],
+                    [v, "v"]
                 ];
                 for (let i = 0; i < innerHTMLs.length; i++) {
                     innerHTMLs[i][0].innerHTML = obj[type][innerHTMLs[i][1]];
@@ -412,6 +422,7 @@
     <div id="t"></div>
     <button onclick="update()" id="b"></button>
     <div id="p"></div>
+    <div id="v"></div>
 </div>
 </body>
 </html>
