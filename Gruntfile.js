@@ -307,6 +307,7 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:version',
+                'minimalVersionInjection:' + version,
                 'uglify',
                 'cssmin',
                 'processhtml',
@@ -321,6 +322,7 @@ module.exports = function(grunt) {
                 'rename',
                 'clean:releaseInfo',
                 'listBuilds',
+                'minimalVersionInjection',
                 'releaseFileSizes',
                 'gruntDone:' + version
             );
@@ -363,6 +365,18 @@ module.exports = function(grunt) {
             settings = settings.replace(/'test': \d*,/, "'test': null,");
         }
         grunt.file.write( 'src/gui_easy_settings.js', settings);
+    });
+
+    grunt.registerTask('minimalVersionInjection', function (version) {
+        let data = grunt.file.read('src/index-minimal.html');
+        if (version !== undefined) {
+            grunt.log.ok('adding temporary mini version');
+            data = data.replace(/let version = null;/, 'let version = "' + version + '";');
+        } else {
+            grunt.log.ok('removing temporary mini version');
+            data = data.replace(/(?<=let version = ).*(?=;)/, "null");
+        }
+        grunt.file.write( 'src/index-minimal.html', data);
     });
 
     grunt.registerTask('verifyCopyright', function () {
