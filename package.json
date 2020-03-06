@@ -1,6 +1,6 @@
 {
   "name": "gui-easy",
-  "timestamp": 1583496492588,
+  "timestamp": 1583497892108,
   "version": "0.1.2",
   "versionName": "0.1.nightly.2",
   "author": "Jimmy 'Grovkillen' Westberg <jimmy@grovkillen.com> (https://grovkillen.com)",
@@ -29,6 +29,7 @@
     "grunt-folder-list": "^1.1.0",
     "grunt-size-report": "^0.1.4",
     "grunt-filesize": "^0.0.7",
+    "grunt-contrib-htmlmin": "^3.1.0",
     "npm": "^6.13.4"
   },
   "scripts": {

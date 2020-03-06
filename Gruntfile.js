@@ -46,6 +46,21 @@ module.exports = function(grunt) {
               }
           }
       },
+// minify html
+      htmlmin: {
+          dist: {
+              options: {
+                  removeComments: false,
+                  collapseWhitespace: true
+              },
+              files: {
+                  'build/temp/index.min.html': 'build/temp/index.min.html',
+                  'build/temp/no-dash.index.min.html': 'build/temp/no-dash.index.min.html',
+                  'build/temp/index-minimal.html': 'src/index-minimal.html'
+              }
+          },
+
+      },
 // minify css
       cssmin: {
           options: {
@@ -130,7 +145,7 @@ module.exports = function(grunt) {
               },
               files: [{
                   expand: false,
-                  src: ['src/index-minimal.html'],
+                  src: ['build/temp/index-minimal.html'],
                   dest: 'build/temp/mini/index.htm.gz'
               }]
           }
@@ -250,6 +265,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-file-append');
     grunt.loadNpmTasks('grunt-folder-list');
@@ -312,6 +328,7 @@ module.exports = function(grunt) {
                 'cssmin',
                 'processhtml',
                 'file_append',
+                'htmlmin',
                 'compress',
                 'clean:tempFiles',
                 'clean:noDash',
