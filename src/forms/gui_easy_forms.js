@@ -13,32 +13,6 @@ guiEasy.forms.setupForm = function (type) {
     container.innerHTML = html;
 };
 
-guiEasy.forms.regEx = function(string) {
-    guiEasy.syntax.curlyLC++;
-    const regExp = /(?:{{)([^}]{1,256})(?:}})/g;  //THIS MEANS THAT A FORM CURLY CAN BE 256 CHARS LONG = longer than regular curly...
-    let curlyMatches = [];
-    let match;
-    while (match = regExp.exec(string)) {
-        curlyMatches.push([match[1], match[0]]);  // [0] is always the full match..;
-    }
-    for (let i = 0; i < curlyMatches.length; i++) {
-        let curly = guiEasy.curly.compileArgs(curlyMatches[i][0].split("--"));
-        let curlyReplace = curlyMatches[i][1].replace(/}/g, "\\}");
-        curlyReplace = curlyReplace.replace(/{/g, "\\{");
-        curlyReplace = curlyReplace.replace(/\(/g, "\\(");
-        curlyReplace = curlyReplace.replace(/\)/g, "\\)");
-        curlyReplace = curlyReplace.replace(/\|/g, "\\|");
-        curlyReplace = RegExp(curlyReplace);
-        curlyMatches[i] = {"type": curly[0], "replace": curlyReplace, "noArgs": curly[1], "args": curly[2]};
-    }
-    for (let i = 0; i < curlyMatches.length; i++) {
-        curlyMatches[i].replaceWith = guiEasy.curly.forms(curlyMatches[i]);
-        string = string.replace(curlyMatches[i]["replace"], curlyMatches[i]["replaceWith"]);
-    }
-    string = string.replace(/"/g, "'");
-    return string;
-};
-
 guiEasy.forms.plugin = function (number) {
     let start = guiEasy.forms.plugin.start();
     let end = guiEasy.forms.plugin.end();
@@ -46,7 +20,6 @@ guiEasy.forms.plugin = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
@@ -57,7 +30,6 @@ guiEasy.forms.controller = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
@@ -68,7 +40,6 @@ guiEasy.forms.notification = function (number) {
     if (middle === undefined) {
         return null;
     }
-    middle = guiEasy.forms.regEx(middle.html);
     return start + middle + end;
 };
 
