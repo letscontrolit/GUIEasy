@@ -5,9 +5,9 @@
     --dark-backend-color: 100, 200, 245;
     --dark-manual-color: 255, 255, 45;
     --dark-bg-color: 0, 0, 0;
-    --light-frontend-color: 0, 125, 25;
+    --light-frontend-color: 15, 75, 15;
     --light-backend-color: 45, 100, 120;
-    --light-manual-color: 125, 125, 255;
+    --light-manual-color: 25, 25, 20;
     --light-bg-color: 255, 255, 255;
     --offline-color: 255, 0, 45;
     /*--color: var(--dark-frontend-color);*/
