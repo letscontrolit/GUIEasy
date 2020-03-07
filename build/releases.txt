@@ -8,3 +8,4 @@
 0.1.nightly.1
 0.1.nightly.2
 0.1.nightly.3
+0.1.nightly.4

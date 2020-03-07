@@ -1,0 +1,7 @@
+timestamp:1583567613037
+major:0
+minor:1
+revision:4
+rc:0
+dev:true
+files:[{"build":"main","size":77102},{"build":"noDash","size":66061},{"build":"mini","size":6211}]
