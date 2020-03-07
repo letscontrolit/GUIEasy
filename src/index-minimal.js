@@ -14,7 +14,7 @@ obj.frontend = {
     "uploadEndpoint": "/upload",
     "uploadSpeed": 35,
     "t": "Click the button below to upgrade this unit.",
-    "v": "0.1.nightly.5" //FRONTEND <--- don't change this row, used for Grunt
+    "v": "" //FRONTEND <--- don't change this row, used for Grunt
 };
 obj.backend = {
     "b": "Update Firmware",
