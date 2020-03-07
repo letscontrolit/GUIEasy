@@ -14,7 +14,7 @@ const guiEasy = {
         //--GRUNT-START--
         'major': 0,
         'minor': 1,
-        'revision': 2,
+        'revision': 3,
         'development': true,
         'releaseCandidate': 0
         //--GRUNT-END--
