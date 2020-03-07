@@ -139,4 +139,5 @@ select option:checked {
 }
 .drag-drop {
     border-style: dashed;
+    background-color: var(--color-2);
 }
