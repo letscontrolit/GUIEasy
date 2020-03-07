@@ -42,6 +42,9 @@ module.exports = function(grunt) {
                   ],
                   'build/temp/patreon.min.js': [
                       'src/gui_easy_popper_extra.js'
+                  ],
+                  'build/temp/minimal.min.js': [
+                      'src/index-minimal.js'
                   ]
               }
           }
@@ -68,7 +71,10 @@ module.exports = function(grunt) {
               roundingPrecision: -1
           },
           target: {
-              files: {'build/temp/gui.min.css': ['src/gui_easy.css']}
+              files: {
+                  'build/temp/gui.min.css': ['src/gui_easy.css'],
+                  'build/temp/minimal.min.css': ['src/index-minimal.css']
+              }
           }
       },
 // make one file of them all
@@ -388,7 +394,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('minimalVersionInjection', function (version) {
-        let data = grunt.file.read('src/index-minimal.html');
+        let data = grunt.file.read('src/index-minimal.js');
         if (version !== undefined) {
             grunt.log.ok('adding temporary mini version');
             data = data.replace(/"v": "" \/\/FRONTEND/, '"v": "' + version + '" //FRONTEND');
@@ -396,7 +402,7 @@ module.exports = function(grunt) {
             grunt.log.ok('removing temporary mini version');
             data = data.replace(/(?<="v": ).*(?= \/\/FRONTEND)/, '""');
         }
-        grunt.file.write( 'src/index-minimal.html', data);
+        grunt.file.write( 'src/index-minimal.js', data);
     });
 
     grunt.registerTask('verifyCopyright', function () {
