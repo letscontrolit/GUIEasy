@@ -1,4 +1,4 @@
-//TODO: add git commit functionality for auto-release tag (https://github.com/rubenv/grunt-git)
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 
 module.exports = function(grunt) {
   // Project configuration.
@@ -22,14 +22,14 @@ module.exports = function(grunt) {
                       'src/gui_easy_curly_unit.js',
                       'src/gui_easy_curly_page.js',
                       'src/gui_easy_curly_icons.js',
-                      'src/gui_easy_curly_forms.js',
                       'src/gui_easy_scrubber.js',
                       'src/gui_easy_popper.js',
                       'src/gui_easy_popper_rules.js',
+                      'src/gui_easy_popper_extra.js',
                       'src/gui_easy_pitcher.js',
                       'src/gui_easy_butler.js',
                       'src/gui_easy_tender.js',
-                      'src/gui_easy_ini.js'
+                      'src/gui_easy_ini.js',
                   ],
                   'build/temp/forms.min.js': [
                       'src/forms/gui_easy_forms.js',
@@ -40,9 +40,6 @@ module.exports = function(grunt) {
                   'build/temp/dash.min.js': [
                       'src/dash/gui_easy_dash.js',
                       'src/dash/gui_easy_dash_d*.js'
-                  ],
-                  'build/temp/patreon.min.js': [
-                      'src/gui_easy_popper_extra.js'
                   ],
                   'build/temp/mini.min.js': [
                       'src/index-minimal.js'

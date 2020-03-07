@@ -30,9 +30,10 @@ you may use the **noDash** version.
 If you plan on contributing to the project you need to be able to compile stuff yourself in
 order to bug test as close as release conditions as possible. What you need to do:
 
-1. Install [Node.js](https://nodejs.org/en/download/), this will include [npm](https://www.npmjs.com/get-npm) which is what we use
-to compile the project. 
-2. Install [Grunt.js](https://gruntjs.com/) + dependencies ([package.json](/package.json), run ``npm install`` from the project root level)
+1. Install [Node.js](https://nodejs.org/en/download/), this will include [npm](https://www.npmjs.com/get-npm)
+which is what we use to compile the project. 
+2. Install [Grunt.js](https://gruntjs.com/) + dependencies ([package.json](/package.json), run ``npm install``
+from the project root level)
 3. Install Grunt Command Line Interface using your terminal/cmd, and thanks to npm it's this easy:
 
 ```

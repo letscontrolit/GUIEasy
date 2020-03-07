@@ -451,12 +451,14 @@ guiEasy.curly.drawer = function (arg) {
             }
             html += guiEasy.curly.drawer.theme(x[i]);
         }
+        // the space between "main-info" button and the "main-bg" button is needed for the grunt to minify correctly
         html +=  `
             <hr>
             <div class="row">
                     <button class="main-success" data-click="theme-save">Save</button>
                     <button class="main-sunny" data-click="theme-copy">Copy</button>
                     <button class="main-info" data-click="theme-default">Default</button>
+                    
                     <button class="main-bg" data-click="modal-theme-import">Import</button>
             </div>
             </div>

@@ -133,8 +133,8 @@ select option:checked {
 }
 #upload {
     display: none;
-    min-height: 230px;
-    max-height: 230px;
+    min-height: 260px;
+    max-height: 260px;
     margin-top: unset;
 }
 .drag-drop {

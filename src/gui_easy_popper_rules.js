@@ -369,25 +369,27 @@ guiEasy.popper.rules.input = function (event) {
 };
 
 guiEasy.popper.rules.syntaxHighlightTemporary = function (what, start, end) {
-    let x = guiEasy.popper.rules.syntax.selectionElement;
-    //default is to insert a character
-    let innerText = guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput(what, start, end);
-    if (innerText !== false) {
-        x.position.col++;
-        let z = guiEasy.popper.rules.syntaxHighlightTemporary;
-        z.addCharacter(innerText, x.position.row, x.position.col);
-    }
-    // this one is special since the "selection" function deals with clicks and inputs, this part deals with the temporary selection
-    x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
-    x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
-    let children = document.getElementById("row-" + x.position.row).children;
-    if (children[x.position.col] !== null) {
-        children[x.position.col].classList.add("editor-caret");
-    }
-    if (children[x.position.col] !== null && children[x.position.col].dataset.endOfLine !== undefined) {
-        children[x.position.col].classList.add("end-of-line-caret");
-    }
+            let x = guiEasy.popper.rules.syntax.selectionElement;
+            //default is to insert a character
+            let innerText = guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput(what, start, end);
+            if (innerText !== false) {
+                x.position.col++;
+                let z = guiEasy.popper.rules.syntaxHighlightTemporary;
+                z.addCharacter(innerText, x.position.row, x.position.col);
+            }
+            // this one is special since the "selection" function deals with clicks and inputs, this part deals with the temporary selection
+            x.innerHTML = (x.innerHTML).replace(/editor-caret/g, "");
+            x.innerHTML = (x.innerHTML).replace(/end-of-line-caret/g, "");
+            let children = document.getElementById("row-" + x.position.row).children;
+            if (children[x.position.col] !== null) {
+                children[x.position.col].classList.add("editor-caret");
+            }
+            if (children[x.position.col] !== null && children[x.position.col].dataset.endOfLine !== undefined) {
+                children[x.position.col].classList.add("end-of-line-caret");
+            }
 };
+
+// TODO: this part is making grunt compile go locco... BELOW could it be the number of levels???
 
 guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput = function (what, start, end) {
     if (
@@ -409,24 +411,22 @@ guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput = function (what,
     let colsInRow;
     let x = guiEasy.popper.rules.syntax.selectionElement;
     let y = guiEasy.popper.rules.syntax.editorElement;
-    if (
-        document.getElementById("rules-editor-selection").childElementCount === null ||
-        document.getElementById("row-" + x.position.row).childElementCount === null
-    ) {
+    let e = document.getElementById("rules-editor-selection").childElementCount;
+    let r = document.getElementById("row-" + x.position.row).childElementCount;
+
+    if (e === null || r === null) {
         let p = setInterval(function () {
-            if (
-                document.getElementById("rules-editor-selection").childElementCount !== null ||
-                document.getElementById("row-" + x.position.row).childElementCount !== null
-            ) {
+            if (e !== null || r !== null) {
                 clearInterval(p);
-                rows = document.getElementById("rules-editor-selection").childElementCount - 1;
-                colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+                rows = e - 1;
+                colsInRow = r - 1;
             }
         }, 10)
     } else {
-        rows = document.getElementById("rules-editor-selection").childElementCount - 1;
-        colsInRow = document.getElementById("row-" + x.position.row).childElementCount - 1;
+        rows = e - 1;
+        colsInRow = r- 1;
     }
+
     let colsInRowAbove = document.getElementById("row-" + (x.position.row - 1));
     if (colsInRowAbove !== null) {
         colsInRowAbove = colsInRowAbove.childElementCount - 1;
@@ -439,6 +439,7 @@ guiEasy.popper.rules.syntaxHighlightTemporary.checkTypeOfInput = function (what,
     } else {
         colsInRowBelow = -1;
     }
+
     if (what === "down") {
         if (rows > x.position.row) {
             x.position.row++;
@@ -532,7 +533,7 @@ guiEasy.popper.rules.syntaxHighlightTemporary.addCharacter = function(char, row,
                     rowInputElement = document.getElementById("input-row-" + row);
                     rowSyntaxElement = document.getElementById("syntax-row-" + row);
                 }
-            }, 10)
+            }, 10);
         }
         let pos = col - 1 + i;
         let siblingSelect = rowSelectElement.children[pos];

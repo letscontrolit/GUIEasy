@@ -14,7 +14,7 @@ obj.frontend = {
     "uploadEndpoint": "/upload",
     "uploadSpeed": 35,
     "t": "Click the button below to upgrade this unit.",
-    "v": "" //FRONTEND <--- don't change this row, used for Grunt
+    "v": "0.1.nightly.5" //FRONTEND <--- don't change this row, used for Grunt
 };
 obj.backend = {
     "b": "Update Firmware",
@@ -444,16 +444,16 @@ favicon = function () {
     ctx.moveTo(0,iconRadius);
     ctx.lineTo(0,iconSide-iconRadius);
     ctx.arc(iconRadius,iconSide-iconRadius, iconRadius, Math.PI, 0.5 * Math.PI, true);
-    ctx.lineTo(iconRadius,iconSide);
-    ctx.lineTo(iconSide-iconRadius,iconSide);
+        ctx.lineTo(iconRadius,iconSide);
+        ctx.lineTo(iconSide-iconRadius,iconSide);
     ctx.arc(iconSide-iconRadius,iconSide-iconRadius, iconRadius, Math.PI, 1.5 * Math.PI, true);
-    ctx.lineTo(iconSide,iconSide-iconRadius);
-    ctx.lineTo(iconSide,iconRadius);
+        ctx.lineTo(iconSide,iconSide-iconRadius);
+        ctx.lineTo(iconSide,iconRadius);
     ctx.arc(iconSide-iconRadius,iconRadius, iconRadius, 0, 1.5 * Math.PI, true);
-    ctx.lineTo(iconSide-iconRadius,0);
-    ctx.lineTo(iconRadius,0);
+        ctx.lineTo(iconSide-iconRadius,0);
+        ctx.lineTo(iconRadius,0);
     ctx.arc(iconRadius,iconRadius, iconRadius, 0, 0.5 * Math.PI, true);
-    ctx.lineTo(0,iconRadius);
+        ctx.lineTo(0,iconRadius);
     ctx.closePath();
     ctx.fill();
     //The dot
