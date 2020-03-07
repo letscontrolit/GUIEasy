@@ -1,9 +1,17 @@
 /* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
-
-guiEasy.popper.extra = "";
+guiEasy.popper.tier = {
+    "level": 0,
+    "timestamp": null,
+    "tier1": 1,
+    "tier2": 2,
+    "tier3": 3,
+    "tier4": 4,
+    "tier5": 5
+};
 
 guiEasy.popper.modal.unlockStuff = function () {
-    if (guiEasy.popper.extra !== undefined) {
+    let t = guiEasy.popper.tier;
+    if (t.level >= t.tier1) {
         document.getElementById("drawer-theme").classList.remove("is-hidden");
     }
 };
