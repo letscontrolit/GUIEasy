@@ -1,7 +1,7 @@
-timestamp:1583570480036
+timestamp:1583578088039
 major:0
 minor:1
 revision:5
 rc:0
 dev:true
-files:[{"build":"main","size":77102},{"build":"noDash","size":66062},{"build":"mini","size":6218}]
+files:[{"build":"main","size":77102},{"build":"noDash","size":66062},{"build":"mini","size":4339}]

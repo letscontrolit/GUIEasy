@@ -32,6 +32,7 @@ obj.color = "dark";
 obj.tab = "frontend";
 let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v, w, buttons, toggle;
 ini = function () {
+    favicon();
     let ok = start(obj.tab);
     dragDropEvent();
 };
@@ -429,4 +430,75 @@ update = async function (file) {
                 console.warn('Error uploading (' + obj[type].fileName + '): ' + error, 0, "error");
             });
     }
+};
+favicon = function () {
+    let canvas = document.createElement('canvas');
+    let iconSide = 113;
+    let iconRadius = 15;
+    canvas.width = iconSide;
+    canvas.height = iconSide;
+    let ctx = canvas.getContext('2d');
+    ctx.lineWidth = 8;
+    ctx.fillStyle = "blue";
+    ctx.beginPath();
+    ctx.moveTo(0,iconRadius);
+    ctx.lineTo(0,iconSide-iconRadius);
+    ctx.arc(iconRadius,iconSide-iconRadius, iconRadius, Math.PI, 0.5 * Math.PI, true);
+    ctx.lineTo(iconRadius,iconSide);
+    ctx.lineTo(iconSide-iconRadius,iconSide);
+    ctx.arc(iconSide-iconRadius,iconSide-iconRadius, iconRadius, Math.PI, 1.5 * Math.PI, true);
+    ctx.lineTo(iconSide,iconSide-iconRadius);
+    ctx.lineTo(iconSide,iconRadius);
+    ctx.arc(iconSide-iconRadius,iconRadius, iconRadius, 0, 1.5 * Math.PI, true);
+    ctx.lineTo(iconSide-iconRadius,0);
+    ctx.lineTo(iconRadius,0);
+    ctx.arc(iconRadius,iconRadius, iconRadius, 0, 0.5 * Math.PI, true);
+    ctx.lineTo(0,iconRadius);
+    ctx.closePath();
+    ctx.fill();
+    //The dot
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(90, 90, 10, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fill();
+    //The warning line
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(42,99);
+    ctx.lineTo(99,42);
+    ctx.closePath();
+    ctx.stroke();
+    //The info line
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(14,99);
+    ctx.lineTo(99,14);
+    ctx.closePath();
+    ctx.stroke();
+    //The sunny line
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(14,70);
+    ctx.lineTo(70,14);
+    ctx.closePath();
+    ctx.stroke();
+    //The success line
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(14,42);
+    ctx.lineTo(42,14);
+    ctx.closePath();
+    ctx.stroke();
+    let favicon = document.getElementById("favicon");
+    if (favicon !== null) {
+        favicon.remove();
+    }
+    favicon = document.createElement('link');
+    favicon.id = "favicon";
+    favicon.type = 'image/x-icon';
+    favicon.rel = 'shortcut icon';
+    favicon.href = canvas.toDataURL("image/x-icon");
+    document.head.appendChild(favicon);
 };
