@@ -340,7 +340,9 @@ A release cycle exemplified:
 ``1.0.0``  <--- release
 
 ``1.0.nightly.1``  <--- working on a fix or a new major/minor release
+
 ...
+
 ``1.0.nightly.123``  <--- we decide that this one will be next 1.1.0
 
 ``1.0.rc1.124``  <--- here's the release candidate (1.0.nightly.123 code base)
@@ -379,10 +381,13 @@ grunt bump:dev=true
 grunt bump:dev=false
 >> 0.0.nightly.2 --> 0.0.2
 >> 0.0.rc1.3 --> 0.0.3     <--- this one isn't correct
+
+grunt bump                 <--- will return current version
+>> 0.0.nightly.2
 ```
 
-As seen in the last example, if you have a release candidate number assigned when you set the
-development flag to true it will still have that rc number. That being said, you should only
+As seen in the second to last example, if you have a release candidate number assigned when you set
+the development flag to true it will still have that rc number. That being said, you should only
 use the dev=BOOL to quickly set the version handler to development mode if you by some chance 
 made a mistake when you bumped. The workflow is like this.
 
@@ -395,15 +400,30 @@ ready.
 Release candidates are by definition never set to the future major and/or minor level. See this example:
 
 ```
-1.0.0 is released and we want to create a new version with extra stuff
+1.0.0 is already released and we want to create a new version with extra stuff
 1.0.nightly.1 is created and we start adding the stuff
 ...
 1.0.nightly.123 is ready to be tested by a broader user base
 1.0.rc1.124 is created
 ...
-1.0.rc3.124 is the version that is finally accepted
+1.0.rc3.126 is the version that is finally accepted
 1.1.0 is created and released.
 ```
+
+Another example
+
+```
+1.1.0 is already released but we found a bug that cannot wait for next version to be resolved
+1.1.nightly.1 is created and we start fixing the bug
+...
+1.1.nightly.5 is ready to be tested by a broader user base
+1.1.rc1.6 is created and after testing accepted
+1.1.7 is created and released.
+```
+
+As you can see, ``nightly`` and ``rc`` is **only a state** of the code, the revision is still
+the actual version together with the major and minor number. You may be used to the term
+metadata or tag, anyway, they are not used as actual versions.
 
 ## CSS Framework
 
