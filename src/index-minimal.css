@@ -1,13 +1,20 @@
 /* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
 
 :root {
-    --frontend-color: 0, 255, 45;
-    --backend-color: 100, 200, 245;
-    --manual-color: 255, 255, 45;
+    --dark-frontend-color: 0, 255, 45;
+    --dark-backend-color: 100, 200, 245;
+    --dark-manual-color: 255, 255, 45;
+    --dark-bg-color: 0, 0, 0;
+    --light-frontend-color: 0, 125, 25;
+    --light-backend-color: 45, 100, 120;
+    --light-manual-color: 125, 125, 255;
+    --light-bg-color: 255, 255, 255;
     --offline-color: 255, 0, 45;
-    /*--color: var(--frontend-color);*/
+    /*--color: var(--dark-frontend-color);*/
+    /*--bg-color: var(--dark-bg-color);*/
     --color-1: rgb(var(--color));
     --color-2: rgba(var(--color), 0.4);
+    --color-3: rgb(var(--bg-color));
 }
 ::-webkit-scrollbar:window-inactive,
 ::-webkit-scrollbar {
@@ -19,7 +26,7 @@
 }
 body {
     color: var(--color-1);
-    background: black;
+    background: var(--color-3);
     font-family: monospace;
     text-align: justify;
     font-size: 1.1em;
@@ -62,15 +69,33 @@ select {
 }
 select option {
     transition: 250ms;
-    background: black;
+    background: var(--color-3);
     color: var(--color-1);
 }
 select option:hover {
-    color: black;
+    color: var(--color-3);
     background-color: var(--color-1);
 }
 select option:checked {
     background: linear-gradient(to bottom, var(--color-1) 0%, var(--color-1) 100%);
+}
+#toggle {
+    width: 10%;
+    float: right;
+    border: none;
+    padding: unset;
+}
+#toggle.dark,
+#toggle.light {
+    transition: background-color 2s ease-in;
+}
+#toggle.dark:after  {
+    content: "\263C";
+    font-size: 2.3em;
+}
+#toggle.light:after {
+    content: "\2686";
+    font-size: 2em;
 }
 #x {
     min-width: 300px;

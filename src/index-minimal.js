@@ -28,18 +28,21 @@ obj.backend = {
     "t": "Click the button below to upgrade this unit to selected firmware version.",
     "v": "" //BACKEND <--- don't change this row, used for Grunt
 };
-let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v, w, buttons;
+obj.color = "dark";
+obj.tab = "frontend";
+let fe, be, r, rc, n, t, d, f, m, upload, b, a, p, v, w, buttons, toggle;
 ini = function () {
-    let ok = start('frontend');
+    let ok = start(obj.tab);
     dragDropEvent();
 };
 start = async function (type) {
-    document.body.dataset.type = type;
+    obj.tab = type;
     fe = document.getElementById("fe"); //front end button
     be = document.getElementById("be"); //back end button
     m = document.getElementById("m"); //manual button
     upload = document.getElementById("upload"); //manual upload button
     buttons = document.getElementById("buttons"); //buttons container
+    toggle = document.getElementById("toggle"); //toggle dark/light
     r = document.getElementById("r"); //filter release button
     rc = document.getElementById("rc"); //filter release candidates button
     n = document.getElementById("n"); //filter nightlies button
@@ -52,21 +55,23 @@ start = async function (type) {
     p = document.getElementById("p"); //progress bar
     v = document.getElementById("v"); //version
     //------------
-    let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n, v, w, buttons];
+    let hides = [fe, be, m, upload, d, f, b, a, t, r, rc, n, v, w, buttons, toggle];
     for (let i = 0; i < hides.length; i++) {
         hides[i].style.display = "none";
     }
     //------------
     p.style.width = "0";
-    document.documentElement.style.setProperty("--color", "var(--" + type + "-color)");
-    if (type === "manual") {
+    toggle.classList.add(obj.color);
+    document.documentElement.style.setProperty("--color", "var(--" + obj.color + "-" + obj.tab + "-color)");
+    document.documentElement.style.setProperty("--bg-color", "var(--" + obj.color + "-bg-color)");
+    if (obj.tab === "manual") {
         setupManualPage();
         return;
     }
     filter('r');
     if (window.navigator.onLine === true) {
         //It's ok to download
-        obj.list = await fetchReleases(type);
+        obj.list = await fetchReleases(obj.tab);
         obj.list.reverse();
         filter('r');
         d.onfocus=function () {
@@ -98,13 +103,13 @@ start = async function (type) {
             this.style.fontSize = "unset";
             this.style.padding = ".65em 2em";
         };
-        t.innerHTML = obj[type].t;
-        if (type === "frontend") {
+        t.innerHTML = obj[obj.tab].t;
+        if (obj.tab === "frontend") {
             fe.classList.add("active");
             be.classList.remove("active");
             m.classList.remove("active");
         }
-        if (type === "backend") {
+        if (obj.tab === "backend") {
             fe.classList.remove("active");
             be.classList.add("active");
             m.classList.remove("active");
@@ -113,7 +118,7 @@ start = async function (type) {
         for (let i = 0; i < flexes.length; i++) {
             flexes[i].style.display = "flex";
         }
-        let blocks = [d, f, b, a, t, v];
+        let blocks = [d, f, b, a, t, v, toggle];
         for (let i = 0; i < blocks.length; i++) {
             blocks[i].style.display = "block";
         }
@@ -123,7 +128,7 @@ start = async function (type) {
             [v, "v"]
         ];
         for (let i = 0; i < innerHTMLs.length; i++) {
-            innerHTMLs[i][0].innerHTML = obj[type][innerHTMLs[i][1]];
+            innerHTMLs[i][0].innerHTML = obj[obj.tab][innerHTMLs[i][1]];
         }
         buttons.style.display = "inline-flex";
     } else {
@@ -139,6 +144,7 @@ setupManualPage = function (type = "") {
     fe.classList.remove("active");
     be.classList.remove("active");
     m.classList.add("active");
+    toggle.style.display = "block";
     dragDropEvent(true);
     if (type === "offline") {
         let disables = [fe, be];
@@ -151,7 +157,8 @@ setupManualPage = function (type = "") {
         }
         m.disabled = "true";
         m.style.cursor = "not-allowed";
-        document.documentElement.style.setProperty("--color", "var(--manual-color)");
+        document.documentElement.style.setProperty("--color", "var(--" + obj.color + "-manual-color)");
+        document.documentElement.style.setProperty("--bg-color", "var(--" + obj.color + "-bg-color)");
         t.innerHTML = "No Internet connection. Please connect to Internet to download graphical user interface - OR - browse to a Queen.";
         t.style.color = "rgb(var(--" + type + "-color))";
         t.style.display = "block";
@@ -170,10 +177,9 @@ filter = function (type) {
 addFilesToOption = async function () {
     f.innerHTML = "";
     let version = d.value;
-    let type = document.body.dataset.type;
     let info = "";
     if (version !== "") {
-        info = await fetchInfo(type, version);
+        info = await fetchInfo(obj.tab, version);
         for (let i = 0; i < info.files.length; i++) {
             let option = document.createElement("option");
             option.text = info.files[i].build + " (" + (Math.round(info.files[i].size * 10) / 10 / 1000).toFixed(1) + "kB)";
@@ -329,6 +335,19 @@ fetchReleases = async function (type) {
 };
 blinkElement = function (id, color) {
     //TODO: add blink functionality
+};
+toggleTo = function (element) {
+    let toState = element.classList[0];
+    let fromState;
+    if (toState === "dark") {
+        fromState = "light";
+    } else {
+        fromState = "dark";
+    }
+    obj.color = fromState;
+    element.classList.add(fromState);
+    element.classList.remove(toState);
+    start(obj.tab);
 };
 update = async function (file) {
     let maxSize = 1000; //TODO: populate with SPIFF or FLASH free size!
