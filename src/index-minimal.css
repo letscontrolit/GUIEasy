@@ -98,8 +98,8 @@ select option:checked {
     font-size: 2em;
 }
 #x {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 320px;
+    max-width: 320px;
     position: absolute;
     top: 50%;
     left: 50%;
