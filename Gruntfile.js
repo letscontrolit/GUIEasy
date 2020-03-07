@@ -43,9 +43,26 @@ module.exports = function(grunt) {
                   ],
                   'build/temp/patreon.min.js': [
                       'src/gui_easy_popper_extra.js'
+                  ],
+                  'build/temp/mini.min.js': [
+                      'src/index-minimal.js'
                   ]
               }
           }
+      },
+// minify html
+      htmlmin: {
+          dist: {
+              options: {
+                  removeComments: true,
+                  collapseWhitespace: true
+              },
+              files: {
+                  'build/temp/index.min.html': 'build/temp/index.min.html',
+                  'build/temp/no-dash.index.min.html': 'build/temp/no-dash.index.min.html',
+                  'build/temp/mini.index.min.html': 'build/temp/mini.index.min.html'
+              }
+          },
       },
 // minify css
       cssmin: {
@@ -54,7 +71,10 @@ module.exports = function(grunt) {
               roundingPrecision: -1
           },
           target: {
-              files: {'build/temp/gui.min.css': ['src/gui_easy.css']}
+              files: {
+                  'build/temp/gui.min.css': ['src/gui_easy.css'],
+                  'build/temp/mini.min.css': ['src/index-minimal.css']
+              }
           }
       },
 // make one file of them all
@@ -64,6 +84,9 @@ module.exports = function(grunt) {
                 },
                 noDash: {
                   files: {'build/temp/no-dash.index.min.html': ['src/no-dash.index.html']}
+                },
+                mini: {
+                  files: {'build/temp/mini.index.min.html': ['src/index-minimal.html']}
                 }
             },
 // clean the release folder + nodash
@@ -131,7 +154,7 @@ module.exports = function(grunt) {
               },
               files: [{
                   expand: false,
-                  src: ['src/index-minimal.html'],
+                  src: ['build/temp/mini.index.min.html'],
                   dest: 'build/temp/mini/index.htm.gz'
               }]
           }
@@ -155,6 +178,18 @@ module.exports = function(grunt) {
                   {
                       prepend: '/* GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg */',
                       input: 'build/temp/dash.min.js'
+                  },
+                  {
+                      prepend: '<!-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg  -->',
+                      input: 'build/temp/index.min.html'
+                  },
+                  {
+                      prepend: '<!-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg  -->',
+                      input: 'build/temp/no-dash.index.min.html'
+                  },
+                  {
+                      prepend: '<!-- GUIEasy  Copyright (C) 2019-' + new Date().getFullYear() + '  Jimmy "Grovkillen" Westberg  -->',
+                      input: 'build/temp/mini.index.min.html'
                   }
               ]
           }
@@ -251,6 +286,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-file-append');
     grunt.loadNpmTasks('grunt-folder-list');
@@ -308,9 +344,11 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:version',
+                'minimalVersionInjection:' + version,
                 'uglify',
                 'cssmin',
                 'processhtml',
+                'htmlmin',
                 'file_append',
                 'compress',
                 'clean:tempFiles',
@@ -322,6 +360,7 @@ module.exports = function(grunt) {
                 'rename',
                 'clean:releaseInfo',
                 'listBuilds',
+                'minimalVersionInjection',
                 'releaseFileSizes',
                 'gruntDone:' + version
             );
@@ -334,15 +373,18 @@ module.exports = function(grunt) {
                 'verifyCopyright',
                 'clean:temp',
                 'clean:test',
+                'minimalVersionInjection:' + version + '-test-' + timestamp,
                 'uglify',
                 'cssmin',
                 'processhtml',
+                'htmlmin',
                 'file_append',
                 'compress',
                 'clean:tempFiles',
                 'clean:noDash',
                 'copy',
                 'rename:test',
+                'minimalVersionInjection',
                 'testBuild',
                 'gruntDone:' + version + "-test-" + timestamp
             );
@@ -364,6 +406,18 @@ module.exports = function(grunt) {
             settings = settings.replace(/'test': \d*,/, "'test': null,");
         }
         grunt.file.write( 'src/gui_easy_settings.js', settings);
+    });
+
+    grunt.registerTask('minimalVersionInjection', function (version) {
+        let data = grunt.file.read('src/index-minimal.js');
+        if (version !== undefined) {
+            grunt.log.ok('adding temporary mini version');
+            data = data.replace(/"v": "" \/\/FRONTEND/, '"v": "' + version + '" //FRONTEND');
+        } else {
+            grunt.log.ok('removing temporary mini version');
+            data = data.replace(/(?<="v": ).*(?= \/\/FRONTEND)/, '""');
+        }
+        grunt.file.write( 'src/index-minimal.js', data);
     });
 
     grunt.registerTask('verifyCopyright', function () {
@@ -411,7 +465,6 @@ module.exports = function(grunt) {
                         grunt.log.writeln('file extension not recognized');
                         break;
                 }
-
                 if (commentWrapper) {
                     fileRead = fileRead.slice(startIndex).join('\n');
                     grunt.file.write( 'src/' + dir, commentWrapper + '\n' + fileRead);
@@ -461,12 +514,12 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('bump', function(level) {
-        let settings_from = grunt.file.read('src/gui_easy_settings.js');
-        let settings = settings_from.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
-        let guiEasy = "{" + settings + "}";
-        guiEasy = guiEasy.replace(/'/g,"\"");
-        guiEasy = JSON.parse(guiEasy);
-        let version_from;
+            let settings_from = grunt.file.read('src/gui_easy_settings.js');
+            let settings = settings_from.match(/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/)[1];
+            let guiEasy = "{" + settings + "}";
+            guiEasy = guiEasy.replace(/'/g,"\"");
+            guiEasy = JSON.parse(guiEasy);
+            let version_from;
             if (guiEasy.development === true && guiEasy.releaseCandidate > 0) {
                 version_from = guiEasy.major + '.' + guiEasy.minor + '.rc' + guiEasy.releaseCandidate + '.' + guiEasy.revision;
             } else if (guiEasy.development === true) {
@@ -510,17 +563,21 @@ module.exports = function(grunt) {
             } else {
                 version_to = guiEasy.major + '.' + guiEasy.minor + '.' + guiEasy.revision;
             }
-            grunt.log.ok(version_from + " --> " + version_to);
-            let replaceText = "//--GRUNT-START--\n" +
-                "        'major': " + guiEasy.major + ",\n" +
-                "        'minor': " + guiEasy.minor + ",\n" +
-                "        'revision': " + guiEasy.revision + ",\n" +
-                "        'development': " + guiEasy.development + ",\n" +
-                "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
-                "        //--GRUNT-END--"
-            ;
-            settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
-            grunt.file.write( 'src/gui_easy_settings.js', settings);
+            if (version_from === version_to) {
+                grunt.log.ok(version_from);
+            } else {
+                let replaceText = "//--GRUNT-START--\n" +
+                    "        'major': " + guiEasy.major + ",\n" +
+                    "        'minor': " + guiEasy.minor + ",\n" +
+                    "        'revision': " + guiEasy.revision + ",\n" +
+                    "        'development': " + guiEasy.development + ",\n" +
+                    "        'releaseCandidate': " + guiEasy.releaseCandidate + "\n" +
+                    "        //--GRUNT-END--"
+                ;
+                settings = settings_from.replace(/\/\/--GRUNT-START--([\s\S]*?)\/\/--GRUNT-END--/, replaceText);
+                grunt.file.write( 'src/gui_easy_settings.js', settings);
+                grunt.log.ok(version_from + " --> " + version_to);
+            }
         }
     );
 };

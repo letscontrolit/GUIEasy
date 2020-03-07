@@ -1,0 +1,15 @@
+button-radius-size|10
+custom-wallpaper-url|https://www.itl.cat/pics/b/29/291029_cool-wallpapers-1920x1080.jpg
+default-font-family|'Segoe UI', Calibri, Arial
+main-bg-color|17,100,174
+main-font-color|255,255,255
+main-info-color|255,143,18
+main-inverted-color|47,66,82
+main-success-color|0,174,65
+main-sunny-color|255,209,0
+main-warning-color|239,72,61
+max-width-page-size|1400px
+overflow-tab-text-size|24
+row-size|20
+scale-size|16
+state-of-navbar-toggle|fixed

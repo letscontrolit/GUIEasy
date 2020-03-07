@@ -1,0 +1,117 @@
+/* GUIEasy  Copyright (C) 2019-2020  Jimmy "Grovkillen" Westberg */
+
+:root {
+    --frontend-color: 0, 255, 45;
+    --backend-color: 100, 200, 245;
+    --manual-color: 255, 255, 45;
+    --offline-color: 255, 0, 45;
+    /*--color: var(--frontend-color);*/
+    --color-1: rgb(var(--color));
+    --color-2: rgba(var(--color), 0.4);
+}
+::-webkit-scrollbar:window-inactive,
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-1);
+}
+body {
+    color: var(--color-1);
+    background: black;
+    font-family: monospace;
+    text-align: justify;
+    font-size: 1.1em;
+    scrollbar-color: var(--color-2) var(--color-2); /* thumb and track color */
+    scrollbar-width: thin;
+}
+button{
+    display: none;
+    width: 100%;
+    border-color: var(--color-1);
+    border-style: solid;
+    border-width: 1px;
+    color: var(--color-1);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: 0;
+    padding: .65em 2em;
+    font-family: inherit;
+    margin-top: 10px;
+}
+button.active {
+    background-color: var(--color-2);
+}
+select {
+    display: none;
+    width: 100%;
+    border-color: var(--color-1);
+    border-style: solid;
+    border-width: 1px;
+    color: var(--color-1);
+    background: transparent;
+    text-align-last: center;
+    text-align: center;
+    cursor: pointer;
+    outline: 0;
+    padding: .65em 2em;
+    font-family: inherit;
+}
+select option {
+    transition: 250ms;
+    background: black;
+    color: var(--color-1);
+}
+select option:hover {
+    color: black;
+    background-color: var(--color-1);
+}
+select option:checked {
+    background: linear-gradient(to bottom, var(--color-1) 0%, var(--color-1) 100%);
+}
+#x {
+    min-width: 300px;
+    max-width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#a {
+    display: none;
+    margin-top: 10px;
+}
+#w {
+    display: none;
+    margin-top: 15px;
+    background-color: rgb(var(--offline-color));
+    font-weight: bold;
+    color: white;
+}
+#v {
+    margin-top: 10px;
+    text-align: center;
+}
+#v:before {
+    content: "current: ";
+}
+#p {
+    background-color: var(--color-1);
+    height: 3px;
+}
+#t {
+    display: none;
+    margin-top: 10px;
+}
+#upload {
+    display: none;
+    min-height: 230px;
+    max-height: 230px;
+    margin-top: unset;
+}
+.drag-drop {
+    border-style: dashed;
+}
