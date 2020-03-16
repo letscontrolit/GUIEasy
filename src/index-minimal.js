@@ -62,6 +62,7 @@ start = async function (type) {
     }
     //------------
     p.style.width = "0";
+    f.innerHTML = "";
     toggle.classList.add(obj.color);
     document.documentElement.style.setProperty("--color", "var(--" + obj.color + "-" + obj.tab + "-color)");
     document.documentElement.style.setProperty("--bg-color", "var(--" + obj.color + "-bg-color)");

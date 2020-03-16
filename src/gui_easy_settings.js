@@ -36,7 +36,7 @@ const guiEasy = {
         }
     },
     'geekName': function () {
-        return guiEasy.name.replace(' ', '-').toLowerCase();
+        return guiEasy.name.replace(/ /g, '-').toLowerCase();
     },
     'geekNameFull': function () {
         return guiEasy.geekName() + '-' + guiEasy.version.full()
