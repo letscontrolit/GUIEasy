@@ -526,6 +526,7 @@ module.exports = function(grunt) {
             }
             if (level === "revision") {
                 guiEasy.revision++;
+                guiEasy.releaseCandidate = 0;
                 guiEasy.development = true;
             }
             if (level === "minor") {
