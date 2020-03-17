@@ -408,7 +408,7 @@ Release candidates are by definition never set to the future major and/or minor 
 [grunt bump:rc]        1.0.rc1.124     is created
 ...
 [grunt bump:rc]        1.0.rc3.126     is the version that is finally accepted
-[grunt bump:minor]     1.1.0           is created and released.
+[grunt bump:minor]     1.1.0           is created and released
 ```
 
 Another example
@@ -419,8 +419,8 @@ Another example
 ...
 [grunt bump:revision]  1.1.nightly.5   is ready to be tested by a broader user base
 [grunt bump:rc]        1.1.rc1.6       is created and after testing accepted
-[grunt bump:revision]  1.1.nightly.7   (since this is the one we want to release as the patched version we need to remove the dev. flag)
-[grunt bump:dev=false] 1.1.7           is created and released.
+[grunt bump:revision]  1.1.nightly.7   (since this is the one we want to release as the patched version, so we need to remove the dev. flag)
+[grunt bump:dev=false] 1.1.7           is created and released
 ```
 
 As you can see, ``nightly`` and ``rc`` is **only a state** of the code, the revision is still
