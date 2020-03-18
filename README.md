@@ -414,12 +414,14 @@ Release candidates are by definition never set to the future major and/or minor 
 Another example
 
 ```
-[grunt bump:minor]     1.1.0           is already released but we found a bug that cannot wait for next version to be resolved
+[grunt bump:minor]     1.1.0           is already released but we found a bug that cannot wait for next
+                                       version to be resolved
 [grunt bump:revision]  1.1.nightly.1   is created and we start fixing the bug
 ...
 [grunt bump:revision]  1.1.nightly.5   is ready to be tested by a broader user base
 [grunt bump:rc]        1.1.rc1.6       is created and after testing accepted
-[grunt bump:revision]  1.1.nightly.7   (since this is the one we want to release as the patched version, so we need to remove the dev. flag)
+[grunt bump:revision]  1.1.nightly.7   (since this is the one we want to release as the patched version,
+                                       so we need to remove the dev. flag)
 [grunt bump:dev=false] 1.1.7           is created and released
 ```
 
