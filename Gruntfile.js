@@ -18,6 +18,7 @@ module.exports = function(grunt) {
                       'src/gui_easy_settings_config_table.js',
                       'src/gui_easy_default_settings.js',
                       'src/gui_easy_helper.js',
+                      'src/gui_easy_helper_esp_specific.js',
                       'src/gui_easy_curly.js',
                       'src/gui_easy_curly_unit.js',
                       'src/gui_easy_curly_page.js',
