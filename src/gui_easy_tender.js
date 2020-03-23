@@ -55,10 +55,6 @@ guiEasy.tender = function (processID, processType) {
             guiEasy.popper.topNotifier("unitUp","Connection with unit is re-established.", "success", 3);
         }
         //is the settings in gui updated?
-        //helpEasy.guiUpdaterSettings();
-        //console.log(defaultSettings);
-        //console.log(guiEasy.nodes);
     }, guiEasy.fetchSettings.intervalGUIupdater);
-
     helpEasy.processDone(processID, processType);
 };

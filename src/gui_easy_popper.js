@@ -20,6 +20,8 @@ guiEasy.popper.events = function() {
     document.addEventListener('click', guiEasy.popper.click, true);
     document.addEventListener('change', guiEasy.popper.change, true);
     document.addEventListener('focusout', guiEasy.popper.focus, true);
+    window.addEventListener('gamepadconnected', guiEasy.popper.gamepad, false);
+    window.addEventListener('gamepaddisconnected', guiEasy.popper.gamepad, false);
 };
 
 //BELOW IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
@@ -67,6 +69,7 @@ guiEasy.popper.change = function (event) {
         "args": x
     };
     if (eventDetails.type !== undefined) {
+        helpEasy.addToLogDOM("Calling change event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
@@ -82,6 +85,7 @@ guiEasy.popper.keyboard = function (event) {
            "event": event
         };
     if (eventDetails.type !== undefined) {
+        helpEasy.addToLogDOM("Calling keyboard event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
@@ -101,9 +105,50 @@ guiEasy.popper.click = function (event) {
             "y": event.y,
             "element": event.target
         };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
+
+guiEasy.popper.gamepad = function (event) {
+    //We only support X360 controller types (original or OEMs that address themselves as one)
+    const supportedGP = "Xbox 360 Controller (XInput STANDARD GAMEPAD)";
+    if (window.gamepads === undefined) {
+        window.gamepads = 0;
+    }
+    let loopInterval;
+    if (event.type === "gamepadconnected" && event.gamepad.id === supportedGP) {
+        window.gamepads++;
+        //controllers doesn't do event listeners so we need to query the states over and over again...
+        loopInterval = setInterval( function() {
+            let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+            for (let i = 0; i < gamepads.length; i++) {
+                let gp = gamepads[i];
+                if (gp !== null && gp.id === supportedGP) {
+                    let currentGamepadMap = {
+                        "LJx": Math.floor(gp.axes[0] * 100)/100,
+                        "LJY": Math.floor(gp.axes[1] * 100)/100,
+                        "RJx": Math.floor(gp.axes[2] * 100)/100,
+                        "RJY": Math.floor(gp.axes[3] * 100)/100
+                    };
+                    guiEasy.popper.gamepad.eventListener(currentGamepadMap);
+                }
+            }
+        }, 1000);
+    }
+    if (event.type === "gamepaddisconnected" && event.gamepad.id === supportedGP) {
+        window.gamepads--;
+    }
+    if (window.gamepads === 0) {
+        clearInterval(loopInterval);
+        helpEasy.addToLogDOM("Gamepad events disabled, no gamepad active.", 2);
+    }
+};
+
+guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
+    helpEasy.addToLogDOM("Calling gamepad event: " + JSON.stringify(gamepadMap), 0);
+};
+
 //ABOVE IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
 //BELOW IS THE FUNCTION TO TRIGGER ESP EASY EVENT + FIND WHAT WAS FOCUSED//
 guiEasy.popper.guiEvent = function (event) {
@@ -357,6 +402,15 @@ guiEasy.popper.menu = function (menuToOpen) {
         }
     }
     helpEasy.addToLogDOM("menu: " + x, 1);
+};
+
+guiEasy.popper.drawer = function (drawerToOpen) {
+    let drawerName = drawerToOpen.args[1];
+    let drawerObject = document.getElementById("drawer-" + drawerName);
+    let x = drawerObject.dataset;
+    drawerObject.classList.toggle(x.close);
+    drawerObject.classList.toggle(x.open);
+    helpEasy.addToLogDOM("drawer: " + drawerName, 1);
 };
 
 guiEasy.popper.modal = function (modalToOpen) {
