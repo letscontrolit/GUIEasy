@@ -111,32 +111,72 @@ guiEasy.popper.click = function (event) {
 };
 
 guiEasy.popper.gamepad = function (event) {
-    //We only support X360 controller types (original or OEMs that address themselves as one)
-    const supportedGP = "Xbox 360 Controller (XInput STANDARD GAMEPAD)";
+    //We only support "standard gamepad" with mapping set to "standard" see w3 standard: https://www.w3.org/TR/gamepad/
+    const supportedGP = "STANDARD GAMEPAD";
     if (window.gamepads === undefined) {
         window.gamepads = 0;
     }
     let loopInterval;
-    if (event.type === "gamepadconnected" && event.gamepad.id === supportedGP) {
+    let n = event.gamepad.id.toUpperCase().includes(supportedGP);
+    if (event.type === "gamepadconnected" && n !== false && event.gamepad.mapping === "standard") {
         window.gamepads++;
+        console.log(event);
         //controllers doesn't do event listeners so we need to query the states over and over again...
         loopInterval = setInterval( function() {
             let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+            let index = 0;
             for (let i = 0; i < gamepads.length; i++) {
                 let gp = gamepads[i];
-                if (gp !== null && gp.id === supportedGP) {
+                if (gp !== null && gp.id.toUpperCase().includes(supportedGP) && event.gamepad.mapping === "standard") {
+                    index++;
                     let currentGamepadMap = {
-                        "LJx": Math.floor(gp.axes[0] * 100)/100,
-                        "LJY": Math.floor(gp.axes[1] * 100)/100,
-                        "RJx": Math.floor(gp.axes[2] * 100)/100,
-                        "RJY": Math.floor(gp.axes[3] * 100)/100
+                        "gamepad": index,
+                        "joystick": {
+                            "left": {
+                                "x": Math.floor(gp.axes[0] * 100)/100,
+                                "y": Math.floor(gp.axes[1] * 100)/100,
+                                "direction": guiEasy.popper.gamepad.direction(gp.axes[0], gp.axes[1], "up"),
+                                "thrust": guiEasy.popper.gamepad.thrust(gp.axes[0], gp.axes[1])
+                            },
+                            "right": {
+                                "x": Math.floor(gp.axes[2] * 100)/100,
+                                "y": Math.floor(gp.axes[3] * 100)/100,
+                                "direction": guiEasy.popper.gamepad.direction(gp.axes[2], gp.axes[3], "up"),
+                                "thrust": guiEasy.popper.gamepad.thrust(gp.axes[2], gp.axes[3])
+                            }
+                        },
+                        "dpad": {
+                            "up": gp.buttons[12].value,
+                            "down": gp.buttons[13].value,
+                            "left": gp.buttons[14].value,
+                            "right": gp.buttons[15].value
+                        },
+                        "button": {
+                            "a": gp.buttons[0].value,
+                            "b": gp.buttons[1].value,
+                            "x": gp.buttons[2].value,
+                            "y": gp.buttons[3].value,
+                            "shoulder_l": gp.buttons[4].value,
+                            "shoulder_r": gp.buttons[5].value,
+                            "joystick_l": gp.buttons[10].value,
+                            "joystick_r": gp.buttons[11].value
+                        },
+                        "trigger": {
+                            "left": gp.buttons[6].value,
+                            "right": gp.buttons[7].value
+                        },
+                        "menu": {
+                            "left": gp.buttons[8].value,
+                            "right": gp.buttons[9].value,
+                            "home": gp.buttons[16].value
+                        }
                     };
                     guiEasy.popper.gamepad.eventListener(currentGamepadMap);
                 }
             }
-        }, 1000);
+        }, 400);
     }
-    if (event.type === "gamepaddisconnected" && event.gamepad.id === supportedGP) {
+    if (event.type === "gamepaddisconnected" && n !== false && event.gamepad.mapping === "standard") {
         window.gamepads--;
     }
     if (window.gamepads === 0) {
@@ -145,8 +185,51 @@ guiEasy.popper.gamepad = function (event) {
     }
 };
 
+guiEasy.popper.gamepad.thrust = function (x, y) {
+    x = Math.floor(x * 100)/100;
+    y = Math.floor(y * 100)/100;
+    if (x === 0 && y === 0) {
+        return NaN;
+    }
+    if (x === 0) {
+        return Math.abs(y);
+    }
+    if (y === 0) {
+        return Math.abs(x);
+    }
+    return Math.sqrt(Math.pow(x,2) * Math.pow(y, 2));
+};
+
+guiEasy.popper.gamepad.direction = function (x, y, zeroPoint) {
+    x = Math.floor(x * 100)/100;
+    y = Math.floor(y * 100)/100;
+    if (x === 0 && y === 0) {
+        return NaN;
+    }
+    let degree = (Math.atan2(y, x) > 0 ? Math.atan2(y, x) : (2*Math.PI + Math.atan2(y, x))) * 360 / (2*Math.PI);
+    if (zeroPoint === "up") {
+        degree = degree - 270;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    if (zeroPoint === "down") {
+        degree = degree - 90;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    if (zeroPoint === "left") {
+        degree = degree - 180;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    // right just return the degrees...
+    return degree;
+
+};
+
 guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
-    helpEasy.addToLogDOM("Calling gamepad event: " + JSON.stringify(gamepadMap), 0);
+    //add key combos and stuff here
+    if (gamepadMap.button.a === 1) {
+        // call an event using event details + try call
+    }
+    console.log(gamepadMap.joystick.left.thrust);
 };
 
 //ABOVE IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
