@@ -14,7 +14,7 @@ const guiEasy = {
         //--GRUNT-START--
         'major': 0,
         'minor': 1,
-        'revision': 4,
+        'revision': 5,
         'development': true,
         'releaseCandidate': 0
         //--GRUNT-END--
@@ -36,7 +36,7 @@ const guiEasy = {
         }
     },
     'geekName': function () {
-        return guiEasy.name.replace(' ', '-').toLowerCase();
+        return guiEasy.name.replace(/ /g, '-').toLowerCase();
     },
     'geekNameFull': function () {
         return guiEasy.geekName() + '-' + guiEasy.version.full()

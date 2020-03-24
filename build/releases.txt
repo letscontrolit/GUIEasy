@@ -9,3 +9,4 @@
 0.1.nightly.2
 0.1.nightly.3
 0.1.nightly.4
+0.1.nightly.5

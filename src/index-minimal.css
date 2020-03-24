@@ -5,9 +5,9 @@
     --dark-backend-color: 100, 200, 245;
     --dark-manual-color: 255, 255, 45;
     --dark-bg-color: 0, 0, 0;
-    --light-frontend-color: 0, 125, 25;
+    --light-frontend-color: 15, 75, 15;
     --light-backend-color: 45, 100, 120;
-    --light-manual-color: 125, 125, 255;
+    --light-manual-color: 25, 25, 20;
     --light-bg-color: 255, 255, 255;
     --offline-color: 255, 0, 45;
     /*--color: var(--dark-frontend-color);*/
@@ -98,8 +98,8 @@ select option:checked {
     font-size: 2em;
 }
 #x {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 320px;
+    max-width: 320px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -133,10 +133,11 @@ select option:checked {
 }
 #upload {
     display: none;
-    min-height: 230px;
-    max-height: 230px;
+    min-height: 260px;
+    max-height: 260px;
     margin-top: unset;
 }
 .drag-drop {
     border-style: dashed;
+    background-color: var(--color-2);
 }

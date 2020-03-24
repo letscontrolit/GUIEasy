@@ -16,15 +16,6 @@ guiEasy.popper.modal.unlockStuff = function () {
     }
 };
 
-guiEasy.popper.drawer = function (drawerToOpen) {
-    let drawerName = drawerToOpen.args[1];
-    let drawerObject = document.getElementById("drawer-" + drawerName);
-    let x = drawerObject.dataset;
-    drawerObject.classList.toggle(x.close);
-    drawerObject.classList.toggle(x.open);
-    helpEasy.addToLogDOM("drawer: " + drawerName, 1);
-};
-
 guiEasy.popper.theme = function (whatToDo) {
     let what = whatToDo.args[1];
     if (what === "default") {

@@ -20,6 +20,8 @@ guiEasy.popper.events = function() {
     document.addEventListener('click', guiEasy.popper.click, true);
     document.addEventListener('change', guiEasy.popper.change, true);
     document.addEventListener('focusout', guiEasy.popper.focus, true);
+    window.addEventListener('gamepadconnected', guiEasy.popper.gamepad, false);
+    window.addEventListener('gamepaddisconnected', guiEasy.popper.gamepad, false);
 };
 
 //BELOW IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
@@ -67,6 +69,7 @@ guiEasy.popper.change = function (event) {
         "args": x
     };
     if (eventDetails.type !== undefined) {
+        helpEasy.addToLogDOM("Calling change event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
@@ -82,6 +85,7 @@ guiEasy.popper.keyboard = function (event) {
            "event": event
         };
     if (eventDetails.type !== undefined) {
+        helpEasy.addToLogDOM("Calling keyboard event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
@@ -101,9 +105,134 @@ guiEasy.popper.click = function (event) {
             "y": event.y,
             "element": event.target
         };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
         guiEasy.popper.tryCallEvent(eventDetails);
     }
 };
+
+guiEasy.popper.gamepad = function (event) {
+    //We only support "standard gamepad" with mapping set to "standard" see w3 standard: https://www.w3.org/TR/gamepad/
+    const supportedGP = "STANDARD GAMEPAD";
+    if (window.gamepads === undefined) {
+        window.gamepads = 0;
+    }
+    let loopInterval;
+    let n = event.gamepad.id.toUpperCase().includes(supportedGP);
+    if (event.type === "gamepadconnected" && n !== false && event.gamepad.mapping === "standard") {
+        window.gamepads++;
+        console.log(event);
+        //controllers doesn't do event listeners so we need to query the states over and over again...
+        loopInterval = setInterval( function() {
+            let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+            let index = 0;
+            for (let i = 0; i < gamepads.length; i++) {
+                let gp = gamepads[i];
+                if (gp !== null && gp.id.toUpperCase().includes(supportedGP) && event.gamepad.mapping === "standard") {
+                    index++;
+                    let currentGamepadMap = {
+                        "gamepad": index,
+                        "joystick": {
+                            "left": {
+                                "x": Math.floor(gp.axes[0] * 100)/100,
+                                "y": Math.floor(gp.axes[1] * 100)/100,
+                                "direction": guiEasy.popper.gamepad.direction(gp.axes[0], gp.axes[1], "up"),
+                                "thrust": guiEasy.popper.gamepad.thrust(gp.axes[0], gp.axes[1])
+                            },
+                            "right": {
+                                "x": Math.floor(gp.axes[2] * 100)/100,
+                                "y": Math.floor(gp.axes[3] * 100)/100,
+                                "direction": guiEasy.popper.gamepad.direction(gp.axes[2], gp.axes[3], "up"),
+                                "thrust": guiEasy.popper.gamepad.thrust(gp.axes[2], gp.axes[3])
+                            }
+                        },
+                        "dpad": {
+                            "up": gp.buttons[12].value,
+                            "down": gp.buttons[13].value,
+                            "left": gp.buttons[14].value,
+                            "right": gp.buttons[15].value
+                        },
+                        "button": {
+                            "a": gp.buttons[0].value,
+                            "b": gp.buttons[1].value,
+                            "x": gp.buttons[2].value,
+                            "y": gp.buttons[3].value,
+                            "shoulder_l": gp.buttons[4].value,
+                            "shoulder_r": gp.buttons[5].value,
+                            "joystick_l": gp.buttons[10].value,
+                            "joystick_r": gp.buttons[11].value
+                        },
+                        "trigger": {
+                            "left": Math.floor(gp.buttons[6].value * 100)/100,
+                            "right": Math.floor(gp.buttons[7].value * 100)/100
+                        },
+                        "menu": {
+                            "left": gp.buttons[8].value,
+                            "right": gp.buttons[9].value,
+                            "home": gp.buttons[16].value
+                        }
+                    };
+                    guiEasy.popper.gamepad.eventListener(currentGamepadMap);
+                }
+            }
+        }, 400);
+    }
+    if (event.type === "gamepaddisconnected" && n !== false && event.gamepad.mapping === "standard") {
+        window.gamepads--;
+    }
+    if (window.gamepads === 0) {
+        clearInterval(loopInterval);
+        helpEasy.addToLogDOM("Gamepad events disabled, no gamepad active.", 2);
+    }
+};
+
+guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
+    //add key combos and stuff here
+    if (gamepadMap.button.a === 1) {
+        // call an event using event details + try call
+    }
+    console.log(gamepadMap.trigger.left);
+};
+
+guiEasy.popper.gamepad.thrust = function (x, y) {
+    x = Math.floor(x * 100)/100;
+    y = Math.floor(y * 100)/100;
+    if (x === 0 && y === 0) {
+        return NaN;
+    }
+    if (x === 0) {
+        return Math.abs(y);
+    }
+    if (y === 0) {
+        return Math.abs(x);
+    }
+    let xy = Math.sqrt(Math.pow(x,2) + Math.pow(y, 2));
+    xy = Math.floor(xy * 100)/100;
+    return (xy > 1 ? 1 : xy);
+};
+
+guiEasy.popper.gamepad.direction = function (x, y, zeroPoint) {
+    x = Math.floor(x * 100)/100;
+    y = Math.floor(y * 100)/100;
+    if (x === 0 && y === 0) {
+        return NaN;
+    }
+    let degree = (Math.atan2(y, x) > 0 ? Math.atan2(y, x) : (2*Math.PI + Math.atan2(y, x))) * 360 / (2*Math.PI);
+    if (zeroPoint === "up") {
+        degree = degree - 270;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    if (zeroPoint === "down") {
+        degree = degree - 90;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    if (zeroPoint === "left") {
+        degree = degree - 180;
+        return (degree < 0 ? degree + 360 : degree);
+    }
+    // right just return the degrees...
+    return degree;
+};
+
 //ABOVE IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
 //BELOW IS THE FUNCTION TO TRIGGER ESP EASY EVENT + FIND WHAT WAS FOCUSED//
 guiEasy.popper.guiEvent = function (event) {
@@ -357,6 +486,15 @@ guiEasy.popper.menu = function (menuToOpen) {
         }
     }
     helpEasy.addToLogDOM("menu: " + x, 1);
+};
+
+guiEasy.popper.drawer = function (drawerToOpen) {
+    let drawerName = drawerToOpen.args[1];
+    let drawerObject = document.getElementById("drawer-" + drawerName);
+    let x = drawerObject.dataset;
+    drawerObject.classList.toggle(x.close);
+    drawerObject.classList.toggle(x.open);
+    helpEasy.addToLogDOM("drawer: " + drawerName, 1);
 };
 
 guiEasy.popper.modal = function (modalToOpen) {
