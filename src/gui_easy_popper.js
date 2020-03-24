@@ -196,30 +196,28 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
 
 guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal") {
     //This only work in Chrome at the moment...
+    let weakLevel, strongLevel, duration;
     if (type === "weak") {
-        gamepad.vibrationActuator.playEffect("dual-rumble", {
-            startDelay: 0,
-            duration: 250,
-            weakMagnitude: 0.2,
-            strongMagnitude: 0
-        });
+        duration = 250;
+        weakLevel = 0.2;
+        strongLevel = 0;
     }
     if (type === "normal") {
-        gamepad.vibrationActuator.playEffect("dual-rumble", {
-            startDelay: 0,
-            duration: 500,
-            weakMagnitude: 1.0,
-            strongMagnitude: 0
-        });
+        duration = 500;
+        weakLevel = 1;
+        strongLevel = 0;
     }
     if (type === "strong") {
-        gamepad.vibrationActuator.playEffect("dual-rumble", {
-            startDelay: 0,
-            duration: 1000,
-            weakMagnitude: 1.0,
-            strongMagnitude: 1.0
-        });
+        duration = 1000;
+        weakLevel = 1;
+        strongLevel = 1;
     }
+    gamepad.vibrationActuator.playEffect("dual-rumble", {
+        startDelay: 0,
+        duration: duration,
+        weakMagnitude: weakLevel,
+        strongMagnitude: strongLevel
+    });
 };
 
 guiEasy.popper.gamepad.thrust = function (x, y) {
