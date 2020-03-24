@@ -130,6 +130,7 @@ guiEasy.popper.gamepad = function (event) {
                 if (gp !== null && gp.id.toUpperCase().includes(supportedGP) && event.gamepad.mapping === "standard") {
                     index++;
                     let currentGamepadMap = {
+                        "gamepadObject": gp,
                         "gamepad": index,
                         "joystick": {
                             "left": {
@@ -189,12 +190,36 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
     //add key combos and stuff here
     if (gamepadMap.button.a === 1) {
         // call an event using event details + try call
-        console.log("gamepad " + gamepadMap.gamepad + "'s A button pressed");
+        guiEasy.popper.gamepad.vibrate(gamepadMap.gamepadObject, "strong");
     }
 };
 
-guiEasy.popper.gamepad.vibrate = function (type = "normal") {
-
+guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal") {
+    //This only work in Chrome at the moment...
+    if (type === "weak") {
+        gamepad.vibrationActuator.playEffect("dual-rumble", {
+            startDelay: 0,
+            duration: 250,
+            weakMagnitude: 0.2,
+            strongMagnitude: 0
+        });
+    }
+    if (type === "normal") {
+        gamepad.vibrationActuator.playEffect("dual-rumble", {
+            startDelay: 0,
+            duration: 500,
+            weakMagnitude: 1.0,
+            strongMagnitude: 0
+        });
+    }
+    if (type === "strong") {
+        gamepad.vibrationActuator.playEffect("dual-rumble", {
+            startDelay: 0,
+            duration: 1000,
+            weakMagnitude: 1.0,
+            strongMagnitude: 1.0
+        });
+    }
 };
 
 guiEasy.popper.gamepad.thrust = function (x, y) {
