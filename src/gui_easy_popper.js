@@ -162,8 +162,8 @@ guiEasy.popper.gamepad = function (event) {
                             "joystick_r": gp.buttons[11].value
                         },
                         "trigger": {
-                            "left": gp.buttons[6].value,
-                            "right": gp.buttons[7].value
+                            "left": Math.floor(gp.buttons[6].value * 100)/100,
+                            "right": Math.floor(gp.buttons[7].value * 100)/100
                         },
                         "menu": {
                             "left": gp.buttons[8].value,
@@ -185,6 +185,14 @@ guiEasy.popper.gamepad = function (event) {
     }
 };
 
+guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
+    //add key combos and stuff here
+    if (gamepadMap.button.a === 1) {
+        // call an event using event details + try call
+    }
+    console.log(gamepadMap.trigger.left);
+};
+
 guiEasy.popper.gamepad.thrust = function (x, y) {
     x = Math.floor(x * 100)/100;
     y = Math.floor(y * 100)/100;
@@ -197,7 +205,9 @@ guiEasy.popper.gamepad.thrust = function (x, y) {
     if (y === 0) {
         return Math.abs(x);
     }
-    return Math.sqrt(Math.pow(x,2) * Math.pow(y, 2));
+    let xy = Math.sqrt(Math.pow(x,2) + Math.pow(y, 2));
+    xy = Math.floor(xy * 100)/100;
+    return (xy > 1 ? 1 : xy);
 };
 
 guiEasy.popper.gamepad.direction = function (x, y, zeroPoint) {
@@ -221,15 +231,6 @@ guiEasy.popper.gamepad.direction = function (x, y, zeroPoint) {
     }
     // right just return the degrees...
     return degree;
-
-};
-
-guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
-    //add key combos and stuff here
-    if (gamepadMap.button.a === 1) {
-        // call an event using event details + try call
-    }
-    console.log(gamepadMap.joystick.left.thrust);
 };
 
 //ABOVE IS FUNCTION TO INTERCEPT AND TRANSLATE THE EVENT INTO A ESP EASY EVENT//
