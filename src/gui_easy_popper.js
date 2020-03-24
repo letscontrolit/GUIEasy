@@ -174,7 +174,7 @@ guiEasy.popper.gamepad = function (event) {
                     guiEasy.popper.gamepad.eventListener(currentGamepadMap);
                 }
             }
-        }, 400);
+        }, 100);
     }
     if (event.type === "gamepaddisconnected" && n !== false && event.gamepad.mapping === "standard") {
         window.gamepads--;
@@ -189,8 +189,12 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
     //add key combos and stuff here
     if (gamepadMap.button.a === 1) {
         // call an event using event details + try call
+        console.log("gamepad " + gamepadMap.gamepad + "'s A button pressed");
     }
-    console.log(gamepadMap.trigger.left);
+};
+
+guiEasy.popper.gamepad.vibrate = function (type = "normal") {
+
 };
 
 guiEasy.popper.gamepad.thrust = function (x, y) {
