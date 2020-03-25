@@ -5,8 +5,11 @@ guiEasy.popper = function (processID, processType) {
     setInterval(guiEasy.popper.tryCallEvent.counter, 5);
     //add event listeners...
     guiEasy.popper.events();
-    guiEasy.popper.rules();
-    guiEasy.popper.favicon();
+    if (guiEasy.popper.rules !== undefined) {
+        //these are used by ESP Easy only
+        guiEasy.popper.rules();
+        guiEasy.popper.favicon();
+    }
     helpEasy.addToLogDOM("pageSize", 1);
     helpEasy.processDone(processID, processType);
 };
