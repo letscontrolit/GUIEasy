@@ -120,7 +120,6 @@ guiEasy.popper.gamepad = function (event) {
     let n = event.gamepad.id.toUpperCase().includes(supportedGP);
     if (event.type === "gamepadconnected" && n !== false && event.gamepad.mapping === "standard") {
         window.gamepads++;
-        console.log(event);
         //controllers doesn't do event listeners so we need to query the states over and over again...
         loopInterval = setInterval( function() {
             let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
@@ -191,34 +190,73 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
     //add key combos and stuff here
     if (gamepadMap.button.a === 1) {
         // call an event using event details + try call
+        if (x["button.a.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("button.a", 1000);
+        }
         x.vibrate(gamepadMap.gamepadObject, "strong");
     }
     if (gamepadMap.button.shoulder_r === 1) {
-        x.vibrate(gamepadMap.gamepadObject, "strong");
-    }
-    if (gamepadMap.trigger.left > 0 || gamepadMap.trigger.right > 0) {
-        let speed = (gamepadMap.trigger.left + gamepadMap.trigger.right) / 2;
-        speed = (500 - 450 * speed);
-        if (x["trigger.left.wait"] || x["trigger.right.wait"]) {
+        if (x["button.shoulder_r.wait"]) {
             return;
         } else {
-            x.eventDelayer("trigger.left", speed);
-            x.eventDelayer("trigger.right", speed);
+            x.eventDelayer("button.shoulder_r", 500);
         }
-        let keyCombo;
-        if (gamepadMap.trigger.left > gamepadMap.trigger.right) {
-            keyCombo = "alt+arrowleft";
+        x.vibrate(gamepadMap.gamepadObject);
+    }
+    if (gamepadMap.button.shoulder_l === 1) {
+        if (x["button.shoulder_l.wait"]) {
+            return;
         } else {
-            keyCombo = "alt+arrowright"
+            x.eventDelayer("button.shoulder_l", 500);
         }
-        let tabNumber = guiEasy.current.tabNumber;
+        x.vibrate(gamepadMap.gamepadObject, "weak");
+    }
+    if (gamepadMap.menu.right === 1) {
+        // call an event using event details + try call
+        if (x["menu.right.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("menu.right");
+        }
+        let element = document.getElementById("menu-button");
+        let args = element.dataset["click"].split("-");
+        let eventDetails = {
+            "type": args[0],
+            "args": args,
+            "dataset": x,
+            "x": element.x,
+            "y": element.y,
+            "element": element
+        };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
+        guiEasy.popper.tryCallEvent(eventDetails);
+    }
+    if (gamepadMap.trigger.left > 0 || gamepadMap.trigger.right > 0) {
+    let speed = (gamepadMap.trigger.left + gamepadMap.trigger.right) / 2;
+    speed = (500 - 450 * speed);
+    if (x["trigger.left.wait"] || x["trigger.right.wait"]) {
+        return;
+    } else {
+        x.eventDelayer("trigger.left", speed);
+        x.eventDelayer("trigger.right", speed);
+    }
+    let keyCombo;
+    if (gamepadMap.trigger.left > gamepadMap.trigger.right) {
+        keyCombo = "alt+arrowleft";
+    } else {
+        keyCombo = "alt+arrowright"
+    }
+    let tabNumber = guiEasy.current.tabNumber;
+    if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
+    while (guiEasy.tabNumber[tabNumber] === undefined) {
         if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
-        while (guiEasy.tabNumber[tabNumber] === undefined) {
-            if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
-            if (tabNumber < 0) {tabNumber = 9}
-            if (tabNumber > 9) {tabNumber = 0}
-        }
-        guiEasy.popper.tab({"args":["tab", tabNumber]});
+        if (tabNumber < 0) {tabNumber = 9}
+        if (tabNumber > 9) {tabNumber = 0}
+    }
+    helpEasy.addToLogDOM("Switching to tab: " + tabNumber, 2);
+    guiEasy.popper.tab({"args":["tab", tabNumber]});
     }
 };
 
@@ -230,7 +268,7 @@ guiEasy.popper.gamepad.eventDelayer = function (input, delay = 250) {
     }, delay);
 };
 
-guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal") {
+guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal", delay = 0) {
     //This only work in Chrome at the moment...
     let weakLevel, strongLevel, duration;
     if (type === "weak") {
@@ -249,7 +287,7 @@ guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal") {
         strongLevel = 1;
     }
     gamepad.vibrationActuator.playEffect("dual-rumble", {
-        startDelay: 0,
+        startDelay: delay,
         duration: duration,
         weakMagnitude: weakLevel,
         strongMagnitude: strongLevel
