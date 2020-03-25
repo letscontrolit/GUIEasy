@@ -197,13 +197,15 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
         x.vibrate(gamepadMap.gamepadObject, "strong");
     }
     if (gamepadMap.trigger.left > 0 || gamepadMap.trigger.right > 0) {
-        let keyCombo;
+        let speed = (gamepadMap.trigger.left + gamepadMap.trigger.right) / 2;
+        speed = (500 - 450 * speed);
         if (x["trigger.left.wait"] || x["trigger.right.wait"]) {
             return;
         } else {
-            x.eventDelayer("trigger.left", 100);
-            x.eventDelayer("trigger.right", 100);
+            x.eventDelayer("trigger.left", speed);
+            x.eventDelayer("trigger.right", speed);
         }
+        let keyCombo;
         if (gamepadMap.trigger.left > gamepadMap.trigger.right) {
             keyCombo = "alt+arrowleft";
         } else {
