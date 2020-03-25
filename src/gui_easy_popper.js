@@ -187,11 +187,45 @@ guiEasy.popper.gamepad = function (event) {
 };
 
 guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
+    let x = guiEasy.popper.gamepad;
     //add key combos and stuff here
     if (gamepadMap.button.a === 1) {
         // call an event using event details + try call
-        guiEasy.popper.gamepad.vibrate(gamepadMap.gamepadObject, "strong");
+        x.vibrate(gamepadMap.gamepadObject, "strong");
     }
+    if (gamepadMap.button.shoulder_r === 1) {
+        x.vibrate(gamepadMap.gamepadObject, "strong");
+    }
+    if (gamepadMap.trigger.left > 0 || gamepadMap.trigger.right > 0) {
+        let keyCombo;
+        if (x["trigger.left.wait"] || x["trigger.right.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("trigger.left", 100);
+            x.eventDelayer("trigger.right", 100);
+        }
+        if (gamepadMap.trigger.left > gamepadMap.trigger.right) {
+            keyCombo = "alt+arrowleft";
+        } else {
+            keyCombo = "alt+arrowright"
+        }
+        let tabNumber = guiEasy.current.tabNumber;
+        if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
+        while (guiEasy.tabNumber[tabNumber] === undefined) {
+            if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
+            if (tabNumber < 0) {tabNumber = 9}
+            if (tabNumber > 9) {tabNumber = 0}
+        }
+        guiEasy.popper.tab({"args":["tab", tabNumber]});
+    }
+};
+
+guiEasy.popper.gamepad.eventDelayer = function (input, delay = 250) {
+    let x = guiEasy.popper.gamepad;
+    x[input + ".wait"] = true;
+    setTimeout(function () {
+        x[input + ".wait"] = false;
+    }, delay);
 };
 
 guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal") {
