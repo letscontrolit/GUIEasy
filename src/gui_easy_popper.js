@@ -228,7 +228,27 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
         let eventDetails = {
             "type": args[0],
             "args": args,
-            "dataset": x,
+            "dataset": element,
+            "x": element.x,
+            "y": element.y,
+            "element": element
+        };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
+        guiEasy.popper.tryCallEvent(eventDetails);
+    }
+    if (gamepadMap.menu.left === 1) {
+        // call an event using event details + try call
+        if (x["menu.left.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("menu.left");
+        }
+        let element = document.getElementsByClassName("bottom-tab")[0];
+        let args = element.dataset["click"].split("-");
+        let eventDetails = {
+            "type": args[0],
+            "args": args,
+            "dataset": element,
             "x": element.x,
             "y": element.y,
             "element": element
