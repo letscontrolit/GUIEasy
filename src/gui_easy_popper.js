@@ -206,11 +206,18 @@ guiEasy.popper.gamepad.indicator = function (type, index) {
     let idx = window.gamepads.active.indexOf(index + "-1");
     if (type === "gamepadconnected") {
         let gpElement = document.createElement("div");
+        container.appendChild(gpElement);
         gpElement.classList.add("gamepad");
         gpElement.classList.add("connected");
         gpElement.id = (idx + 1) + "-gamepad-" + index;
-        gpElement.innerHTML = svg +  "<div class='number'>" + (idx + 1) + "</div>"
-        container.appendChild(gpElement);
+        gpElement.innerHTML = svg +  "<div class='number'>" + (idx + 1) + "</div>";
+        helpEasy.blinkElement(gpElement, "inverted");
+        setTimeout( function () {
+            helpEasy.blinkElement(gpElement, "inverted");
+        }, 500);
+        setTimeout( function () {
+            helpEasy.blinkElement(gpElement, "inverted");
+        }, 1000);
     }
     if (type === "gamepaddisconnected") {
         let element = document.getElementById((idx + 1) + "-gamepad-" + index);
@@ -224,7 +231,8 @@ guiEasy.popper.gamepad.indicator = function (type, index) {
     // sort their placement
     [...container.children]
         .sort((a,b)=>a.innerText>b.innerText?1:-1)
-        .map(node=>container.appendChild(node))
+        .map(node=>container.appendChild(node));
+    // auto close the menu...
     setTimeout( function () {
         container.classList.remove("show");
     }, 5000)
@@ -270,9 +278,9 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
         let eventDetails = {
             "type": args[0],
             "args": args,
-            "dataset": element,
-            "x": element.x,
-            "y": element.y,
+            "dataset": element.dataset,
+            "x": Math.floor(element.getBoundingClientRect().left),
+            "y": Math.floor(element.getBoundingClientRect().top),
             "element": element
         };
         helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
@@ -290,9 +298,9 @@ guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
         let eventDetails = {
             "type": args[0],
             "args": args,
-            "dataset": element,
-            "x": element.x,
-            "y": element.y,
+            "dataset": element.dataset,
+            "x": Math.floor(element.getBoundingClientRect().left),
+            "y": Math.floor(element.getBoundingClientRect().top),
             "element": element
         };
         helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
@@ -623,6 +631,7 @@ guiEasy.popper.tab = function (tabToOpen) {
         }
         if (y.tab === tab) {
             x[i].classList.add("nav-selected");
+            x[i].focus();
         }
     }
     helpEasy.addToLogDOM("tab open: " + tab, 1);

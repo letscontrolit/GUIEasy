@@ -94,6 +94,124 @@ const helpEasy = {
 
         array[index].ping.timestamp = Date.now();
     },
+    'capitalWord' : function (str) {
+        let allCaps = [
+            "ac","ap",
+            "bin","bssid",
+            "cpu",
+            "dc","dhcp","dns","dst",
+            "esp",
+            "gui","gw","gpio","gps",
+            "http","https",
+            "ip","id","i2c","io","ir",
+            "json",
+            "led","l/r","lcd",
+            "md5","mqtt","mp3",
+            "ntp",
+            "ok","oled",
+            "p2p",
+            "rssi","ram","rfid",
+            "ssid","spi","sda","scl","sta","ssl","smtp","sd",
+            "ttn",
+            "udp","uuid",
+            "wpa"
+        ];
+        let reformat = [
+            "AM2320","APDS9960","ADS1115",
+            "BMP085/180","BMP280","BMx280","BH1750",
+            "CO2","CSE7766",
+            "DS18b20","DHT11/12/22","DMX512","DHT12",
+            "FHEM",
+            "GitHub","GP2Y10","GY-63",
+            "HC-SR04","HT16K33","HLW8012/BL0937","HDC1080","HX711",
+            "iButton","INA219","ID12LA/RDM6300",
+            "LCD2004","LM75A","LoRa",
+            "MCP23017","MCP3221","MH-Z19","MLX90614","MS5611","MPU6050","MPR121",
+            "OpenHAB",
+            "PCF8591","PCF8574","PCF8574/MCP23017","phpBB","PMSx003","POW","PCA9685","PN532",
+            "RCW-0001","RN2483/RN2903",
+            "SHT1x","SHT30/31/35","SGP30","SI7021/HTU21D","SSD1306","SSD1306/SH1106","SDS011/018/198","SMD120C/220T/230/630",
+            "TSL2561","TSL2591","TCS32725","TCS34725","TSOP4838","TTP229",
+            "VEML6040","VEML6070"
+        ];
+        let reformatCheck = [[],[],[],[],[]];
+        for (let i = 0; i < reformat.length; i++) {
+            reformatCheck[0].push(reformat[i].toLowerCase());
+            reformatCheck[1].push("(" + reformat[i].toLowerCase());
+            reformatCheck[2].push(reformat[i].toLowerCase() + ")");
+            reformatCheck[3].push("(" + reformat[i].toLowerCase() + ")");
+            reformatCheck[4].push(reformat[i].toLowerCase() + ",");
+        }
+        let allCapsCheck = [[],[],[],[],[]];
+        for (let i = 0; i < allCaps.length; i++) {
+            allCapsCheck[0].push(allCaps[i].toLowerCase());
+            allCapsCheck[1].push("(" + allCaps[i].toLowerCase());
+            allCapsCheck[2].push(allCaps[i].toLowerCase() + ")");
+            allCapsCheck[3].push("(" + allCaps[i].toLowerCase() + ")");
+            allCapsCheck[4].push(allCaps[i].toLowerCase() + ",");
+        }
+        let words = str.toLowerCase().split(" ");
+        for (let i = 0; i < words.length; i++) {
+            let index = helpEasy.findInArray(words[i], reformatCheck[0]);
+            if (index > -1) {
+                words[i] = reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[3]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index] + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[1]);
+            if (index > -1) {
+                words[i] = "(" + reformat[index];
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[2]);
+            if (index > -1) {
+                words[i] = reformat[index] + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], reformatCheck[4]);
+            if (index > -1) {
+                words[i] = reformat[index] + ",";
+                continue;
+            }
+            //all caps
+            index = helpEasy.findInArray(words[i], allCapsCheck[0]);
+            if (index > -1) {
+                words[i] = allCaps[index].toUpperCase();
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], allCapsCheck[3]);
+            if (index > -1) {
+                words[i] = "(" + allCaps[index].toUpperCase() + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], allCapsCheck[1]);
+            if (index > -1) {
+                words[i] = "(" + allCaps[index].toUpperCase();
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], allCapsCheck[2]);
+            if (index > -1) {
+                words[i] = allCaps[index].toUpperCase() + ")";
+                continue;
+            }
+            index = helpEasy.findInArray(words[i], allCapsCheck[4]);
+            if (index > -1) {
+                words[i] = allCaps[index].toUpperCase() + ",";
+                continue;
+            }
+            //if not found in any of the arrays.. camel case
+            if (words[i].charAt(0) === "(") {
+                words[i] = "(" + words[i].charAt(1).toUpperCase() + words[i].substring(2);
+            } else {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
+            }
+        }
+        return words.join(" ");
+    },
     'bumpScheduler': function (array, index, endpoint) {
         let nextRun = Date.now() + 10;
         let x = array[index]["scheduler"];

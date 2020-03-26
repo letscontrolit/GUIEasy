@@ -92,10 +92,8 @@ div.gamepads:empty {
 }
 div.gamepad {
     width: calc(1.45 * var(--default-height-size));
-    padding-top: calc(0.4 * var(--default-height-size));
-    padding-bottom: calc(0.4 * var(--default-height-size));
+    margin: calc(0.4 * var(--default-height-size)) calc(0.4 * var(--default-height-size)) calc(0.4 * var(--default-height-size)) calc(3 * var(--default-height-size));
     position: relative;
-    margin-left: calc(2 * var(--default-height-size));
 }
 div.gamepad > svg {
     height: calc(1.45 * var(--default-height-size));
@@ -103,7 +101,7 @@ div.gamepad > svg {
 div.gamepad > div.number {
     position: absolute;
     width: calc(0.7 * var(--default-height-size));
-    top: calc(0.75 * var(--default-height-size));
+    top: calc(0.9 * var(--default-height-size));
     right: 0;
     border-radius: calc(1 * var(--default-height-size) / var(--button-radius-size));
     font-size: calc(0.6 * var(--default-font-size));
