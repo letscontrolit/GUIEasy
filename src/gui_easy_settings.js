@@ -277,6 +277,7 @@ const guiEasy = {
             'notifier',
             'drawer',
             'navbar',
+            'gamepad',
             'unit',
             'unitname',
             'modal',

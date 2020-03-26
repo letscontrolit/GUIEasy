@@ -117,23 +117,33 @@ guiEasy.popper.gamepad = function (event) {
     //We only support "standard gamepad" with mapping set to "standard" see w3 standard: https://www.w3.org/TR/gamepad/
     const supportedGP = "STANDARD GAMEPAD";
     if (window.gamepads === undefined) {
-        window.gamepads = 0;
+        window.gamepads = {
+            "number": 0,
+            "active": []
+        };
     }
+    let currentIdx = event.gamepad.index;
     let loopInterval;
     let n = event.gamepad.id.toUpperCase().includes(supportedGP);
     if (event.type === "gamepadconnected" && n !== false && event.gamepad.mapping === "standard") {
-        window.gamepads++;
+        window.gamepads.number++;
         //controllers doesn't do event listeners so we need to query the states over and over again...
         loopInterval = setInterval( function() {
             let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-            let index = 0;
             for (let i = 0; i < gamepads.length; i++) {
                 let gp = gamepads[i];
                 if (gp !== null && gp.id.toUpperCase().includes(supportedGP) && event.gamepad.mapping === "standard") {
-                    index++;
+                    if (window.gamepads.active.includes(gp.index + "-0") === true) {
+                        let idx = window.gamepads.active.indexOf(gp.index + "-0");
+                        window.gamepads.active[idx] = gp.index + "-1"; //0 is now 1 = is active
+                        guiEasy.popper.gamepad.indicator(event.type, gp.index);
+                    } else if (window.gamepads.active.includes(gp.index + "-1") === false) {
+                        window.gamepads.active.push(gp.index + "-1"); //1 = is active
+                        guiEasy.popper.gamepad.indicator(event.type, gp.index);
+                    }
                     let currentGamepadMap = {
                         "gamepadObject": gp,
-                        "gamepad": index,
+                        "gamepad": window.gamepads.active.indexOf(gp.index + "-1") + 1,
                         "joystick": {
                             "left": {
                                 "x": Math.floor(gp.axes[0] * 100)/100,
@@ -180,12 +190,44 @@ guiEasy.popper.gamepad = function (event) {
         }, 100);
     }
     if (event.type === "gamepaddisconnected" && n !== false && event.gamepad.mapping === "standard") {
-        window.gamepads--;
+        window.gamepads.number--;
+        guiEasy.popper.gamepad.indicator(event.type, event.gamepad.index);
     }
-    if (window.gamepads === 0) {
+    if (window.gamepads.number === 0) {
         clearInterval(loopInterval);
         helpEasy.addToLogDOM("Gamepad events disabled, no gamepad active.", 2);
     }
+};
+
+guiEasy.popper.gamepad.indicator = function (type, index) {
+    let container = document.getElementById("active-gamepads");
+    container.classList.add("show");
+    let svg = document.getElementById("template-gamepad").innerHTML;
+    let idx = window.gamepads.active.indexOf(index + "-1");
+    if (type === "gamepadconnected") {
+        let gpElement = document.createElement("div");
+        gpElement.classList.add("gamepad");
+        gpElement.classList.add("connected");
+        gpElement.id = (idx + 1) + "-gamepad-" + index;
+        gpElement.innerHTML = svg +  "<div class='number'>" + (idx + 1) + "</div>"
+        container.appendChild(gpElement);
+    }
+    if (type === "gamepaddisconnected") {
+        let element = document.getElementById((idx + 1) + "-gamepad-" + index);
+        element.classList.remove("connected");
+        element.classList.add("disconnected");
+        window.gamepads.active[idx] = index + "-0"; // its removed.....
+        setTimeout( function () {
+            element.remove();
+        }, 3100)
+    }
+    // sort their placement
+    [...container.children]
+        .sort((a,b)=>a.innerText>b.innerText?1:-1)
+        .map(node=>container.appendChild(node))
+    setTimeout( function () {
+        container.classList.remove("show");
+    }, 5000)
 };
 
 guiEasy.popper.gamepad.eventListener = function (gamepadMap) {

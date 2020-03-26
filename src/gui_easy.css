@@ -49,7 +49,7 @@ div.modal div.row::-webkit-scrollbar-thumb {
 div.modal div.row,
 body,
 textarea {
-    scrollbar-color: var(--main-inverted-color-rgba) var(--main-bg-color-rgba, blue); /* thumb and track color */
+    scrollbar-color: var(--main-inverted-color-rgba) var(--main-bg-color-rgba); /* thumb and track color */
     scrollbar-width: thin;
 }
 /*below makes the body not scrolling together with modals*/
@@ -64,6 +64,61 @@ br {
     content: "A" !important;
     display: block !important;
     margin-bottom: -2px !important;
+}
+#template-gamepad {
+    display: none;
+}
+div.is-black ~ div.gamepads {
+    display: none;
+    z-index: 100;
+}
+div.gamepads {
+    position: absolute;
+    left: calc(-3 * var(--default-height-size, 20));
+    top: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: rgba(var(--main-inverted-color), 0.3);
+    padding: 3px;
+    border: 2px solid rgba(var(--main-inverted-color), 0.5);
+    border-radius: calc(0 * var(--default-height-size, 20) / var(--button-radius-size, 2)) calc(0.5 * var(--default-height-size, 20) / var(--button-radius-size, 2)) calc(0.5 * var(--default-height-size, 20) / var(--button-radius-size, 2)) calc(0 * var(--default-height-size, 20) / var(--button-radius-size, 2));
+    transition: left 200ms ease-in;
+}
+div.gamepads.show {
+    left: 0;
+}
+div.gamepads:empty {
+    display: none;
+}
+div.gamepad {
+    width: calc(1.45 * var(--default-height-size, 20));
+    padding-top: calc(0.4 * var(--default-height-size, 20));
+    padding-bottom: calc(0.4 * var(--default-height-size, 20));
+    position: relative;
+    margin-left: calc(2 * var(--default-height-size, 20));
+}
+div.gamepad > svg {
+    height: calc(1.45 * var(--default-height-size, 20));
+}
+div.gamepad > div.number {
+    position: absolute;
+    width: calc(0.7 * var(--default-height-size, 20));
+    top: calc(0.75 * var(--default-height-size, 20));
+    right: 0;
+    border-radius: calc(1 * var(--default-height-size, 20) / var(--button-radius-size, 2));
+    font-size: calc(0.6 * var(--default-font-size, 19pt));
+}
+div.gamepad.connected > div.number {
+    color: var(--main-font-color-rgba);
+    background: var(--main-success-color-rgba);
+}
+div.gamepad.disconnected > div.number {
+    color: var(--main-font-color-rgba);
+    background: var(--main-warning-color-rgba);
+    animation: fadeGone 2.5s ease-in forwards;
+}
+div.gamepad.disconnected {
+    animation: fadeGone 3s ease-in forwards;
 }
 div.view-got-box-shadows {
     z-index: 699;
