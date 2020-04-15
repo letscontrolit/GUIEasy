@@ -458,6 +458,21 @@ const helpEasy = {
             return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]][path[9]];
         }
     },
+    'iniFileToObject': function(string) {
+      let object = {};
+      let sections = string.match(/^\[[^\]\n]+](?:\n(?:[^[\n].*)?)*/gm);
+      for (let i=0; i < sections.length; i++) {
+          let sectionName = sections[i].split("\n")[0];
+          sectionName = sectionName.slice(1, sectionName.length-1);
+          object[sectionName] = {};
+          let key = sections[i].match(/^[^;\s][^;\r\n]*/gm);  //we remove comments behind ";" character
+          for (let k=1; k < key.length; k++) {
+              let keyValue = key[k].split("=");
+              object[sectionName][keyValue[0]] = keyValue[1];
+          }
+      }
+      return object;
+    },
     'sortObjectArray': (propName) =>
         (a, b) => a[propName] === b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1
     ,
