@@ -18,6 +18,7 @@ import cgi
 import sys
 import mimetypes
 import zlib
+import webbrowser
 from optparse import OptionParser
 
 try:
@@ -199,8 +200,8 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         f = StringIO()
         displaypath = cgi.escape(urllib.unquote(self.path))
         f.write('<!DOCTYPE html>')
-        f.write("<html>\n<title>Directory listing for %s</title>\n" % displaypath)
-        f.write("<body>\n<h2>Directory listing for %s</h2>\n" % displaypath)
+        f.write("<html>\n<title>GUI Easy %s</title>\n" % displaypath)
+        f.write("<body>\n<h2>Directory: %s</h2>\n" % displaypath)
         f.write("<hr>\n<ul>\n")
         for name in list:
             fullname = os.path.join(path, name)
@@ -302,6 +303,8 @@ def test(HandlerClass = SimpleHTTPRequestHandler,
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    url = 'http://localhost:' + str(sa[1])
+    webbrowser.open(url)
     httpd.serve_forever()
     BaseHTTPServer.test(HandlerClass, ServerClass)
 
