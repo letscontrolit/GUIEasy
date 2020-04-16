@@ -102,6 +102,15 @@ in your local network. Point to this unit inside a file called ``custom.json``, 
  try the frontend from your local machine you will get an error in the browser console and
  the frontend will not load. 
 
+### Run as COMPILED localhost
+
+To test different versions of the compiled code we have added the ``GzipSimpleHTTPServer.py``
+script. Given that you have python already installed you can simply double click on this
+file and then open your web browser, type in the URL ``localhost:8000`` and you will see
+the entire project folder listed. Click your way through to the build you want to test.
+The compiled code will, if runned in localhost mode, search for the ``src/custom.json``
+file so make sure you have that one setup according to your needs.
+
 ### Source Code Ideology
 
 As you will find out the source code is composed by several individual JavaScript files.
