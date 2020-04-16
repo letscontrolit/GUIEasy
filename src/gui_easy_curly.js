@@ -571,3 +571,9 @@ guiEasy.curly.info = function (what) {
         helpEasy.addToLogDOM("patreon", 0, "info");
     }
 };
+
+guiEasy.curly.gamepad = function () {
+    let html = "<div id='template-gamepad'>{{ICON-GAMEPAD}}</div>";
+    html += "<div id='active-gamepads' class='gamepads'></div>";
+    return html;
+};

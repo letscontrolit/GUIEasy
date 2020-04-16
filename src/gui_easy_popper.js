@@ -5,8 +5,11 @@ guiEasy.popper = function (processID, processType) {
     setInterval(guiEasy.popper.tryCallEvent.counter, 5);
     //add event listeners...
     guiEasy.popper.events();
-    guiEasy.popper.rules();
-    guiEasy.popper.favicon();
+    if (guiEasy.popper.rules !== undefined) {
+        //these are used by ESP Easy only
+        guiEasy.popper.rules();
+        guiEasy.popper.favicon();
+    }
     helpEasy.addToLogDOM("pageSize", 1);
     helpEasy.processDone(processID, processType);
 };
@@ -114,23 +117,33 @@ guiEasy.popper.gamepad = function (event) {
     //We only support "standard gamepad" with mapping set to "standard" see w3 standard: https://www.w3.org/TR/gamepad/
     const supportedGP = "STANDARD GAMEPAD";
     if (window.gamepads === undefined) {
-        window.gamepads = 0;
+        window.gamepads = {
+            "number": 0,
+            "active": []
+        };
     }
+    let currentIdx = event.gamepad.index;
     let loopInterval;
     let n = event.gamepad.id.toUpperCase().includes(supportedGP);
     if (event.type === "gamepadconnected" && n !== false && event.gamepad.mapping === "standard") {
-        window.gamepads++;
-        console.log(event);
+        window.gamepads.number++;
         //controllers doesn't do event listeners so we need to query the states over and over again...
         loopInterval = setInterval( function() {
             let gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-            let index = 0;
             for (let i = 0; i < gamepads.length; i++) {
                 let gp = gamepads[i];
                 if (gp !== null && gp.id.toUpperCase().includes(supportedGP) && event.gamepad.mapping === "standard") {
-                    index++;
+                    if (window.gamepads.active.includes(gp.index + "-0") === true) {
+                        let idx = window.gamepads.active.indexOf(gp.index + "-0");
+                        window.gamepads.active[idx] = gp.index + "-1"; //0 is now 1 = is active
+                        guiEasy.popper.gamepad.indicator(event.type, gp.index);
+                    } else if (window.gamepads.active.includes(gp.index + "-1") === false) {
+                        window.gamepads.active.push(gp.index + "-1"); //1 = is active
+                        guiEasy.popper.gamepad.indicator(event.type, gp.index);
+                    }
                     let currentGamepadMap = {
-                        "gamepad": index,
+                        "gamepadObject": gp,
+                        "gamepad": window.gamepads.active.indexOf(gp.index + "-1") + 1,
                         "joystick": {
                             "left": {
                                 "x": Math.floor(gp.axes[0] * 100)/100,
@@ -174,23 +187,184 @@ guiEasy.popper.gamepad = function (event) {
                     guiEasy.popper.gamepad.eventListener(currentGamepadMap);
                 }
             }
-        }, 400);
+        }, 100);
     }
     if (event.type === "gamepaddisconnected" && n !== false && event.gamepad.mapping === "standard") {
-        window.gamepads--;
+        window.gamepads.number--;
+        guiEasy.popper.gamepad.indicator(event.type, event.gamepad.index);
     }
-    if (window.gamepads === 0) {
+    if (window.gamepads.number === 0) {
         clearInterval(loopInterval);
         helpEasy.addToLogDOM("Gamepad events disabled, no gamepad active.", 2);
     }
 };
 
+guiEasy.popper.gamepad.indicator = function (type, index) {
+    let container = document.getElementById("active-gamepads");
+    container.classList.add("show");
+    let svg = document.getElementById("template-gamepad").innerHTML;
+    let idx = window.gamepads.active.indexOf(index + "-1");
+    if (type === "gamepadconnected") {
+        let gpElement = document.createElement("div");
+        container.appendChild(gpElement);
+        gpElement.classList.add("gamepad");
+        gpElement.classList.add("connected");
+        gpElement.id = (idx + 1) + "-gamepad-" + index;
+        gpElement.innerHTML = svg +  "<div class='number'>" + (idx + 1) + "</div>";
+        helpEasy.blinkElement(gpElement, "inverted");
+        setTimeout( function () {
+            helpEasy.blinkElement(gpElement, "inverted");
+        }, 500);
+        setTimeout( function () {
+            helpEasy.blinkElement(gpElement, "inverted");
+        }, 1000);
+    }
+    if (type === "gamepaddisconnected") {
+        let element = document.getElementById((idx + 1) + "-gamepad-" + index);
+        element.classList.remove("connected");
+        element.classList.add("disconnected");
+        window.gamepads.active[idx] = index + "-0"; // its removed.....
+        setTimeout( function () {
+            element.remove();
+        }, 3100)
+    }
+    // sort their placement
+    [...container.children]
+        .sort((a,b)=>a.innerText>b.innerText?1:-1)
+        .map(node=>container.appendChild(node));
+    // auto close the menu...
+    setTimeout( function () {
+        container.classList.remove("show");
+    }, 5000)
+};
+
 guiEasy.popper.gamepad.eventListener = function (gamepadMap) {
+    let x = guiEasy.popper.gamepad;
     //add key combos and stuff here
     if (gamepadMap.button.a === 1) {
         // call an event using event details + try call
+        if (x["button.a.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("button.a", 1000);
+        }
+        x.vibrate(gamepadMap.gamepadObject, "strong");
     }
-    console.log(gamepadMap.trigger.left);
+    if (gamepadMap.button.shoulder_r === 1) {
+        if (x["button.shoulder_r.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("button.shoulder_r", 500);
+        }
+        x.vibrate(gamepadMap.gamepadObject);
+    }
+    if (gamepadMap.button.shoulder_l === 1) {
+        if (x["button.shoulder_l.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("button.shoulder_l", 500);
+        }
+        x.vibrate(gamepadMap.gamepadObject, "weak");
+    }
+    if (gamepadMap.menu.right === 1) {
+        // call an event using event details + try call
+        if (x["menu.right.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("menu.right");
+        }
+        let element = document.getElementById("menu-button");
+        let args = element.dataset["click"].split("-");
+        let eventDetails = {
+            "type": args[0],
+            "args": args,
+            "dataset": element.dataset,
+            "x": Math.floor(element.getBoundingClientRect().left),
+            "y": Math.floor(element.getBoundingClientRect().top),
+            "element": element
+        };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
+        guiEasy.popper.tryCallEvent(eventDetails);
+    }
+    if (gamepadMap.menu.left === 1) {
+        // call an event using event details + try call
+        if (x["menu.left.wait"]) {
+            return;
+        } else {
+            x.eventDelayer("menu.left");
+        }
+        let element = document.getElementsByClassName("bottom-tab")[0];
+        let args = element.dataset["click"].split("-");
+        let eventDetails = {
+            "type": args[0],
+            "args": args,
+            "dataset": element.dataset,
+            "x": Math.floor(element.getBoundingClientRect().left),
+            "y": Math.floor(element.getBoundingClientRect().top),
+            "element": element
+        };
+        helpEasy.addToLogDOM("Calling click event: " + JSON.stringify(eventDetails), 2);
+        guiEasy.popper.tryCallEvent(eventDetails);
+    }
+    if (gamepadMap.trigger.left > 0 || gamepadMap.trigger.right > 0) {
+    let speed = (gamepadMap.trigger.left + gamepadMap.trigger.right) / 2;
+    speed = (500 - 450 * speed);
+    if (x["trigger.left.wait"] || x["trigger.right.wait"]) {
+        return;
+    } else {
+        x.eventDelayer("trigger.left", speed);
+        x.eventDelayer("trigger.right", speed);
+    }
+    let keyCombo;
+    if (gamepadMap.trigger.left > gamepadMap.trigger.right) {
+        keyCombo = "alt+arrowleft";
+    } else {
+        keyCombo = "alt+arrowright"
+    }
+    let tabNumber = guiEasy.current.tabNumber;
+    if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
+    while (guiEasy.tabNumber[tabNumber] === undefined) {
+        if (keyCombo === "alt+arrowleft") {tabNumber = tabNumber - 1} else {tabNumber = tabNumber + 1}
+        if (tabNumber < 0) {tabNumber = 9}
+        if (tabNumber > 9) {tabNumber = 0}
+    }
+    helpEasy.addToLogDOM("Switching to tab: " + tabNumber, 2);
+    guiEasy.popper.tab({"args":["tab", tabNumber]});
+    }
+};
+
+guiEasy.popper.gamepad.eventDelayer = function (input, delay = 250) {
+    let x = guiEasy.popper.gamepad;
+    x[input + ".wait"] = true;
+    setTimeout(function () {
+        x[input + ".wait"] = false;
+    }, delay);
+};
+
+guiEasy.popper.gamepad.vibrate = function (gamepad, type = "normal", delay = 0) {
+    //This only work in Chrome at the moment...
+    let weakLevel, strongLevel, duration;
+    if (type === "weak") {
+        duration = 250;
+        weakLevel = 0.2;
+        strongLevel = 0;
+    }
+    if (type === "normal") {
+        duration = 500;
+        weakLevel = 1;
+        strongLevel = 0;
+    }
+    if (type === "strong") {
+        duration = 1000;
+        weakLevel = 1;
+        strongLevel = 1;
+    }
+    gamepad.vibrationActuator.playEffect("dual-rumble", {
+        startDelay: delay,
+        duration: duration,
+        weakMagnitude: weakLevel,
+        strongMagnitude: strongLevel
+    });
 };
 
 guiEasy.popper.gamepad.thrust = function (x, y) {
@@ -457,6 +631,7 @@ guiEasy.popper.tab = function (tabToOpen) {
         }
         if (y.tab === tab) {
             x[i].classList.add("nav-selected");
+            x[i].focus();
         }
     }
     helpEasy.addToLogDOM("tab open: " + tab, 1);
