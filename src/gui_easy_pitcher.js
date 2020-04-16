@@ -8,11 +8,11 @@ guiEasy.pitcher = async function (processID, processType) {
     //TODO: remove this part when doing a build release (saves almost 1kB)
     if (window.location.hostname === "localhost") {
         let path = window.location.origin;
-        if (window.location.pathname === "/") {
-            path += "/custom.json";
-        } else {
+        if (window.location.pathname.includes("index.html")) {
             path += window.location.pathname;
             path = path.replace("index.html", "custom.json");
+        } else {
+            path += "/src/custom.json";
         }
         await fetch(path)
             .then(res => res.json())
