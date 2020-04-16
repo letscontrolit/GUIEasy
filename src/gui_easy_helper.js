@@ -465,7 +465,7 @@ const helpEasy = {
           let sectionName = sections[i].split("\n")[0];
           sectionName = sectionName.slice(1, sectionName.length-1);
           object[sectionName] = {};
-          let key = sections[i].match(/^[^;\s][^;\r\n]*/gm);  //we remove comments behind ";" character
+          let key = sections[i].match(/^[^;\s][^;\n]*/gm);  //we remove comments behind ";" character
           for (let k=1; k < key.length; k++) {
               let keyValue = key[k].split("=");
               object[sectionName][keyValue[0]] = keyValue[1];

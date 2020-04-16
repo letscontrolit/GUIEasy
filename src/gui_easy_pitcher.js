@@ -7,8 +7,13 @@ guiEasy.pitcher = async function (processID, processType) {
     helpEasy.setCurrentIndex(-1);
     //TODO: remove this part when doing a build release (saves almost 1kB)
     if (window.location.hostname === "localhost") {
-        let path = window.location.origin + window.location.pathname;
-        path = path.replace("index.html", "custom.json");
+        let path = window.location.origin;
+        if (window.location.pathname === "/") {
+            path += "/custom.json";
+        } else {
+            path += window.location.pathname;
+            path = path.replace("index.html", "custom.json");
+        }
         await fetch(path)
             .then(res => res.json())
             .then((jsonData) => {
