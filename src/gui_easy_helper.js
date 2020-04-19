@@ -468,7 +468,7 @@ const helpEasy = {
           let key = sections[i].match(/^((?!\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$).)+/gm);  //we remove comments "//" syntax, single row
           for (let k=1; k < key.length; k++) {
               let keyValue = key[k].split("=");
-              if (keyValue[1].charAt(0) === "0" || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
+              if ((keyValue[1].charAt(0) === "0" && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
                   object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
               } else {
                   object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
