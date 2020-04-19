@@ -3,6 +3,9 @@
 This module builds on BaseHTTPServer by implementing the standard GET
 and HEAD requests in a fairly straightforward manner.
 
+Tweaked version based on:
+https://github.com/ksmith97/GzipSimpleHTTPServer
+
 """
 
 
@@ -303,7 +306,7 @@ def test(HandlerClass = SimpleHTTPRequestHandler,
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
-    url = 'http://localhost:' + str(sa[1])
+    url = 'http://localhost:' + str(sa[1]) + '/build/'
     webbrowser.open(url)
     httpd.serve_forever()
     BaseHTTPServer.test(HandlerClass, ServerClass)
