@@ -460,15 +460,19 @@ const helpEasy = {
     },
     'iniFileToObject': function(string) {
       let object = {};
-      let sections = string.match(/^\[[^\]\n]+](?:\n(?:[^[\n].*)?)*/gm);
+      let sections = string.match(/^\[[^\]\r\n]+](?:[\r\n]([^[\r\n].*)?)*/gm);
       for (let i=0; i < sections.length; i++) {
           let sectionName = sections[i].split("\n")[0];
-          sectionName = sectionName.slice(1, sectionName.length-1);
+          sectionName = sectionName.replace(/[\[\]]/g, '').trim();
           object[sectionName] = {};
-          let key = sections[i].match(/^[^;\s][^;\n]*/gm);  //we remove comments behind ";" character
+          let key = sections[i].match(/^((?!\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$).)+/gm);  //we remove comments "//" syntax, single row
           for (let k=1; k < key.length; k++) {
               let keyValue = key[k].split("=");
-              object[sectionName][keyValue[0]] = keyValue[1];
+              if (keyValue[1].charAt(0) === "0" || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
+                  object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
+              } else {
+                  object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
+              }
           }
       }
       return object;
