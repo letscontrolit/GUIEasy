@@ -458,7 +458,7 @@ const helpEasy = {
             return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]][path[9]];
         }
     },
-    'iniFileToObject': function(string) {
+    'iniFileToObject': function(string, pipe2array = false) {
       let object = {};
       let sections = string.match(/^\[[^\]\r\n]+](?:[\r\n]([^[\r\n].*)?)*/gm);
       for (let i=0; i < sections.length; i++) {
@@ -469,7 +469,11 @@ const helpEasy = {
           for (let k=1; k < key.length; k++) {
               let keyValue = key[k].split("=");
               if ((keyValue[1].charAt(0) === "0" && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
-                  object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
+                  if (pipe2array && keyValue[1].trim().includes("|")) {
+                      object[sectionName][keyValue[0].trim()] = keyValue[1].trim().split("|");
+                  } else {
+                      object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
+                  }
               } else {
                   object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
               }
