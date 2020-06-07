@@ -471,6 +471,8 @@ const helpEasy = {
               if ((keyValue[1].charAt(0) === "0" && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
                   if (pipe2array && keyValue[1].trim().includes("|")) {
                       object[sectionName][keyValue[0].trim()] = keyValue[1].trim().split("|");
+                  } else if (keyValue[1].trim() === "null") {
+                      object[sectionName][keyValue[0].trim()] = null;
                   } else {
                       object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
                   }
