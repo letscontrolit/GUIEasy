@@ -291,6 +291,7 @@ div.bottom-drawer::before {
     box-shadow: inset 0 30px 25px -20px rgba(var(--main-inverted-color), 1);
 }
 div.bottom-tab {
+    z-index: 10000;
     display: flex;
     background-color: var(--main-inverted-color-rgba);
     padding: 2px 8px 6px;
