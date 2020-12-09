@@ -459,29 +459,42 @@ const helpEasy = {
         }
     },
     'iniFileToObject': function(string, pipe2array = false) {
-      let object = {};
-      let sections = string.match(/^\[[^\]\r\n]+](?:[\r\n]([^[\r\n].*)?)*/gm);
-      for (let i=0; i < sections.length; i++) {
-          let sectionName = sections[i].split("\n")[0];
-          sectionName = sectionName.replace(/[\[\]]/g, '').trim();
-          object[sectionName] = {};
-          let key = sections[i].match(/^((?!\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$).)+/gm);  //we remove comments "//" syntax, single row
-          for (let k=1; k < key.length; k++) {
-              let keyValue = key[k].split("=");
-              if ((keyValue[1].charAt(0) === "0" && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros are interpreted as string values
-                  if (pipe2array && keyValue[1].trim().includes("|")) {
-                      object[sectionName][keyValue[0].trim()] = keyValue[1].trim().split("|");
-                  } else if (keyValue[1].trim() === "null") {
-                      object[sectionName][keyValue[0].trim()] = null;
-                  } else {
-                      object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
-                  }
-              } else {
-                  object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
-              }
-          }
-      }
-      return object;
+        let object = {};
+        let sections = string.match(/^\[[^\]\r\n]+](?:[\r\n]([^[\r\n].*)?)*/gm);
+        if (sections === null) {
+            return object["error"] = "Cannot parse ini data!";
+        }
+        for (let i=0; i < sections.length; i++) {
+            let sectionName = sections[i].split("\n")[0];
+            sectionName = sectionName.replace(/[\[\]]/g, '').trim();
+            object[sectionName] = {};
+            let key = sections[i].match(/^((?!\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$).)+/gm);  //we remove comments "//" syntax, single row
+            for (let k=1; k < key.length; k++) {
+                let keyValue = key[k].split("=");
+                if (keyValue.length === 1) {
+                    continue;  // since we don't have a "=" sign we treat this the same way we treat comments = remove them
+                }
+                if (keyValue.length > 2) {
+                    keyValue[1] = keyValue.slice(1, keyValue.length).join('=');  //join if = is used in the string value
+                }
+                if (keyValue[1] === "") {
+                    object[sectionName][keyValue[0].trim()] = null;  // make empty strings null
+                    continue;
+                }
+                if ((keyValue[1].charAt(0) === "0" && keyValue[1].charAt(1) !== "." && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros with no dot following are interpreted as string values
+                    if (pipe2array && keyValue[1].trim().includes("|")) {
+                        object[sectionName][keyValue[0].trim()] = keyValue[1].trim().split("|");
+                    } else if (keyValue[1].trim() === "null") {
+                        object[sectionName][keyValue[0].trim()] = null;
+                    } else {
+                        object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
+                    }
+                } else {
+                    object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
+                }
+            }
+        }
+        return object;
     },
     'sortObjectArray': (propName) =>
         (a, b) => a[propName] === b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1

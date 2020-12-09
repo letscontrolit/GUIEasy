@@ -294,7 +294,7 @@ div.bottom-tab {
     z-index: 10000;
     display: flex;
     background-color: var(--main-inverted-color-rgba);
-    padding: 2px 8px 6px;
+    padding: 2px 8px 0;
     width: auto;
     position: absolute;
     top: 4px;

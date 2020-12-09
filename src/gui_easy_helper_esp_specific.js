@@ -13,6 +13,7 @@ helpEasy.int32binaryBool = function (obj, int, names, base, emptyString = "_empt
     }
 };
 
+//should be async + await fetch
 helpEasy.getDataFromNode = function (array, index, endpoint, ttl_fallback) {
     array[index]["scheduler"].shift();
     let timeStart = Date.now();
