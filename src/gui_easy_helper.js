@@ -492,7 +492,7 @@ const helpEasy = {
                                 case "null": return  null;
                                 default: return  string;
                             }
-                        })(keyValue[1].trim());
+                        })(keyValue[1].toLowerCase().trim());
                     }
                 } else {
                     object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
