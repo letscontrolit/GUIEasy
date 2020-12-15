@@ -458,20 +458,48 @@ const helpEasy = {
             return json[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]][path[6]][path[7]][path[8]][path[9]];
         }
     },
-    'iniFileToObject': function(string) {
-      let object = {};
-      let sections = string.match(/^\[[^\]\n]+](?:\n(?:[^[\n].*)?)*/gm);
-      for (let i=0; i < sections.length; i++) {
-          let sectionName = sections[i].split("\n")[0];
-          sectionName = sectionName.slice(1, sectionName.length-1);
-          object[sectionName] = {};
-          let key = sections[i].match(/^[^;\s][^;\n]*/gm);  //we remove comments behind ";" character
-          for (let k=1; k < key.length; k++) {
-              let keyValue = key[k].split("=");
-              object[sectionName][keyValue[0]] = keyValue[1];
-          }
-      }
-      return object;
+    'iniFileToObject': function(string, pipe2array = false) {
+        let object = {};
+        let sections = string.match(/^\[[^\]\r\n]+](?:[\r\n]([^[\r\n].*)?)*/gm);
+        if (sections === null) {
+            return object["error"] = "Cannot parse ini data!";
+        }
+        for (let i=0; i < sections.length; i++) {
+            let sectionName = sections[i].split("\n")[0];
+            sectionName = sectionName.replace(/[\[\]]/g, '').trim();
+            object[sectionName] = {};
+            let key = sections[i].match(/^((?!\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$).)+/gm);  //we remove comments "//" syntax, single row
+            for (let k=1; k < key.length; k++) {
+                let keyValue = key[k].split("=");
+                if (keyValue.length === 1) {
+                    continue;  // since we don't have a "=" sign we treat this the same way we treat comments = remove them
+                }
+                if (keyValue.length > 2) {
+                    keyValue[1] = keyValue.slice(1, keyValue.length).join('=');  //join if = is used in the string value
+                }
+                if (keyValue[1] === "") {
+                    object[sectionName][keyValue[0].trim()] = null;  // make empty strings null
+                    continue;
+                }
+                if ((keyValue[1].charAt(0) === "0" && keyValue[1].charAt(1) !== "." && keyValue[1].length > 1) || isNaN(Number(keyValue[1]))) {   // leading zeros with no dot following are interpreted as string values
+                    if (pipe2array && keyValue[1].trim().includes("|")) {
+                        object[sectionName][keyValue[0].trim()] = keyValue[1].trim().split("|");
+                    } else {
+                        object[sectionName][keyValue[0].trim()] = (function (string) {  //parse booleans and nulls
+                            switch(string){
+                                case "true": case "yes": return true;
+                                case "false": case "no": return  false;
+                                case "null": return  null;
+                                default: return  string;
+                            }
+                        })(keyValue[1].toLowerCase().trim());
+                    }
+                } else {
+                    object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
+                }
+            }
+        }
+        return object;
     },
     'sortObjectArray': (propName) =>
         (a, b) => a[propName] === b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1

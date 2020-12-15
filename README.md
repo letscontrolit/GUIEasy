@@ -105,8 +105,8 @@ in your local network. Point to this unit inside a file called ``custom.json``, 
 ### Run as COMPILED localhost
 
 To test different versions of the compiled code we have added the ``GzipSimpleHTTPServer.py``
-script. Given that you have python already installed you can simply double click on this
-file will start the server and automatically open ``localhost:8000`` and you will see
+script. Given that you have [Python](https://www.python.org/downloads/) already installed you can simply double click on this
+file and it will start the server and automatically open ``localhost:8000`` and you will see
 the entire project folder listed. Click your way through to the build you want to test.
 The compiled code will, if started in localhost mode, search for the ``src/custom.json``
 file so make sure you have that one setup according to your needs.

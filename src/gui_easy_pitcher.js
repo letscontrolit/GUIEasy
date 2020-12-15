@@ -20,7 +20,7 @@ guiEasy.pitcher = async function (processID, processType) {
                 guiEasy.nodes.push(jsonData);  //THIS ONE IS USED TO RUN THE GUI FROM LOCALHOST
             })
             .catch(error => {
-                helpEasy.addToLogDOM('Error fetching (custom.json): ' + error, 0, "error");
+                helpEasy.addToLogDOM('Error fetching (src/custom.json): ' + error, 0, "error");
                 helpEasy.addToLogDOM('You should create a "custom.json", please refer to the "custom-template.json".', 0, "warn");
                 helpEasy.addToLogDOM('With this file you can specify what unit you want to connect to during development...', 0, "info");
             });
