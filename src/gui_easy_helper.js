@@ -487,7 +487,13 @@ const helpEasy = {
                     } else if (keyValue[1].trim() === "null") {
                         object[sectionName][keyValue[0].trim()] = null;
                     } else {
-                        object[sectionName][keyValue[0].trim()] = keyValue[1].trim();
+                        object[sectionName][keyValue[0].trim()] = (function (string) {  //parse booleans
+                            switch(string){
+                                case "true": case "yes": return true;
+                                case "false": case "no": return  false;
+                                default: return  string;
+                            }
+                        })(keyValue[1].trim());
                     }
                 } else {
                     object[sectionName][keyValue[0].trim()] = Number(keyValue[1]);
